@@ -1,9 +1,13 @@
+
 package it.polimi.distsys.communication;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReliableReceiver implements Receiver {
+	
+	
+	
 	@Override
 	public List<Message> receive() {
 		// TODO Auto-generated method stub

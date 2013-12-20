@@ -30,9 +30,12 @@ public class VectorClock {
 	
 	
 	/**
-	 * merge two vector clocks
+	 * 
+	 * @param v
+	 * merge the received vector clock with the local one
+	 * 
 	 */
-	public void merge(VectorClock v){
+	public synchronized void merge(VectorClock v){
 		Iterator<Integer> iterator = vector.keySet().iterator();
 		while(iterator.hasNext()){
 			int key = iterator.next();
@@ -45,7 +48,12 @@ public class VectorClock {
 		}
 	}
 	
-	public int getScalar(int clientID){
+	/**
+	 * 
+	 * @param clientID
+	 * @return the scalar clock associated with the passed client ID
+	 */
+	public synchronized int getScalar(int clientID){
 		Integer value = vector.get(clientID);
 		if(value == null){
 			value = 0;

@@ -4,7 +4,7 @@ public class VectorClockMessage implements MessageDecorator {
     private Message message;
     private VectorClock clock;
 
-    private VectorClockMessage(Message message, VectorClock clock) {
+    public VectorClockMessage(Message message, VectorClock clock) {
     	super();
     	this.message=message;
     	this.clock = clock;
@@ -13,7 +13,7 @@ public class VectorClockMessage implements MessageDecorator {
 
     @Override
     public void display() {
-	// TODO Auto-generated method stub
+
 	System.out.println("display on " + getClass().getCanonicalName() + clock.toString());
     }
 

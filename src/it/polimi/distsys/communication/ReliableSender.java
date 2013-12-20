@@ -2,18 +2,20 @@ package it.polimi.distsys.communication;
 
 public class ReliableSender implements Sender {
 	private Sender sender;
-
-	public ReliableSender(Sender sender) {
+	private int clientID;
+	
+	public ReliableSender(Sender sender, int clientID) {
 		super();
 		this.sender = sender;
+		this.clientID=clientID;
 	}
 
 	@Override
 	public void send(Host host, Message msg) {
 		// TODO Auto-generated method stub
-		System.out
-				.println(getClass().getName() + " sending: " + msg.toString());
-		sender.send(host, msg);
+		
+		Message reliableMsg = new SequenceNumberMessage(msg, clientID);
+		sender.send(host, reliableMsg);
 	}
 
 }
