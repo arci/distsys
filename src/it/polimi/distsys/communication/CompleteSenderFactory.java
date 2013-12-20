@@ -6,6 +6,7 @@ public class CompleteSenderFactory {
 		return new CausalSender(new ReliableSender(new Serializer(new TCPSender())));
 	}
 	
+	//TODO remove
 	public static void main(String[] args) {
 		new CompleteSenderFactory().makeSender().send(null, new StringMessage("Message content"));
 	}

@@ -4,13 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReliableReceiver implements Receiver {
-	private Receiver receiver;
-
-	public ReliableReceiver(Receiver receiver) {
-		super();
-		this.receiver = receiver;
-	}
-
 	@Override
 	public List<Message> receive() {
 		// TODO Auto-generated method stub

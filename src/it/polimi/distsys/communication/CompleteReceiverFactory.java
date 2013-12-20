@@ -3,7 +3,7 @@ package it.polimi.distsys.communication;
 public class CompleteReceiverFactory {
 
 	public Receiver makeReceiver() {
-		return new TCPReceiver(new Deserializer(new CausalReceiver(new ReliableReceiver(null))));
+		return new TCPReceiver(new Deserializer(new CausalReceiver(new ReliableReceiver())));
 	}
 	
 	//TODO remove
