@@ -1,16 +1,22 @@
 package it.polimi.distsys.communication;
 
 public class StringMessage implements Message {
+	private String content;
 
-    @Override
-    public void display() {
-	// TODO Auto-generated method stub
-	System.out.println("display on " + getClass().getCanonicalName());
-    }
+	public StringMessage(String content) {
+		super();
+		this.content = content;
+	}
 
-    @Override
-    public Message unpack() {
-	return this;
-    }
+	@Override
+	public void display() {
+		// TODO Auto-generated method stub
+		System.out.println(getClass().getCanonicalName() + " says: " + content);
+	}
+
+	@Override
+	public Message unpack() {
+		return this;
+	}
 
 }
