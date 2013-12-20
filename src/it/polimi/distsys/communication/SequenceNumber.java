@@ -1,22 +1,29 @@
 package it.polimi.distsys.communication;
 
 public class SequenceNumber implements MessageDecorator {
-    private Message message;
+	private Message message;
+	int id;
 
-    private SequenceNumber(Message message) {
-	super();
-	this.message = message;
-    }
+	private SequenceNumber(Message message, int id) {
+		super();
+		this.message = message;
+		this.id = id;
+	}
 
-    @Override
-    public void display() {
-	// TODO Auto-generated method stub
-	System.out.println("display on " + getClass().getCanonicalName());
-    }
+	@Override
+	public void display() {
+		// TODO Auto-generated method stub
+		System.out.println("display on " + getClass().getCanonicalName());
+	}
 
-    @Override
-    public Message unpack() {
-	return message;
-    }
+	@Override
+	public Message unpack() {
+		return message;
+	}
+
+	@Override
+	public String toString() {
+		return "SequenceNumber [message=" + message + ", id=" + id + "]";
+	}
 
 }
