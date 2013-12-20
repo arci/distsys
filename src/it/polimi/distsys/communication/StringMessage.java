@@ -13,6 +13,12 @@ public class StringMessage implements Message {
 		// TODO Auto-generated method stub
 		System.out.println(getClass().getCanonicalName() + " says: " + content);
 	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return content;
+	}
 
 	@Override
 	public Message unpack() {
