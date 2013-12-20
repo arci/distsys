@@ -1,16 +1,31 @@
 package it.polimi.distsys.security;
 
-import it.polimi.distsys.communication.Message;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 
 public class Encrypter {
-	public void updateKey(Key newKey) {
-		// TODO implement
 
+    private SecretKey dek;
+
+    public Encrypter(SecretKey dek) {
+	this.dek = dek;
+    }
+
+    public void updateKey(SecretKey newKey) {
+	this.dek = newKey;
+    }
+
+    public byte[] encrypt(String string) {
+	Cipher cipher;
+	byte[] encrypted = null;
+	try {
+	    cipher = Cipher.getInstance("DES");
+	    cipher.init(Cipher.ENCRYPT_MODE, this.dek);
+	    encrypted = cipher.doFinal(string.getBytes());
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-	
-	public byte[] encrypt(Message message){
-		//TODO implement
-		return message.toString().getBytes();
-	}
+	return encrypted;
+    }
 
 }
