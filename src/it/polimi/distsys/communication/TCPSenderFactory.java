@@ -1,7 +1,9 @@
 package it.polimi.distsys.communication;
 
+import java.io.OutputStream;
+
 public class TCPSenderFactory {
-    public Sender makeSender() {
-	return new TCPSender();
-    }
+	public Sender makeSender(OutputStream out) {
+		return new TCPSender(out);
+	}
 }
