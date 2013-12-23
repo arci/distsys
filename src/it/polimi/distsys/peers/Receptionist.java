@@ -16,12 +16,17 @@ public class Receptionist implements Runnable {
 
 	@Override
 	public void run() {
-		try {
-			Socket socket = in.accept();
-			peer.join(new Host(socket, null));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		while (true) {
+			try {
+				Socket socket = in.accept();
+				System.out.println("Received connection from "
+						+ socket.getInetAddress() + ":" + socket.getPort());
+				peer.join(new Host(socket, null));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}

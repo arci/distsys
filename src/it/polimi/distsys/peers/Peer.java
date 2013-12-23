@@ -3,12 +3,10 @@ package it.polimi.distsys.peers;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-public abstract class Peer {
-	public static final int PORT = 1234;
-	
+public abstract class Peer implements Observer {
 	protected Group group;
-	private Receptionist receptionist;
-	private ServerSocket serverSocket;
+	protected Receptionist receptionist;
+	protected ServerSocket serverSocket;
 
 	public Peer(int port) {
 		super();
@@ -24,19 +22,18 @@ public abstract class Peer {
 
 	final public void join(Host host) {
 		group.join(host);
-		new Thread(new RunnableSender(this, host, null)).start();
-		new Thread(new RunnableReceiver(this, host, null)).start();
-		doStuff();
+		host.register(this);
+		onJoin(host);
 	}
 
 	public void leave(Host host) {
 		group.leave(host);
 	}
-	
+
 	public void accept() {
 		new Thread(receptionist).start();
 	}
 
-	protected abstract void doStuff();
+	protected abstract void onJoin(Host host);
 
 }
