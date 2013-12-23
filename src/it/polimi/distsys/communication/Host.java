@@ -1,5 +1,14 @@
 package it.polimi.distsys.communication;
 
-public interface Host {
+import java.io.InputStream;
 
+public interface Host {
+	
+	public InputStream getInputStream();
+	
+	public Sender getSender();
+	
+	public Receiver getReceiver();
+	
+	public String getName();
 }

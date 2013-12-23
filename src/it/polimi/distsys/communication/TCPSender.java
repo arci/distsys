@@ -1,12 +1,19 @@
 package it.polimi.distsys.communication;
 
+import java.io.IOException;
+
 public class TCPSender implements Sender {
 	
 	
 	@Override
 	public void send(Host host, Message msg) {
 		// TODO Auto-generated method stub
-		msg.notify();
+		try {
+			host.getReceiver().
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
