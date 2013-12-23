@@ -5,19 +5,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class Group {
-	List<Peer> peers;
+	List<Host> hosts;
 	
 	public Group() {
 		super();
-		peers = Collections.synchronizedList(new ArrayList<Peer>());
+		hosts = Collections.synchronizedList(new ArrayList<Host>());
 	}
 
-	public void join(Peer peer) {
-		peers.add(peer);
+	public void join(Host host) {
+		hosts.add(host);
 	}
 	
-	public void leave(Peer peer){
-		peers.remove(peer);
+	public void leave(Host host){
+		hosts.remove(host);
 	}
 
 }

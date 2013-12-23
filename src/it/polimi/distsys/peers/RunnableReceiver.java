@@ -12,11 +12,11 @@ public class RunnableReceiver implements Runnable {
 	private Decrypter decrypter;
 	private Receiver receiver;
 
-	public RunnableReceiver(Peer parent, Peer peer, Decrypter decrypter) {
+	public RunnableReceiver(Peer parent, Host host, Decrypter decrypter) {
 		super();
 		this.decrypter = decrypter;
 		try {
-			receiver = new TCPReceiverFactory().makeReceiver(peer.getIn());
+			receiver = new TCPReceiverFactory().makeReceiver(host.getIn());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

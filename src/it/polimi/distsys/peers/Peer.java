@@ -1,39 +1,42 @@
 package it.polimi.distsys.peers;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.net.ServerSocket;
 
 public abstract class Peer {
+	public static final int PORT = 1234;
+	
 	protected Group group;
-	protected Socket socket;
+	private Receptionist receptionist;
+	private ServerSocket serverSocket;
 
-	public Peer(Socket socket) {
+	public Peer(int port) {
 		super();
 		group = new Group();
-		this.socket = socket;
+		try {
+			serverSocket = new ServerSocket(port);
+			receptionist = new Receptionist(serverSocket, this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	final public void join(Peer peer) {
-		group.join(peer);
-		new Thread(new RunnableSender(this, peer, null)).start();
-		new Thread(new RunnableReceiver(this, peer, null)).start();
+	final public void join(Host host) {
+		group.join(host);
+		new Thread(new RunnableSender(this, host, null)).start();
+		new Thread(new RunnableReceiver(this, host, null)).start();
 		doStuff();
 	}
 
-	public void leave(Peer peer) {
-		group.leave(peer);
+	public void leave(Host host) {
+		group.leave(host);
+	}
+	
+	public void accept() {
+		new Thread(receptionist).start();
 	}
 
-	public InputStream getIn() throws IOException {
-		return socket.getInputStream();
-	}
-
-	public OutputStream getOut() throws IOException {
-		return socket.getOutputStream();
-	}
-
-	public abstract void doStuff();
+	protected abstract void doStuff();
 
 }

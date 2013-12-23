@@ -13,11 +13,11 @@ public class RunnableSender implements Runnable {
 	private Encrypter encrypter;
 	private Sender sender;
 
-	public RunnableSender(Peer parent, Peer peer, Encrypter encrypter) {
+	public RunnableSender(Peer parent, Host host, Encrypter encrypter) {
 		super();
 		this.encrypter = encrypter;
 		try {
-			sender = new TCPSenderFactory().makeSender(peer.getOut());
+			sender = new TCPSenderFactory().makeSender(host.getOut());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

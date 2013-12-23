@@ -6,19 +6,19 @@ import java.net.Socket;
 
 public class Receptionist implements Runnable {
 	ServerSocket in;
-	Server server;
+	Peer peer;
 
-	public Receptionist(ServerSocket in, Server server) {
+	public Receptionist(ServerSocket in, Peer peer) {
 		super();
 		this.in = in;
-		this.server = server;
+		this.peer = peer;
 	}
 
 	@Override
 	public void run() {
 		try {
 			Socket socket = in.accept();
-			server.join(new Client(socket));
+			peer.join(new Host(socket, null));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
