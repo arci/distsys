@@ -1,5 +1,7 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.peers.Host;
+
 public class CausalSender implements Sender {
 	private Sender sender;
 	private VectorClock clock;

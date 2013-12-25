@@ -1,5 +1,7 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.peers.Host;
+
 public class ReliableSender implements Sender {
 	private Sender sender;
 	private int clientID;
