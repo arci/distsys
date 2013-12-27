@@ -15,7 +15,6 @@ public class Host implements Observable {
 	private String name;
 	private RunnableSender sender;
 	private RunnableReceiver receiver;
-	private List<Message> incoming;
 	private List<Observer> observers;
 
 	public Host(Socket socket, String name) {
@@ -23,7 +22,6 @@ public class Host implements Observable {
 		this.socket = socket;
 		this.name = name;
 
-		incoming = new ArrayList<Message>();
 		observers = new ArrayList<Observer>();
 		sender = new RunnableSender(this, null);
 		receiver = new RunnableReceiver(this, null);
@@ -48,25 +46,6 @@ public class Host implements Observable {
 		return socket.getPort();
 	}
 
-	public void send(Message msg) {
-		sender.send(msg);
-	}
-
-	public void receive(List<Message> msgs) {
-		List<Message> cloned = null;
-		synchronized (this) {
-			incoming.addAll(msgs);
-			cloned = new ArrayList<Message>(incoming);
-			incoming = new ArrayList<Message>();
-		}
-
-		for (Message m : cloned) {
-			for (Observer o : observers) {
-				o.update(m);
-			}
-		}
-	}
-
 	@Override
 	public void register(Observer o) {
 		observers.add(o);
@@ -75,5 +54,11 @@ public class Host implements Observable {
 	@Override
 	public void unregister(Observer o) {
 		observers.remove(o);
+	}
+
+	public void notifyObservers(Message m) {
+		for(Observer o : observers){
+			o.update(m);
+		}
 	}
 }

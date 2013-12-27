@@ -7,6 +7,7 @@ import it.polimi.distsys.communication.StringMessage;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 public class Client extends Peer {
@@ -16,7 +17,7 @@ public class Client extends Peer {
 		super(accessPort);
 		group = new Group();
 		try {
-			host = new Host(new Socket(serverAddress, serverPort), "ciaobau");
+			host = new Host(new Socket(serverAddress, serverPort), null);
 			join(host);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -24,7 +25,7 @@ public class Client extends Peer {
 		}
 	}
 
-	public void read() {
+	public void startReader() {
 		new Thread(new Runnable() {
 
 			@Override
@@ -39,15 +40,30 @@ public class Client extends Peer {
 					}
 					Message msg = new StringMessage(str);
 
-					Iterator<Host> it = group.iterator();
-
-					while (it.hasNext()) {
-						it.next().send(msg);
-					}
+					addOutgoingMessage(msg);
 				}
 
 				in.close();
 
+			}
+		}).start();
+	}
+
+	public void startDisplayer() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (true) {
+					List<Message> messages = getIncomingMessages();
+					Iterator<Host> itr = group.iterator();
+
+					while (itr.hasNext()) {
+						for (Message m : messages) {
+							itr.next().notifyObservers(m);
+						}
+					}
+				}
 			}
 		}).start();
 	}

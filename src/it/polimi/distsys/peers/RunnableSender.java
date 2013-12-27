@@ -6,20 +6,17 @@ import it.polimi.distsys.communication.TCPSenderFactory;
 import it.polimi.distsys.security.Encrypter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RunnableSender implements Runnable {
 	private Encrypter encrypter;
 	private Sender sender;
 	private Host host;
-	private List<Message> outgoing;
 
 	public RunnableSender(Host host, Encrypter encrypter) {
 		super();
 		this.encrypter = encrypter;
 		this.host = host;
-		outgoing = new ArrayList<Message>();
 		try {
 			sender = new TCPSenderFactory().makeSender(this.host.getOut());
 		} catch (IOException e) {
@@ -37,20 +34,12 @@ public class RunnableSender implements Runnable {
 		// byte[] msgInByte = encrypter.encrypt(msg.toString());
 		// //sender.send(null, new StringMessage(msgInByte.toString()));
 		while (true) {
-			List<Message> cloned = null;
-			synchronized (this) {
-				cloned = new ArrayList<Message>(outgoing);
-				outgoing = new ArrayList<Message>();
-			}
+			List<Message> messages = Peer.getOutgoingMessages();
 
-			for (Message m : cloned) {
+			for (Message m : messages) {
 				sender.send(m);
 			}
 		}
-	}
-
-	public synchronized void send(Message msg) {
-		outgoing.add(msg);
 	}
 
 }
