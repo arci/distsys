@@ -25,16 +25,10 @@ public class Server extends Peer {
 		Peer.addOutgoingMessage(new JoinMessage(host.getAddress(), host.getPort()));
 	}
 
-	@Override
-	public void update(Message m) {
-		// default behavior is set to string message
-		StringMessage msg = (StringMessage) m;
-		update(msg);
-	}
-
 	public void update(StringMessage m) {
 		// no action on string message
 		System.out.println("StringMessage received!");
+		m.display();
 	}
 
 	public void update(JoinMessage m) {
@@ -85,5 +79,11 @@ public class Server extends Peer {
 				}
 			}
 		}).start();
+	}
+
+	@Override
+	public void update(Message m) {
+		// TODO Auto-generated method stub
+		
 	}
 }

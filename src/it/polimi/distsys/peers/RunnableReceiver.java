@@ -34,7 +34,7 @@ public class RunnableReceiver implements Runnable {
 		// + msgInByte.toString());
 
 		while (true) {
-			List<Message> msgs = receiver.receive();
+			List<Message> msgs = receiver.receive(null);
 			if (msgs == null)
 				break;
 			Peer.addIncomingMessages(msgs);

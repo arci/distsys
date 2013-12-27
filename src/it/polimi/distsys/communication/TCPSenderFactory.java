@@ -4,6 +4,6 @@ import java.io.OutputStream;
 
 public class TCPSenderFactory {
 	public Sender makeSender(OutputStream out) {
-		return new TCPSender(out);
+		return new Serializer(new TCPSender(out));
 	}
 }

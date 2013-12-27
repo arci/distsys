@@ -1,6 +1,5 @@
 package it.polimi.distsys.communication;
 
-import it.polimi.distsys.peers.Host;
 
 public class Serializer implements Sender {
 	private Sender sender;
@@ -11,12 +10,8 @@ public class Serializer implements Sender {
 	}
 
 	@Override
-	public void send(Host host, Message msg) {
-		// TODO Auto-generated method stub
-		
-		Message serializedMsg =  new SerializedMessage(msg);
-		
-		sender.send(host, serializedMsg);
+	public void send(Message msg) {
+		sender.send(new RawMessage(msg.getClass().getName() + Deserializer.SEPARATOR + msg.toString()));
 	}
 
 }

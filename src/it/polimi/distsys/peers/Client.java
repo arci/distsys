@@ -11,14 +11,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Client extends Peer {
-	private Host host;
 
 	public Client(int accessPort, String serverAddress, int serverPort) {
 		super(accessPort);
 		group = new Group();
 		try {
-			host = new Host(new Socket(serverAddress, serverPort), null);
-			join(host);
+			join(new Host(new Socket(serverAddress, serverPort), null));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,18 +72,17 @@ public class Client extends Peer {
 
 	}
 
-	@Override
-	public void update(Message m) {
-		// default behavior is set to string message
-		StringMessage msg = (StringMessage) m;
-		update(msg);
-	}
-
 	public void update(StringMessage m) {
 		m.display();
 	}
 
 	public void update(JoinMessage m) {
+		
+	}
+
+	@Override
+	public void update(Message m) {
+		// TODO Auto-generated method stub
 		
 	}
 }

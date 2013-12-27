@@ -4,17 +4,17 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 public class TCPSender implements Sender {
-    private PrintWriter out;
+	private PrintWriter out;
 
-    public TCPSender(OutputStream out) {
-	super();
-	this.out = new PrintWriter(out);
-    }
+	public TCPSender(OutputStream out) {
+		super();
+		this.out = new PrintWriter(out);
+	}
 
-    @Override
-    public void send(Message msg) {
-	out.println(msg.toString());
-	out.flush();
-    }
+	@Override
+	public void send(Message msg) {
+		out.println(msg.toString());
+		out.flush();
+	}
 
 }
