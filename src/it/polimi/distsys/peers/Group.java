@@ -26,4 +26,8 @@ public class Group {
 		return cloned.iterator();
 	}
 
+	public synchronized int size() {
+		return hosts.size();
+	}
+
 }

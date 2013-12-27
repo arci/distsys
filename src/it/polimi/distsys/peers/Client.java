@@ -86,6 +86,6 @@ public class Client extends Peer {
 	}
 
 	public void update(JoinMessage m) {
-
+		
 	}
 }
