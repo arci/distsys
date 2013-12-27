@@ -1,9 +1,12 @@
 package it.polimi.distsys.peers;
 
 import it.polimi.distsys.communication.JoinMessage;
+import it.polimi.distsys.communication.Message;
 import it.polimi.distsys.communication.StringMessage;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 
 public class Server extends Peer {
 
@@ -19,22 +22,15 @@ public class Server extends Peer {
 
     @Override
     public void onJoin(Host host) {
-	Iterator<Host> it = group.iterator();
-
-	while (it.hasNext()) {
-	    Host nextHost = it.next();
-	    if (!nextHost.equals(host)) {
-		nextHost.send(new JoinMessage(host.getAddress(),
-			host.getPort(), host.getName()));
-	    }
-	}
+	Peer.addOutgoingMessage(new JoinMessage(host.getAddress(), host
+		.getPort(), host.getName()));
     }
 
     @Override
-    public void update(Object o) {
+    public void update(Message m) {
 	// default behavior is set to string message
-	StringMessage m = (StringMessage) o;
-	update(m);
+	StringMessage msg = (StringMessage) m;
+	update(msg);
     }
 
     public void update(StringMessage m) {
@@ -44,6 +40,51 @@ public class Server extends Peer {
 
     public void update(JoinMessage m) {
 	// perform a join
-	System.out.println("I received a JoinMessage!");
+	System.out.println("JoinMessage received!");
+    }
+
+    // TODO remove... Only to see things work
+    public void startReader() {
+	new Thread(new Runnable() {
+
+	    @Override
+	    public void run() {
+		Scanner in = new Scanner(System.in);
+
+		while (true) {
+		    String str = in.nextLine();
+		    if (str.equals("leave")) {
+			// Message msg = new LeaveMessage();
+			break;
+		    }
+		    Message msg = new StringMessage(str);
+
+		    addOutgoingMessage(msg);
+		}
+
+		in.close();
+
+	    }
+	}).start();
+    }
+
+    // TODO remove... Only to see things work
+    public void startDisplayer() {
+	new Thread(new Runnable() {
+
+	    @Override
+	    public void run() {
+		while (true) {
+		    List<Message> messages = getIncomingMessages();
+		    Iterator<Host> itr = group.iterator();
+
+		    while (itr.hasNext()) {
+			for (Message m : messages) {
+			    itr.next().notifyObservers(m);
+			}
+		    }
+		}
+	    }
+	}).start();
     }
 }

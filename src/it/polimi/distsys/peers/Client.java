@@ -27,7 +27,7 @@ public class Client extends Peer {
 	}
     }
 
-    public void read() {
+    public void startReader() {
 	new Thread(new Runnable() {
 
 	    @Override
@@ -41,16 +41,30 @@ public class Client extends Peer {
 			break;
 		    }
 		    Message msg = new StringMessage(str);
-
-		    Iterator<Host> it = group.iterator();
-
-		    while (it.hasNext()) {
-			it.next().send(msg);
-		    }
+		    addOutgoingMessage(msg);
 		}
 
 		in.close();
 
+	    }
+	}).start();
+    }
+
+    public void startDisplayer() {
+	new Thread(new Runnable() {
+
+	    @Override
+	    public void run() {
+		while (true) {
+		    List<Message> messages = getIncomingMessages();
+		    Iterator<Host> itr = group.iterator();
+
+		    while (itr.hasNext()) {
+			for (Message m : messages) {
+			    itr.next().notifyObservers(m);
+			}
+		    }
+		}
 	    }
 	}).start();
     }
@@ -62,10 +76,9 @@ public class Client extends Peer {
     }
 
     @Override
-    public void update(Object o) {
-	// default behavior is set to string message
-	StringMessage m = (StringMessage) o;
-	update(m);
+    public void update(Message m) {
+	// TODO Auto-generated method stub
+
     }
 
     public void update(StringMessage m) {
@@ -80,6 +93,7 @@ public class Client extends Peer {
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+
 	}
     }
 }

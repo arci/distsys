@@ -37,7 +37,7 @@ public class RunnableReceiver implements Runnable {
 			List<Message> msgs = receiver.receive();
 			if (msgs == null)
 				break;
-			host.receive(msgs);
+			Peer.addIncomingMessages(msgs);
 		}
 
 		System.out.println("Client has left");

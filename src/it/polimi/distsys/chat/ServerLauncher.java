@@ -9,6 +9,9 @@ public class ServerLauncher {
 		Server server = new Server(port);
 		System.out.println("Server ready on port " + port);
 		server.accept();
+		//TODO remove these lines
+		server.startDisplayer();
+		server.startReader();
 	}
 
 }

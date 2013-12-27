@@ -12,7 +12,8 @@ public class ClientLauncher {
 				+ port);
 		System.out.println("Client listening on port " + accPort);
 
-		client.read();
+		client.startDisplayer();
+		client.startReader();
 	}
 
 }
