@@ -21,6 +21,7 @@ public abstract class Peer implements Observer {
 		group = new Group();
 		incoming = new MessageQueue();
 		outgoing = new MessageQueue();
+		toSend = new ArrayList<Message>();
 		try {
 			serverSocket = new ServerSocket(port);
 			receptionist = new Receptionist(serverSocket, this);
@@ -58,7 +59,7 @@ public abstract class Peer implements Observer {
 		return incoming.getMessages();
 	}
 
-	public static List<Message> getOutgoingMessages() {
+	public synchronized static List<Message> getOutgoingMessages() {
 		if (sending == group.size()) {
 			toSend.clear();
 		}

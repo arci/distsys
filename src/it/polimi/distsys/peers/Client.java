@@ -75,10 +75,10 @@ public class Client extends Peer {
 	}
 
 	@Override
-	public void update(Object o) {
+	public void update(Message m) {
 		// default behavior is set to string message
-		StringMessage m = (StringMessage) o;
-		update(m);
+		StringMessage msg = (StringMessage) m;
+		update(msg);
 	}
 
 	public void update(StringMessage m) {
