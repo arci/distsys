@@ -1,5 +1,7 @@
 package it.polimi.distsys.communication;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,13 @@ public class Deserializer implements Receiver {
 		Message received = null;
 		try {
 			received = (Message) Class.forName(className).newInstance();
+			Method[] methods = Class.forName(className).getDeclaredMethods();
+			for (int i = 0; i < methods.length; i++) {
+				if (methods[i].getName().startsWith("set")) {
+					//TODO make objects from parts
+					methods[i].invoke(received, parts[i + 1]);
+				}
+			}
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -30,11 +39,17 @@ public class Deserializer implements Receiver {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+
 		List<Message> list = new ArrayList<Message>();
 		list.add(received);
-		
+
 		return list;
 	}
 

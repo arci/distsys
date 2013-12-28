@@ -62,6 +62,7 @@ public abstract class Peer implements Observer {
 	public synchronized static List<Message> getOutgoingMessages() {
 		if (sending == group.size()) {
 			toSend.clear();
+			sending = 0;
 		}
 		
 		if (toSend.isEmpty()) {

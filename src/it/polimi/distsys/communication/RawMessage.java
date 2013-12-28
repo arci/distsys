@@ -20,5 +20,10 @@ public class RawMessage implements Message {
 	public String getContent() {
 		return content;
 	}
+	
+	@Override
+	public String toString() {
+		return content;
+	}
 
 }

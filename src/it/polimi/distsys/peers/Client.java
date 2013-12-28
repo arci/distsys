@@ -54,12 +54,16 @@ public class Client extends Peer {
 			public void run() {
 				while (true) {
 					List<Message> messages = getIncomingMessages();
-					Iterator<Host> itr = group.iterator();
+					// Iterator<Host> itr = group.iterator();
+					//
+					// while (itr.hasNext()) {
+					// for (Message m : messages) {
+					// itr.next().notifyObservers(m);
+					// }
+					// }
 
-					while (itr.hasNext()) {
-						for (Message m : messages) {
-							itr.next().notifyObservers(m);
-						}
+					for (Message m : messages) {
+						m.display();
 					}
 				}
 			}
@@ -77,12 +81,12 @@ public class Client extends Peer {
 	}
 
 	public void update(JoinMessage m) {
-		
+
 	}
 
 	@Override
 	public void update(Message m) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

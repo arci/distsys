@@ -7,6 +7,8 @@ public class StringMessage implements Message {
 		super();
 		this.content = content;
 	}
+	
+	public StringMessage() {}
 
 	@Override
 	public void display() {
@@ -16,13 +18,16 @@ public class StringMessage implements Message {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return content;
 	}
 
 	@Override
 	public Message unpack() {
 		return this;
+	}
+	
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }

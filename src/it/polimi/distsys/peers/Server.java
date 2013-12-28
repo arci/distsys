@@ -22,7 +22,7 @@ public class Server extends Peer {
 
 	@Override
 	public void onJoin(Host host) {
-		Peer.addOutgoingMessage(new JoinMessage(host.getAddress(), host.getPort()));
+		//Peer.addOutgoingMessage(new JoinMessage(host.getAddress(), host.getPort()));
 	}
 
 	public void update(StringMessage m) {
@@ -69,12 +69,16 @@ public class Server extends Peer {
 			public void run() {
 				while (true) {
 					List<Message> messages = getIncomingMessages();
-					Iterator<Host> itr = group.iterator();
+					// Iterator<Host> itr = group.iterator();
+					//
+					// while (itr.hasNext()) {
+					// for (Message m : messages) {
+					// itr.next().notifyObservers(m);
+					// }
+					// }
 
-					while (itr.hasNext()) {
-						for (Message m : messages) {
-							itr.next().notifyObservers(m);
-						}
+					for (Message m : messages) {
+						m.display();
 					}
 				}
 			}
