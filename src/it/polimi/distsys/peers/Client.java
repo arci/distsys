@@ -75,18 +75,4 @@ public class Client extends Peer {
 		// TODO Auto-generated method stub
 
 	}
-
-	public void update(StringMessage m) {
-		m.display();
-	}
-
-	public void update(JoinMessage m) {
-
-	}
-
-	@Override
-	public void update(Message m) {
-		// TODO Auto-generated method stub
-
-	}
 }

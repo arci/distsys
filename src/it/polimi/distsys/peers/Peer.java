@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Peer implements Observer {
+public abstract class Peer {
 	protected static Group group;
 	protected Receptionist receptionist;
 	protected ServerSocket serverSocket;
@@ -33,7 +33,6 @@ public abstract class Peer implements Observer {
 
 	final public void join(Host host) {
 		group.join(host);
-		host.register(this);
 		onJoin(host);
 	}
 

@@ -1,12 +1,10 @@
 package it.polimi.distsys.peers;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
-
-import it.polimi.distsys.communication.JoinMessage;
 import it.polimi.distsys.communication.Message;
 import it.polimi.distsys.communication.StringMessage;
+
+import java.util.List;
+import java.util.Scanner;
 
 public class Server extends Peer {
 
@@ -23,17 +21,6 @@ public class Server extends Peer {
 	@Override
 	public void onJoin(Host host) {
 		//Peer.addOutgoingMessage(new JoinMessage(host.getAddress(), host.getPort()));
-	}
-
-	public void update(StringMessage m) {
-		// no action on string message
-		System.out.println("StringMessage received!");
-		m.display();
-	}
-
-	public void update(JoinMessage m) {
-		// perform a join
-		System.out.println("JoinMessage received!");
 	}
 	
 	//TODO remove... Only to see things work
@@ -83,11 +70,5 @@ public class Server extends Peer {
 				}
 			}
 		}).start();
-	}
-
-	@Override
-	public void update(Message m) {
-		// TODO Auto-generated method stub
-		
 	}
 }
