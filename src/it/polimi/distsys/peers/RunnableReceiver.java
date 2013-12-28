@@ -18,7 +18,7 @@ public class RunnableReceiver implements Runnable {
 		this.decrypter = decrypter;
 		this.host = host;
 		try {
-			receiver = new TCPReceiverFactory().makeReceiver(this.host.getIn());
+			receiver = new TCPReceiverFactory().makeReceiver(host.getFather(), this.host.getIn());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +37,7 @@ public class RunnableReceiver implements Runnable {
 			List<Message> msgs = receiver.receive(null);
 			if (msgs == null)
 				break;
-			Peer.addIncomingMessages(msgs);
+			host.getFather().addIncomingMessages(msgs);
 		}
 
 		System.out.println("Client has left");

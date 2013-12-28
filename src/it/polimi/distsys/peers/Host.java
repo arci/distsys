@@ -1,19 +1,25 @@
 package it.polimi.distsys.peers;
 
+import it.polimi.distsys.communication.Message;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Host {
+	private Peer coordinator;
 	private Socket socket;
 	private String name;
 	private RunnableSender sender;
 	private RunnableReceiver receiver;
 
-	public Host(Socket socket, String name) {
+	public Host(Peer coordinator, Socket socket, String name) {
 		super();
+		this.coordinator = coordinator;
 		this.socket = socket;
 		this.name = name;
 
@@ -38,5 +44,9 @@ public class Host {
 
 	public int getPort() {
 		return socket.getPort();
+	}
+	
+	public Peer getFather(){
+		return coordinator;
 	}
 }

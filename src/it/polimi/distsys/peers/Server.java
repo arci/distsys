@@ -1,5 +1,6 @@
 package it.polimi.distsys.peers;
 
+import it.polimi.distsys.communication.JoinMessage;
 import it.polimi.distsys.communication.Message;
 import it.polimi.distsys.communication.StringMessage;
 
@@ -20,7 +21,7 @@ public class Server extends Peer {
 
 	@Override
 	public void onJoin(Host host) {
-		//Peer.addOutgoingMessage(new JoinMessage(host.getAddress(), host.getPort()));
+		addOutgoingMessage(new JoinMessage(host.getAddress(), host.getPort()));
 	}
 	
 	//TODO remove... Only to see things work

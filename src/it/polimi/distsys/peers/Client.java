@@ -1,12 +1,10 @@
 package it.polimi.distsys.peers;
 
-import it.polimi.distsys.communication.JoinMessage;
 import it.polimi.distsys.communication.Message;
 import it.polimi.distsys.communication.StringMessage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,7 +14,7 @@ public class Client extends Peer {
 		super(accessPort);
 		group = new Group();
 		try {
-			join(new Host(new Socket(serverAddress, serverPort), null));
+			join(new Host(this, new Socket(serverAddress, serverPort), null));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,8 +69,9 @@ public class Client extends Peer {
 	}
 
 	@Override
-	protected void onJoin(Host host) {
+	public void onJoin(Host host) {
 		// TODO Auto-generated method stub
-
+		
 	}
+
 }

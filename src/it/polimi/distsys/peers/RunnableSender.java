@@ -34,7 +34,7 @@ public class RunnableSender implements Runnable {
 		// byte[] msgInByte = encrypter.encrypt(msg.toString());
 		// //sender.send(null, new StringMessage(msgInByte.toString()));
 		while (true) {
-			List<Message> messages = Peer.getOutgoingMessages();
+			List<Message> messages = host.getFather().getOutgoingMessages();
 
 			for (Message m : messages) {
 				sender.send(m);

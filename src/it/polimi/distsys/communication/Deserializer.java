@@ -1,5 +1,7 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.peers.Peer;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,10 +10,12 @@ import java.util.List;
 public class Deserializer implements Receiver {
 	private Receiver receiver;
 	public static final String SEPARATOR = "#";
+	private Peer peer;
 
-	public Deserializer(Receiver receiver) {
+	public Deserializer(Peer peer, Receiver receiver) {
 		super();
 		this.receiver = receiver;
+		this.peer = peer;
 	}
 
 	@Override
@@ -24,10 +28,15 @@ public class Deserializer implements Receiver {
 		try {
 			received = (Message) Class.forName(className).newInstance();
 			Method[] methods = Class.forName(className).getDeclaredMethods();
-			for (int i = 0; i < methods.length; i++) {
+			for (int i = 0, j = 1; i < methods.length; i++ ) {
 				if (methods[i].getName().startsWith("set")) {
-					//TODO make objects from parts
-					methods[i].invoke(received, parts[i + 1]);
+					if (methods[i].getName().equals("setPeer")) {
+						methods[i].invoke(received, peer);
+					} else {
+						// TODO make objects from parts
+						methods[i].invoke(received, parts[j]);
+						j++;
+					}
 				}
 			}
 		} catch (InstantiationException e) {
