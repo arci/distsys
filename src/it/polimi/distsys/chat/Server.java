@@ -1,18 +1,14 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.peers.Host;
-import it.polimi.distsys.peers.Peer;
+import it.polimi.distsys.communication.messages.LeaveMessage;
 
 public class Server extends Peer {
+	public static final Integer DEFAULT_ID = 0;
+	private static Integer clientID = 1;
 
 	public Server(int port) {
 		super(port);
-	}
-
-	@Override
-	public void leave(Host host) {
-		// TODO Auto-generated method stub
-		super.leave(host);
+		ID = 0;
 	}
 
 	// TODO remove... Only to see things work
@@ -22,5 +18,16 @@ public class Server extends Peer {
 
 	public void startDisplayer() {
 		new Thread(new Displayer(this)).start();
+	}
+
+	public Integer incrementID() {
+		int temp = clientID;
+		clientID++;
+		return temp;
+	}
+
+	@Override
+	public void onLeave(Integer leaverID) {
+		sendMulticast(new LeaveMessage(leaverID));
 	}
 }

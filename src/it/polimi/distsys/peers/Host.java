@@ -1,5 +1,6 @@
 package it.polimi.distsys.peers;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.Signature;
 
@@ -13,14 +14,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Host {
+	private Integer ID;
 	private Peer coordinator;
 	private Socket socket;
 	private RunnableSender sender;
 	private RunnableReceiver receiver;
 	private MessageQueue outgoing;
 
-	public Host(Peer coordinator, Socket socket) {
+	public Host(Integer ID, Peer coordinator, Socket socket) {
 		super();
+		this.ID = ID;
 		this.coordinator = coordinator;
 		this.socket = socket;
 		outgoing = new MessageQueue();
@@ -66,5 +69,13 @@ public class Host {
 
 	public List<Message> getIncomingMessages() {
 		return coordinator.getIncomingMessages();
+	}
+
+	public void setID(Integer ID) {
+		this.ID = ID;
+	}
+	
+	public Integer getID() {
+		return ID;
 	}
 }

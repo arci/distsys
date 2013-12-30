@@ -1,8 +1,8 @@
 package it.polimi.distsys.chat;
 
+import it.polimi.distsys.communication.messages.LeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
-import it.polimi.distsys.peers.Peer;
 
 import java.util.Scanner;
 
@@ -28,6 +28,8 @@ public class Reader implements Runnable {
 			peer.sendMulticast(msg);
 		}
 
+		Client client = (Client) peer;
+		client.sendUnicast(client.getServer(), new LeaveMessage(peer.getID()));
 		in.close();
 
 	}

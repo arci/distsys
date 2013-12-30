@@ -1,8 +1,8 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.chat.Server;
 import it.polimi.distsys.peers.Host;
-import it.polimi.distsys.peers.Peer;
 
 import java.net.InetAddress;
 
@@ -35,6 +35,9 @@ public class ConnectionMessage implements Message {
 	@Override
 	public void execute(Peer receiver, Host sender) {
 		Server server = (Server) receiver;
-		server.sendExceptOne(sender, new JoinMessage(address, port));
+		Integer ID = server.incrementID(); 
+		server.sendUnicast(sender, new StartingIDMessage(ID));
+		server.join(sender);
+		server.sendExceptOne(sender, new JoinMessage(ID, address, port));
 	}
 }

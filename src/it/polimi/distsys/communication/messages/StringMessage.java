@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.peers.Host;
-import it.polimi.distsys.peers.Peer;
 
 public class StringMessage implements Message {
 	private static final long serialVersionUID = 9052245167443004983L;

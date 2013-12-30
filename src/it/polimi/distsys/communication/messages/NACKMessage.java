@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.peers.Host;
-import it.polimi.distsys.peers.Peer;
 
 public class NACKMessage implements Message {
 

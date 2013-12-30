@@ -2,7 +2,6 @@ package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.Signature;
-import it.polimi.distsys.peers.Peer;
 
 import java.util.List;
 

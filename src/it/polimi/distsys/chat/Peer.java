@@ -1,6 +1,10 @@
-package it.polimi.distsys.peers;
+package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.messages.Message;
+import it.polimi.distsys.peers.Group;
+import it.polimi.distsys.peers.Host;
+import it.polimi.distsys.peers.MessageQueue;
+import it.polimi.distsys.peers.Receptionist;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -9,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class Peer {
+	protected Integer ID;
 	protected Group group;
 	protected Receptionist receptionist;
 	protected ServerSocket serverSocket;
@@ -31,8 +36,11 @@ public abstract class Peer {
 		group.join(host);
 	}
 
-	public void leave(Host host) {
-		group.leave(host);
+	public void leave(Integer leaverID) {
+		group.leave(leaverID);
+		//TODO remove
+		System.out.println("My group is: " + group.toString());
+		onLeave(leaverID);
 	}
 
 	public void accept() {
@@ -79,5 +87,15 @@ public abstract class Peer {
 	public int getListeningPort() {
 		return serverSocket.getLocalPort();
 	}
+
+	public Integer getID() {
+		return ID;
+	}
+
+	public void setID(Integer ID) {
+		this.ID = ID;
+	}
+	
+	public abstract void onLeave(Integer leaverID);
 
 }
