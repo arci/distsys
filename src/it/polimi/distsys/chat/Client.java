@@ -1,4 +1,8 @@
-package it.polimi.distsys.peers;
+package it.polimi.distsys.chat;
+
+import it.polimi.distsys.peers.Group;
+import it.polimi.distsys.peers.Host;
+import it.polimi.distsys.peers.Peer;
 
 import java.io.IOException;
 import java.net.Socket;

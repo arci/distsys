@@ -1,6 +1,8 @@
-package it.polimi.distsys.peers;
+package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.messages.JoinMessage;
+import it.polimi.distsys.peers.Host;
+import it.polimi.distsys.peers.Peer;
 
 public class Server extends Peer {
 
