@@ -2,7 +2,7 @@ package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.VectorClock;
-import it.polimi.distsys.peers.Host;
+import it.polimi.distsys.components.Host;
 
 public class VectorClockMessage implements MessageDecorator {
     /**

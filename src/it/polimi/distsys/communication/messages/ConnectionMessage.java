@@ -2,7 +2,7 @@ package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.chat.Server;
-import it.polimi.distsys.peers.Host;
+import it.polimi.distsys.components.Host;
 
 import java.net.InetAddress;
 
@@ -37,6 +37,7 @@ public class ConnectionMessage implements Message {
 		Server server = (Server) receiver;
 		Integer ID = server.incrementID(); 
 		server.sendUnicast(sender, new StartingIDMessage(ID));
+		sender.setID(ID);
 		server.join(sender);
 		server.sendExceptOne(sender, new JoinMessage(ID, address, port));
 	}

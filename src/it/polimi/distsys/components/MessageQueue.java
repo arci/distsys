@@ -1,4 +1,4 @@
-package it.polimi.distsys.peers;
+package it.polimi.distsys.components;
 
 import it.polimi.distsys.communication.messages.Message;
 

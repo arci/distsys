@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.peers.Host;
+import it.polimi.distsys.components.Host;
 
 public class LeaveMessage implements Message {
 	private Integer leaverID;
@@ -26,6 +26,7 @@ public class LeaveMessage implements Message {
 	@Override
 	public void execute(Peer receiver, Host sender) {
 		receiver.leave(leaverID);
+		receiver.sendMulticast(new LeaveMessage(leaverID));
 	}
 
 }

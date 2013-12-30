@@ -1,9 +1,7 @@
-package it.polimi.distsys.peers;
+package it.polimi.distsys.components;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 public class Group {
@@ -28,7 +26,7 @@ public class Group {
 	}
 
 	public synchronized Iterator<Host> iterator() {
-		List<Host> cloned = new ArrayList<Host>(hosts);
+		Set<Host> cloned = new HashSet<Host>(hosts);
 		return cloned.iterator();
 	}
 
