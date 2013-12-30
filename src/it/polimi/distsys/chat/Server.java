@@ -1,6 +1,5 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.communication.messages.LeaveMessage;
 
 public class Server extends Peer {
 	public static final Integer DEFAULT_ID = 0;
@@ -24,10 +23,5 @@ public class Server extends Peer {
 		int temp = clientID;
 		clientID++;
 		return temp;
-	}
-
-	@Override
-	public void onLeave(Integer leaverID) {
-		sendMulticast(new LeaveMessage(leaverID));
 	}
 }

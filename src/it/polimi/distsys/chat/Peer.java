@@ -1,10 +1,10 @@
 package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.messages.Message;
-import it.polimi.distsys.peers.Group;
-import it.polimi.distsys.peers.Host;
-import it.polimi.distsys.peers.MessageQueue;
-import it.polimi.distsys.peers.Receptionist;
+import it.polimi.distsys.components.Group;
+import it.polimi.distsys.components.Host;
+import it.polimi.distsys.components.MessageQueue;
+import it.polimi.distsys.components.Receptionist;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -38,9 +38,8 @@ public abstract class Peer {
 
 	public void leave(Integer leaverID) {
 		group.leave(leaverID);
-		//TODO remove
+		// TODO remove
 		System.out.println("My group is: " + group.toString());
-		onLeave(leaverID);
 	}
 
 	public void accept() {
@@ -72,14 +71,15 @@ public abstract class Peer {
 
 		while (itr.hasNext()) {
 			Host receiver = itr.next();
-			if(!receiver.equals(host)){
-				//TODO remove println
-				System.out.println("SendExceptOne to " + receiver.getAddress() + ":" + receiver.getPort());
+			if (!receiver.equals(host)) {
+				// TODO remove println
+				System.out.println("SendExceptOne to " + receiver.getAddress()
+						+ ":" + receiver.getPort());
 				receiver.addOutgoingMessage(msg);
 			}
 		}
 	}
-	
+
 	public InetAddress getAddress() {
 		return serverSocket.getInetAddress();
 	}
@@ -95,7 +95,4 @@ public abstract class Peer {
 	public void setID(Integer ID) {
 		this.ID = ID;
 	}
-	
-	public abstract void onLeave(Integer leaverID);
-
 }

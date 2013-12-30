@@ -1,7 +1,7 @@
 package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.messages.ConnectionMessage;
-import it.polimi.distsys.peers.Host;
+import it.polimi.distsys.components.Host;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -38,11 +38,4 @@ public class Client extends Peer {
 	public Host getServer() {
 		return server;
 	}
-
-	@Override
-	public void onLeave(Integer leaverID) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
