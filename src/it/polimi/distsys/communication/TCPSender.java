@@ -1,20 +1,33 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.communication.messages.Message;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 public class TCPSender implements Sender {
-	private PrintWriter out;
+	private ObjectOutputStream out;
 
 	public TCPSender(OutputStream out) {
 		super();
-		this.out = new PrintWriter(out);
+		try {
+			this.out = new ObjectOutputStream(out);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void send(Message msg) {
-		out.println(msg.toString());
-		out.flush();
+		try {
+			out.writeObject(msg);
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,11 +1,6 @@
 package it.polimi.distsys.peers;
 
-import it.polimi.distsys.communication.JoinMessage;
-import it.polimi.distsys.communication.Message;
-import it.polimi.distsys.communication.StringMessage;
-
-import java.util.List;
-import java.util.Scanner;
+import it.polimi.distsys.communication.messages.JoinMessage;
 
 public class Server extends Peer {
 
@@ -21,55 +16,15 @@ public class Server extends Peer {
 
 	@Override
 	public void onJoin(Host host) {
-		addOutgoingMessage(new JoinMessage(host.getAddress(), host.getPort()));
+		sendExceptOne(host, new JoinMessage(host.getAddress(), host.getPort()));
 	}
 	
 	//TODO remove... Only to see things work
 	public void startReader() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				Scanner in = new Scanner(System.in);
-
-				while (true) {
-					String str = in.nextLine();
-					if (str.equals("leave")) {
-						// Message msg = new LeaveMessage();
-						break;
-					}
-					Message msg = new StringMessage(str);
-
-					addOutgoingMessage(msg);
-				}
-
-				in.close();
-
-			}
-		}).start();
+		new Thread(new Reader(this)).start();
 	}
 
-	//TODO remove... Only to see things work
 	public void startDisplayer() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while (true) {
-					List<Message> messages = getIncomingMessages();
-					// Iterator<Host> itr = group.iterator();
-					//
-					// while (itr.hasNext()) {
-					// for (Message m : messages) {
-					// itr.next().notifyObservers(m);
-					// }
-					// }
-
-					for (Message m : messages) {
-						m.display();
-					}
-				}
-			}
-		}).start();
+		new Thread(new Displayer(this)).start();
 	}
 }

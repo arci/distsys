@@ -1,6 +1,6 @@
 package it.polimi.distsys.peers;
 
-import it.polimi.distsys.communication.Message;
+import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,20 +8,21 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Host {
 	private Peer coordinator;
 	private Socket socket;
-	private String name;
 	private RunnableSender sender;
 	private RunnableReceiver receiver;
+	private MessageQueue outgoing;
 
-	public Host(Peer coordinator, Socket socket, String name) {
+	public Host(Peer coordinator, Socket socket) {
 		super();
 		this.coordinator = coordinator;
 		this.socket = socket;
-		this.name = name;
+		outgoing = new MessageQueue();
 
 		sender = new RunnableSender(this, null);
 		receiver = new RunnableReceiver(this, null);
@@ -46,7 +47,19 @@ public class Host {
 		return socket.getPort();
 	}
 	
-	public Peer getFather(){
-		return coordinator;
+	public void addOutgoingMessage(Message m){
+		outgoing.addMessages(new ArrayList<Message>(Arrays.asList(m)));
+	}
+
+	public List<Message> getOutgoingMessages() {
+		return outgoing.getMessages();
+	}
+	
+	public void addIncomingMessages(List<Message> msgs) {
+		coordinator.addIncomingMessages(msgs);
+	}
+
+	public List<Message> getIncomingMessages() {
+		return coordinator.getIncomingMessages();
 	}
 }

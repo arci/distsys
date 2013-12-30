@@ -1,18 +1,26 @@
 package it.polimi.distsys.communication;
 
-import java.io.BufferedReader;
+import it.polimi.distsys.communication.messages.Message;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TCPReceiver implements Receiver {
-	private BufferedReader in;
+	private ObjectInputStream in;
 	private Receiver receiver;
 
 	public TCPReceiver(InputStream in, Receiver receiver) {
 		super();
-		this.in = new BufferedReader(new InputStreamReader(in));
+		try {
+			this.in = new ObjectInputStream(in);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.receiver = receiver;
 	}
 	
@@ -20,18 +28,21 @@ public class TCPReceiver implements Receiver {
 	public List<Message> receive(Message m) {
 		Message msg = null;
 		try {
-			String string = in.readLine();
-			System.out.println("TCP received: " + string);
-			msg = new RawMessage(string);
+			msg = (Message) in.readObject();
 //			
 //			String className = string.split("#")[0];
 //			msg = (Message) Class.forName(className).newInstance();
 //			list.add(msg);
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return receiver.receive(msg);
+		
+		if(receiver != null){
+			return receiver.receive(msg);
+		}
+		
+		return new ArrayList<Message>(Arrays.asList(msg));
 	}
 
 }
