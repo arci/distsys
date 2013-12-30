@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.peers.Host;
 import it.polimi.distsys.peers.Peer;
 
 public class NACKMessage implements Message {
@@ -21,7 +22,7 @@ public class NACKMessage implements Message {
     }
 
 	@Override
-	public void execute(Peer peer) {
+	public void execute(Peer receiver, Host sender) {
 		// TODO Auto-generated method stub
 		
 	}

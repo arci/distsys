@@ -3,6 +3,7 @@ package it.polimi.distsys.peers;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,6 @@ public abstract class Peer {
 
 	public void join(Host host) {
 		group.join(host);
-		onJoin(host);
 	}
 
 	public void leave(Host host) {
@@ -65,11 +65,19 @@ public abstract class Peer {
 		while (itr.hasNext()) {
 			Host receiver = itr.next();
 			if(!receiver.equals(host)){
+				//TODO remove println
+				System.out.println("SendExceptOne to " + receiver.getAddress() + ":" + receiver.getPort());
 				receiver.addOutgoingMessage(msg);
 			}
 		}
 	}
+	
+	public InetAddress getAddress() {
+		return serverSocket.getInetAddress();
+	}
 
-	public abstract void onJoin(Host host);
+	public int getListeningPort() {
+		return serverSocket.getLocalPort();
+	}
 
 }

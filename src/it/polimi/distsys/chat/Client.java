@@ -1,6 +1,6 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.peers.Group;
+import it.polimi.distsys.communication.messages.ConnectionMessage;
 import it.polimi.distsys.peers.Host;
 import it.polimi.distsys.peers.Peer;
 
@@ -11,9 +11,8 @@ public class Client extends Peer {
 
 	public Client(int accessPort, String serverAddress, int serverPort) {
 		super(accessPort);
-		group = new Group();
 		try {
-			join(new Host(this, new Socket(serverAddress, serverPort)));
+			connect(new Host(this, new Socket(serverAddress, serverPort)));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -27,10 +26,10 @@ public class Client extends Peer {
 	public void startDisplayer() {
 		new Thread(new Displayer(this)).start();
 	}
-
-	@Override
-	public void onJoin(Host host) {
-		// TODO Auto-generated method stub
-
+	
+	public void connect(Host host) {
+		group.join(host);
+		sendUnicast(host, new ConnectionMessage(getAddress(), getListeningPort()));
 	}
+
 }

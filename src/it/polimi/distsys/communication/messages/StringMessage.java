@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.peers.Host;
 import it.polimi.distsys.peers.Peer;
 
 public class StringMessage implements Message {
@@ -13,7 +14,7 @@ public class StringMessage implements Message {
 
 	@Override
 	public void display() {
-		System.out.println(content);
+		System.err.println(content);
 	}
 
 	@Override
@@ -27,8 +28,9 @@ public class StringMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer peer) {
-		//does nothing
+	public void execute(Peer receiver, Host sender) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

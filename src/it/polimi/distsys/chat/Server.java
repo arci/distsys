@@ -1,6 +1,5 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.communication.messages.JoinMessage;
 import it.polimi.distsys.peers.Host;
 import it.polimi.distsys.peers.Peer;
 
@@ -16,12 +15,7 @@ public class Server extends Peer {
 		super.leave(host);
 	}
 
-	@Override
-	public void onJoin(Host host) {
-		sendExceptOne(host, new JoinMessage(host.getAddress(), host.getPort()));
-	}
-	
-	//TODO remove... Only to see things work
+	// TODO remove... Only to see things work
 	public void startReader() {
 		new Thread(new Reader(this)).start();
 	}
