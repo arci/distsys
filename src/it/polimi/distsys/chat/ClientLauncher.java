@@ -1,6 +1,5 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.peers.Client;
 
 public class ClientLauncher {
 	public static void main(String[] args) {

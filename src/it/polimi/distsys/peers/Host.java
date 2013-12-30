@@ -1,6 +1,6 @@
 package it.polimi.distsys.peers;
 
-import it.polimi.distsys.communication.Message;
+import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,34 +8,27 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Host implements Observable {
+public class Host {
+    private Peer coordinator;
     private Socket socket;
-    private String name;
     private RunnableSender sender;
     private RunnableReceiver receiver;
-    private List<Observer> observers;
+    private MessageQueue outgoing;
 
-    public Host(Socket socket, String name) {
+    public Host(Peer coordinator, Socket socket) {
 	super();
+	this.coordinator = coordinator;
 	this.socket = socket;
-	this.name = name;
+	outgoing = new MessageQueue();
 
-	observers = new ArrayList<Observer>();
 	sender = new RunnableSender(this, null);
 	receiver = new RunnableReceiver(this, null);
 
 	new Thread(sender).start();
 	new Thread(receiver).start();
-    }
-
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    public String getName() {
-	return this.name;
     }
 
     public InputStream getIn() throws IOException {
@@ -54,19 +47,19 @@ public class Host implements Observable {
 	return socket.getPort();
     }
 
-    @Override
-    public void register(Observer o) {
-	observers.add(o);
+    public void addOutgoingMessage(Message m) {
+	outgoing.addMessages(new ArrayList<Message>(Arrays.asList(m)));
     }
 
-    @Override
-    public void unregister(Observer o) {
-	observers.remove(o);
+    public List<Message> getOutgoingMessages() {
+	return outgoing.getMessages();
     }
 
-    public void notifyObservers(Message m) {
-	for (Observer o : observers) {
-	    o.update(m);
-	}
+    public void addIncomingMessages(List<Message> msgs) {
+	coordinator.addIncomingMessages(msgs);
+    }
+
+    public List<Message> getIncomingMessages() {
+	return coordinator.getIncomingMessages();
     }
 }

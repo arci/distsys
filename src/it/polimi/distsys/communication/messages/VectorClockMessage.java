@@ -1,7 +1,14 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.communication.messages;
+
+import it.polimi.distsys.communication.VectorClock;
+import it.polimi.distsys.peers.Peer;
 
 public class VectorClockMessage implements MessageDecorator {
-    private Message message;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3674718470667194111L;
+	private Message message;
     private VectorClock clock;
 
     public VectorClockMessage(Message message, VectorClock clock) {
@@ -26,6 +33,12 @@ public class VectorClockMessage implements MessageDecorator {
 	public String toString() {
 		return "VectorClockMessage [message=" + message + ", clock=" + clock
 				+ "]";
+	}
+
+	@Override
+	public void execute(Peer peer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

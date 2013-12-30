@@ -1,13 +1,14 @@
 package it.polimi.distsys.peers;
 
-import it.polimi.distsys.communication.Message;
 import it.polimi.distsys.communication.Receiver;
 import it.polimi.distsys.communication.TCPReceiverFactory;
+import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.security.Decrypter;
 
 import java.io.IOException;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class RunnableReceiver implements Runnable {
 	private Decrypter decrypter;
 	private Receiver receiver;
@@ -34,10 +35,10 @@ public class RunnableReceiver implements Runnable {
 		// + msgInByte.toString());
 
 		while (true) {
-			List<Message> msgs = receiver.receive();
+			List<Message> msgs = receiver.receive(null);
 			if (msgs == null)
 				break;
-			Peer.addIncomingMessages(msgs);
+			host.addIncomingMessages(msgs);
 		}
 
 		System.out.println("Client has left");

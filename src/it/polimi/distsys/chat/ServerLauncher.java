@@ -1,6 +1,5 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.peers.Server;
 
 public class ServerLauncher {
 

@@ -1,13 +1,14 @@
 package it.polimi.distsys.peers;
 
-import it.polimi.distsys.communication.Message;
 import it.polimi.distsys.communication.Sender;
 import it.polimi.distsys.communication.TCPSenderFactory;
+import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.security.Encrypter;
 
 import java.io.IOException;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class RunnableSender implements Runnable {
 	private Encrypter encrypter;
 	private Sender sender;
@@ -34,7 +35,7 @@ public class RunnableSender implements Runnable {
 		// byte[] msgInByte = encrypter.encrypt(msg.toString());
 		// //sender.send(null, new StringMessage(msgInByte.toString()));
 		while (true) {
-			List<Message> messages = Peer.getOutgoingMessages();
+			List<Message> messages = host.getOutgoingMessages();
 
 			for (Message m : messages) {
 				sender.send(m);

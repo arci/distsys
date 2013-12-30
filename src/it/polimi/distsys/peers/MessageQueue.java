@@ -1,6 +1,6 @@
 package it.polimi.distsys.peers;
 
-import it.polimi.distsys.communication.Message;
+import it.polimi.distsys.communication.messages.Message;
 
 import java.util.ArrayList;
 import java.util.List;

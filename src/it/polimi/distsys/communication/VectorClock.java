@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.sun.swing.internal.plaf.synth.resources.synth;
-
 public class VectorClock {
 	
 	private Map<Integer, Integer> vector;
