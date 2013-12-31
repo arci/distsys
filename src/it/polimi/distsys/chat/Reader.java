@@ -28,8 +28,8 @@ public class Reader implements Runnable {
 			peer.sendMulticast(msg);
 		}
 
-		Client client = (Client) peer;
-		client.sendUnicast(client.getServer(), new LeaveMessage(peer.getID()));
+		//Client client = (Client) peer;
+		peer.sendMulticast(new LeaveMessage(peer.getID()));
 		in.close();
 
 	}

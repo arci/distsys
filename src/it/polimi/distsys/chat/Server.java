@@ -13,7 +13,7 @@ public class Server extends Peer {
 
 	public Server(int port) {
 		super(port);
-		ID = 0;
+		ID = DEFAULT_ID;
 	}
 
 	// TODO remove... Only to see things work
@@ -33,15 +33,14 @@ public class Server extends Peer {
 
 	@Override
 	public void onJoin(int ID, InetAddress address, int port) {
-		// TODO Auto-generated method stub
-		
+		//does nothing
 	}
 
 	public void onConnect(Host sender, InetAddress address, int port) {
 		Integer ID = incrementID(); 
 		sendUnicast(sender, new StartingIDMessage(ID));
-		sender.setID(ID);
 		join(sender);
+		group.setMemberID(sender, ID);
 		sendExceptOne(sender, new JoinMessage(ID, address, port));	
 	}
 

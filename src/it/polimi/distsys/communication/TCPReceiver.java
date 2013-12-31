@@ -41,6 +41,10 @@ public class TCPReceiver implements Receiver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		if(msg == null){
+			Thread.currentThread().interrupt();
+		}
 
 		if (receiver != null) {
 			return receiver.receive(msg);

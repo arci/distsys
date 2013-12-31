@@ -1,12 +1,13 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.chat.Client;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.components.Host;
 
 public class IDMessage implements Message {
-	private Integer ID;
 
 	private static final long serialVersionUID = -4595833754654176767L;
+	private Integer ID;
 
 	public IDMessage(Integer ID) {
 		this.ID = ID;
@@ -19,9 +20,10 @@ public class IDMessage implements Message {
 
 	@Override
 	public void execute(Peer receiver, Host sender) {
-		sender.setID(ID);
-		receiver.join(sender);
-		System.out.println("Host " + sender.getAddress().getHostAddress() + ":" + sender.getPort() + " has ID " + sender.getID());
+		Client client = (Client) receiver;
+		client.onID(sender, ID);
+		System.out.println("Host " + sender.getAddress().getHostAddress() + ":"
+				+ sender.getPort() + " has ID " + sender.getID());
 	}
 
 	@Override

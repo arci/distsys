@@ -6,8 +6,8 @@ import it.polimi.distsys.components.Host;
 public class Signature implements MessageDecorator {
 	
 	private static final long serialVersionUID = 1500524929829982625L;
-	Message message;
-	Host sender;
+	private Message message;
+	private Host sender;
 
 	public Signature(Host sender, Message message) {
 		super();

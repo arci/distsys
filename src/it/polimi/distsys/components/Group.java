@@ -17,12 +17,7 @@ public class Group {
 	}
 
 	public void leave(Integer leaverID) {
-		for(Host host : hosts){
-			if(host.getID().equals(leaverID)){
-				hosts.remove(host);
-				break;
-			}
-		}
+		hosts.remove(getMemberByID(leaverID));
 	}
 
 	public synchronized Iterator<Host> iterator() {
@@ -33,14 +28,32 @@ public class Group {
 	public synchronized int size() {
 		return hosts.size();
 	}
-	
+
+	public Host getMemberByID(int ID) {
+		for (Host host : hosts) {
+			if (host.getID() == ID) {
+				return host;
+			}
+		}
+
+		return null;
+	}
+
+	public void setMemberID(Host sender, Integer ID) {
+		for (Host host : hosts) {
+			if (host.equals(sender)) {
+				host.setID(ID);
+			}
+		}
+	}
+
 	@Override
 	public String toString() {
-		String str = null;
-		for(Host host : hosts){
+		String str = "";
+		for (Host host : hosts) {
 			str += host.getID() + "   ";
 		}
-		
+
 		return str;
 	}
 

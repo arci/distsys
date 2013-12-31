@@ -16,7 +16,9 @@ public class Client extends Peer {
 		try {
 			this.server = new Host(Server.DEFAULT_ID, this, new Socket(
 					serverAddress, serverPort));
-			connect(server);
+			join(server);
+			sendUnicast(server, new ConnectionMessage(getAddress(),
+					getListeningPort()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -31,12 +33,6 @@ public class Client extends Peer {
 		new Thread(new Displayer(this)).start();
 	}
 
-	public void connect(Host host) {
-		group.join(host);
-		sendUnicast(host, new ConnectionMessage(getAddress(),
-				getListeningPort()));
-	}
-	
 	public Host getServer() {
 		return server;
 	}
@@ -50,7 +46,11 @@ public class Client extends Peer {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		
+		}
+
+	}
+	
+	public void onID(Host host, int ID){
+		group.setMemberID(host, ID);
 	}
 }

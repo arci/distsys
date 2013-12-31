@@ -26,7 +26,6 @@ public class LeaveMessage implements Message {
 	@Override
 	public void execute(Peer receiver, Host sender) {
 		receiver.leave(leaverID);
-		receiver.sendMulticast(new LeaveMessage(leaverID));
 	}
 
 }
