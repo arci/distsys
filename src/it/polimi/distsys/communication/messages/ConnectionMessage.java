@@ -35,10 +35,6 @@ public class ConnectionMessage implements Message {
 	@Override
 	public void execute(Peer receiver, Host sender) {
 		Server server = (Server) receiver;
-		Integer ID = server.incrementID(); 
-		server.sendUnicast(sender, new StartingIDMessage(ID));
-		sender.setID(ID);
-		server.join(sender);
-		server.sendExceptOne(sender, new JoinMessage(ID, address, port));
+		server.onConnect(sender, address, port);
 	}
 }

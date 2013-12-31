@@ -95,4 +95,6 @@ public abstract class Peer {
 	public void setID(Integer ID) {
 		this.ID = ID;
 	}
+	
+	public abstract void onJoin(int ID, InetAddress address, int port);
 }
