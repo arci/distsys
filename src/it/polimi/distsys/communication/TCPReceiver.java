@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.communication.messages.InterruptedMessage;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.EOFException;
@@ -43,7 +44,13 @@ public class TCPReceiver implements Receiver {
 		}
 		
 		if(msg == null){
-			Thread.currentThread().interrupt();
+			try {
+				in.close();
+				msg = new InterruptedMessage();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		if (receiver != null) {

@@ -34,10 +34,8 @@ public class RunnableReceiver implements Runnable {
 		// System.out.println(getClass().getName() + " says: "
 		// + msgInByte.toString());
 
-		while (true) {
+		while (host.isActive()) {
 			List<Message> msgs = receiver.receive(null);
-			if (msgs == null)
-				break;
 			host.addIncomingMessages(msgs);
 		}
 

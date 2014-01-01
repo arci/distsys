@@ -20,7 +20,6 @@ public class Reader implements Runnable {
 		while (true) {
 			String str = in.nextLine();
 			if (str.equals("leave")) {
-				// Message msg = new LeaveMessage();
 				break;
 			}
 			Message msg = new StringMessage(str);
@@ -31,6 +30,5 @@ public class Reader implements Runnable {
 		//Client client = (Client) peer;
 		peer.sendMulticast(new LeaveMessage(peer.getID()));
 		in.close();
-
 	}
 }

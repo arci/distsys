@@ -1,6 +1,7 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.communication.messages.LeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.Signature;
 
@@ -20,9 +21,11 @@ public class Host {
 	private RunnableSender sender;
 	private RunnableReceiver receiver;
 	private MessageQueue outgoing;
+	private boolean active;
 
 	public Host(Integer ID, Peer coordinator, Socket socket) {
 		super();
+		active = true;
 		this.ID = ID;
 		this.coordinator = coordinator;
 		this.socket = socket;
@@ -62,6 +65,9 @@ public class Host {
 	public void addIncomingMessages(List<Message> msgs) {
 		List<Message> decoratedMsgs = new ArrayList<Message>();
 		for (Message m : msgs) {
+			if (m == null) {
+				m = new LeaveMessage(getID());
+			}
 			decoratedMsgs.add(new Signature(this, m));
 		}
 		coordinator.addIncomingMessages(decoratedMsgs);
@@ -74,8 +80,16 @@ public class Host {
 	public void setID(Integer ID) {
 		this.ID = ID;
 	}
-	
+
 	public Integer getID() {
 		return ID;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }
