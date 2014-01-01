@@ -9,7 +9,6 @@ import it.polimi.distsys.components.Receptionist;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,6 +18,7 @@ public abstract class Peer {
 	protected Receptionist receptionist;
 	protected ServerSocket serverSocket;
 	protected MessageQueue incoming;
+	protected Command command;
 
 	public Peer(int port) {
 		super();
@@ -32,11 +32,13 @@ public abstract class Peer {
 			e.printStackTrace();
 		}
 	}
-
-	public void leave(Integer leaverID) {
-		group.leave(leaverID);
-		// TODO remove
-		System.out.println("My group is: " + group.toString());
+	
+	public void setCommand(Command command) {
+		this.command = command;
+	}
+	
+	public void onReceive(Host sender){
+		command.execute(this, sender);
 	}
 
 	public void accept() {
@@ -92,10 +94,8 @@ public abstract class Peer {
 	public void setID(Integer ID) {
 		this.ID = ID;
 	}
-	
-	public void onBinding(Socket socket) {
-		group.join(new Host(null, this, socket));
+
+	public Group getGroup() {
+		return group;
 	}
-	
-	public abstract void onJoin(int ID, InetAddress address, int port);
 }

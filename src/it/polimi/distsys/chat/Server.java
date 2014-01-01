@@ -1,12 +1,5 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.communication.messages.JoinMessage;
-import it.polimi.distsys.communication.messages.StartingIDMessage;
-import it.polimi.distsys.components.Host;
-
-import java.net.InetAddress;
-
-
 public class Server extends Peer {
 	public static final Integer DEFAULT_ID = 0;
 	private static Integer clientID = 1;
@@ -31,18 +24,4 @@ public class Server extends Peer {
 		return temp;
 	}
 
-	@Override
-	public void onJoin(int ID, InetAddress address, int port) {
-		//does nothing
-	}
-
-	public void onConnect(Host sender, InetAddress address, int port) {
-		Integer ID = incrementID(); 
-		sendUnicast(sender, new StartingIDMessage(ID));
-		group.join(sender);
-		group.setMemberID(sender, ID);
-		sendExceptOne(sender, new JoinMessage(ID, address, port));	
-	}
-
-	
 }

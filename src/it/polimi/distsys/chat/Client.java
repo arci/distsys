@@ -1,11 +1,9 @@
 package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.messages.ConnectionMessage;
-import it.polimi.distsys.communication.messages.IDMessage;
 import it.polimi.distsys.components.Host;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public class Client extends Peer {
@@ -35,22 +33,5 @@ public class Client extends Peer {
 
 	public Host getServer() {
 		return server;
-	}
-
-	@Override
-	public void onJoin(int ID, InetAddress address, int port) {
-		try {
-			Host joiner = new Host(ID, this, new Socket(address, port));
-			group.join(joiner);
-			sendUnicast(joiner, new IDMessage(getID()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-	
-	public void onID(Host host, int ID){
-		group.setMemberID(host, ID);
 	}
 }

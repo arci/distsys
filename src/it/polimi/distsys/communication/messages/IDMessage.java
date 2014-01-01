@@ -1,6 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Client;
+import it.polimi.distsys.chat.IDCommand;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.components.Host;
 
@@ -20,8 +20,8 @@ public class IDMessage implements Message {
 
 	@Override
 	public void execute(Peer receiver, Host sender) {
-		Client client = (Client) receiver;
-		client.onID(sender, ID);
+		receiver.setCommand(new IDCommand(ID));
+		receiver.onReceive(sender);
 		System.out.println("Host " + sender.getAddress().getHostAddress() + ":"
 				+ sender.getPort() + " has ID " + sender.getID());
 	}

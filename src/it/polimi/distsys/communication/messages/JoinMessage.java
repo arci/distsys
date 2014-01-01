@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.chat.JoinCommand;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.components.Host;
 
@@ -34,8 +35,9 @@ public class JoinMessage implements Message {
 
 	@Override
 	public void execute(Peer receiver, Host sender) {
-		System.out.println("Joining to " + address.getHostAddress() + ":"
+		System.out.println("Joining client" + ID + " on " + address.getHostAddress() + ":"
 				+ port);
-		receiver.onJoin(ID, address, port);
+		receiver.setCommand(new JoinCommand(ID, address, port));
+		receiver.onReceive(sender);
 	}
 }

@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.chat.LeaveCommand;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.components.Host;
 
@@ -25,7 +26,8 @@ public class LeaveMessage implements Message {
 
 	@Override
 	public void execute(Peer receiver, Host sender) {
-		receiver.leave(leaverID);
+		receiver.setCommand(new LeaveCommand(leaverID));
+		receiver.onReceive(sender);
 	}
 
 }

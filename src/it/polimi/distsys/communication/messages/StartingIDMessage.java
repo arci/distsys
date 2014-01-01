@@ -1,6 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.chat.StartingIDCommand;
 import it.polimi.distsys.components.Host;
 
 public class StartingIDMessage implements Message {
@@ -19,7 +20,8 @@ public class StartingIDMessage implements Message {
 
 	@Override
 	public void execute(Peer receiver, Host sender) {
-		receiver.setID(ID);
+		receiver.setCommand(new StartingIDCommand(ID));
+		receiver.onReceive(sender);
 		System.out.println("My ID is now " + receiver.getID());
 	}
 
