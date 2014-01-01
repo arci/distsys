@@ -24,7 +24,7 @@ public class Receptionist implements Runnable {
 				Socket socket = in.accept();
 				System.out.println("Received connection from "
 						+ socket.getInetAddress() + ":" + socket.getPort());
-				peer.join(new Host(null, peer, socket));
+				peer.onBinding(socket);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

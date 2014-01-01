@@ -39,7 +39,7 @@ public class Server extends Peer {
 	public void onConnect(Host sender, InetAddress address, int port) {
 		Integer ID = incrementID(); 
 		sendUnicast(sender, new StartingIDMessage(ID));
-		join(sender);
+		group.join(sender);
 		group.setMemberID(sender, ID);
 		sendExceptOne(sender, new JoinMessage(ID, address, port));	
 	}

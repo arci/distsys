@@ -16,7 +16,7 @@ public class Client extends Peer {
 		try {
 			this.server = new Host(Server.DEFAULT_ID, this, new Socket(
 					serverAddress, serverPort));
-			join(server);
+			group.join(server);
 			sendUnicast(server, new ConnectionMessage(getAddress(),
 					getListeningPort()));
 		} catch (IOException e) {
@@ -41,7 +41,7 @@ public class Client extends Peer {
 	public void onJoin(int ID, InetAddress address, int port) {
 		try {
 			Host joiner = new Host(ID, this, new Socket(address, port));
-			join(joiner);
+			group.join(joiner);
 			sendUnicast(joiner, new IDMessage(getID()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

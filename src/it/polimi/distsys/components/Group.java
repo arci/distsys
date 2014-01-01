@@ -1,5 +1,6 @@
 package it.polimi.distsys.components;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -9,7 +10,7 @@ public class Group {
 
 	public Group() {
 		super();
-		hosts = new HashSet<Host>();
+		hosts = Collections.synchronizedSet(new HashSet<Host>());
 	}
 
 	public void join(Host host) {
@@ -25,12 +26,14 @@ public class Group {
 		return cloned.iterator();
 	}
 
-	public synchronized int size() {
+	public int size() {
 		return hosts.size();
 	}
 
 	public Host getMemberByID(int ID) {
-		for (Host host : hosts) {
+		Iterator<Host> itr = iterator();
+		while (itr.hasNext()) {
+			Host host = itr.next();
 			if (host.getID() == ID) {
 				return host;
 			}
@@ -40,7 +43,9 @@ public class Group {
 	}
 
 	public void setMemberID(Host sender, Integer ID) {
-		for (Host host : hosts) {
+		Iterator<Host> itr = iterator();
+		while (itr.hasNext()) {
+			Host host = itr.next();
 			if (host.equals(sender)) {
 				host.setID(ID);
 			}
@@ -50,7 +55,10 @@ public class Group {
 	@Override
 	public String toString() {
 		String str = "";
-		for (Host host : hosts) {
+		
+		Iterator<Host> itr = iterator();
+		while (itr.hasNext()) {
+			Host host = itr.next();
 			str += host.getID() + "   ";
 		}
 
