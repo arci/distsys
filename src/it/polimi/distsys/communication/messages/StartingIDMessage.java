@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.StartingIDCommand;
+import it.polimi.distsys.chat.actions.StartingIDCommand;
 import it.polimi.distsys.components.Host;
 
 public class StartingIDMessage implements Message {

@@ -1,5 +1,6 @@
 package it.polimi.distsys.chat;
 
+import it.polimi.distsys.chat.actions.Command;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.components.Group;
 import it.polimi.distsys.components.Host;

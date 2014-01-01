@@ -1,5 +1,6 @@
-package it.polimi.distsys.chat;
+package it.polimi.distsys.chat.actions;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.components.Host;
 
 public class StartingIDCommand implements Command {

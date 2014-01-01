@@ -1,5 +1,7 @@
-package it.polimi.distsys.chat;
+package it.polimi.distsys.chat.actions;
 
+import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.chat.Server;
 import it.polimi.distsys.communication.messages.JoinMessage;
 import it.polimi.distsys.communication.messages.StartingIDMessage;
 import it.polimi.distsys.components.Host;
