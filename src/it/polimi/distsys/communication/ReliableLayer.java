@@ -41,11 +41,12 @@ public class ReliableLayer implements Layer {
 			for (int i = 1; i < offset; i++) {
 				if (!receivingQueue.keySet().contains(lastID + i)) {
 					receivingQueue.put(lastID + i, null);
-					send(new NACKMessage(lastID + i));
+					underneath.send(new NACKMessage(lastID + i));
 				}
 			}
 
-			List<Integer> sorted = new ArrayList<Integer>(receivingQueue.keySet());
+			List<Integer> sorted = new ArrayList<Integer>(
+					receivingQueue.keySet());
 			Collections.sort(sorted);
 
 			for (Integer i : sorted) {
@@ -60,20 +61,25 @@ public class ReliableLayer implements Layer {
 			}
 		}
 
-		return toReceive;
+		try {
+			return above.receive(toReceive);
+		} catch (NullPointerException e) {
+			return toReceive;
+		}
+
 	}
 
 	@Override
 	public Message send(Message msg) {
 		ID++;
 		Message toSend = new SequenceNumberMessage(ID, msg);
-		return toSend;
+		return underneath.send(toSend);
 	}
-	
+
 	public void setAbove(Layer above) {
 		this.above = above;
 	}
-	
+
 	public void setUnderneath(Layer underneath) {
 		this.underneath = underneath;
 	}

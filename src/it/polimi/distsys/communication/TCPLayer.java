@@ -38,7 +38,7 @@ public class TCPLayer implements Layer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -64,14 +64,14 @@ public class TCPLayer implements Layer {
 				e.printStackTrace();
 			}
 		}
-		
-		if(above == null){
+
+		try {
+			return above.receive(new ArrayList<Message>(Arrays.asList(msg)));
+		} catch (Exception e) {
 			return new ArrayList<Message>(Arrays.asList(msg));
 		}
-
-		return above.receive(new ArrayList<Message>(Arrays.asList(msg)));
 	}
-	
+
 	public void setAbove(Layer above) {
 		this.above = above;
 	}
