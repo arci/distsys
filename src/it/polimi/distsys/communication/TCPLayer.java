@@ -16,6 +16,7 @@ import java.util.List;
 public class TCPLayer implements Layer {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
+	private Layer above;
 
 	public TCPLayer(InputStream in, OutputStream out) {
 		super();
@@ -63,8 +64,16 @@ public class TCPLayer implements Layer {
 				e.printStackTrace();
 			}
 		}
+		
+		if(above == null){
+			return new ArrayList<Message>(Arrays.asList(msg));
+		}
 
-		return new ArrayList<Message>(Arrays.asList(msg));
+		return above.receive(new ArrayList<Message>(Arrays.asList(msg)));
+	}
+	
+	public void setAbove(Layer above) {
+		this.above = above;
 	}
 
 }

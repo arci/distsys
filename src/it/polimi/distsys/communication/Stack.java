@@ -2,35 +2,24 @@ package it.polimi.distsys.communication;
 
 import it.polimi.distsys.communication.messages.Message;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Stack {
-	List<Layer> layers;
-	List<Layer> reversedLayers;
+	Layer first;
+	Layer last;
 
-	public Stack(List<Layer> layers) {
+	public Stack(Layer first, Layer last) {
 		super();
-		this.layers = layers;
-		reversedLayers = new ArrayList<Layer>(layers);
-		Collections.reverse(reversedLayers);
-	}
-	
-	public void send(Message msg){
-		for(Layer l : layers){
-			msg = l.send(msg);
-		}
+		this.first = first;
+		this.last = last;
 	}
 
-	public List<Message> receive(List<Message> msgs){
-		for(Layer l : reversedLayers){
-			msgs = l.receive(msgs);
-		}
-		
-		return msgs;
+	public void send(Message msg) {
+		first.send(msg);
 	}
-	
-	
+
+	public List<Message> receive(List<Message> msgs) {
+		return last.receive(msgs);
+	}
 
 }
