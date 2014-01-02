@@ -1,4 +1,4 @@
-package it.polimi.distsys.chat.actions;
+package it.polimi.distsys.chat.commands;
 
 import it.polimi.distsys.chat.Client;
 import it.polimi.distsys.chat.Peer;

@@ -4,41 +4,39 @@ import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.components.Host;
 
 public class SequenceNumberMessage implements MessageDecorator {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6506203353941938533L;
 	private Message message;
-	int id;
+	int ID;
 
-	public SequenceNumberMessage(Message message, int id) {
+	public SequenceNumberMessage(int ID, Message message) {
 		super();
 		this.message = message;
-		this.id = id;
+		this.ID = ID;
 	}
 
 	@Override
 	public void display() {
-		
-		System.out.println("display on " + getClass().getCanonicalName());
-	}
-
-	@Override
-	public Message unpack() {
-		return message;
-	}
-
-	@Override
-	public String toString() {
-		return "SequenceNumber [message=" + message + ", id=" + id + "]";
+		System.out.println(this.toString());
+		message.display();
 	}
 
 	@Override
 	public void execute(Peer receiver, Host sender) {
-		// TODO Auto-generated method stub
-		
+		message.execute(receiver, sender);
+	}
+	
+	@Override
+	public Message unpack() {
+		return message;
+	}
+	
+	@Override
+	public String toString() {
+		return "[SN: " + ID + ", " + message.toString() + "]";
 	}
 
-	
+	public int getID() {
+		return ID;
+	}
 
 }

@@ -1,7 +1,8 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.communication.Receiver;
-import it.polimi.distsys.communication.TCPReceiverFactory;
+import it.polimi.distsys.communication.factories.ReliableFactory;
+import it.polimi.distsys.communication.factories.TCPFactory;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.security.Decrypter;
 
@@ -19,7 +20,7 @@ public class RunnableReceiver implements Runnable {
 		this.decrypter = decrypter;
 		this.host = host;
 		try {
-			receiver = new TCPReceiverFactory().makeReceiver(this.host.getIn());
+			receiver = new ReliableFactory().makeReceiver(this.host.getIn());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

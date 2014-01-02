@@ -1,7 +1,8 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.communication.Sender;
-import it.polimi.distsys.communication.TCPSenderFactory;
+import it.polimi.distsys.communication.factories.ReliableFactory;
+import it.polimi.distsys.communication.factories.TCPFactory;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.security.Encrypter;
 
@@ -19,7 +20,7 @@ public class RunnableSender implements Runnable {
 		this.encrypter = encrypter;
 		this.host = host;
 		try {
-			sender = new TCPSenderFactory().makeSender(this.host.getOut());
+			sender = new ReliableFactory().makeSender(this.host.getOut());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

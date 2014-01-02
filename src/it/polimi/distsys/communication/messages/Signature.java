@@ -22,7 +22,7 @@ public class Signature implements MessageDecorator {
 
 	@Override
 	public Message unpack() {
-		return this;
+		return message;
 	}
 	
 	public Host getSender() {

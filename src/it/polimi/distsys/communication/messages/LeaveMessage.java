@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.actions.LeaveCommand;
+import it.polimi.distsys.chat.commands.LeaveCommand;
 import it.polimi.distsys.components.Host;
 
 public class LeaveMessage implements Message {

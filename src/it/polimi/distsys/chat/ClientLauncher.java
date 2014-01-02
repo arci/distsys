@@ -1,5 +1,7 @@
 package it.polimi.distsys.chat;
 
+import it.polimi.distsys.Config;
+
 
 public class ClientLauncher {
 	public static void main(String[] args) {
@@ -11,6 +13,7 @@ public class ClientLauncher {
 				+ port);
 		System.out.println("Client listening on port " + accPort);
 
+		Config.init();
 		client.accept();
 		client.startDisplayer();
 		client.startReader();

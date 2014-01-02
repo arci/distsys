@@ -1,7 +1,7 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.actions.BindCommand;
+import it.polimi.distsys.chat.commands.BindCommand;
 
 import java.io.IOException;
 import java.net.ServerSocket;

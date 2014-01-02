@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.actions.JoinCommand;
+import it.polimi.distsys.chat.commands.JoinCommand;
 import it.polimi.distsys.components.Host;
 
 import java.net.InetAddress;
