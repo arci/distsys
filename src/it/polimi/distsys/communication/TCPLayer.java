@@ -7,23 +7,40 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TCPReceiver implements Receiver {
+public class TCPLayer implements Layer {
+	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	private Receiver receiver;
+	private Layer layer;
 
-	public TCPReceiver(InputStream in, Receiver receiver) {
+	public TCPLayer(InputStream in, OutputStream out, Layer layer) {
 		super();
 		try {
+			this.out = new ObjectOutputStream(out);
 			this.in = new ObjectInputStream(in);
+			this.layer = layer;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.receiver = receiver;
+	}
+
+	@Override
+	public Message send(Message msg) {
+		try {
+			out.writeObject(msg);
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -42,8 +59,8 @@ public class TCPReceiver implements Receiver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		if(msg == null){
+
+		if (msg == null) {
 			try {
 				in.close();
 				msg = new InterruptedMessage();
@@ -53,8 +70,8 @@ public class TCPReceiver implements Receiver {
 			}
 		}
 
-		if (receiver != null) {
-			return receiver.receive(msg);
+		if (layer != null) {
+			return layer.receive(msg);
 		}
 
 		return new ArrayList<Message>(Arrays.asList(msg));

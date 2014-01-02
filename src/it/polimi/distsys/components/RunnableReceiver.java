@@ -1,30 +1,22 @@
 package it.polimi.distsys.components;
 
-import it.polimi.distsys.communication.Receiver;
-import it.polimi.distsys.communication.factories.ReliableFactory;
-import it.polimi.distsys.communication.factories.TCPFactory;
+import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.security.Decrypter;
 
-import java.io.IOException;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class RunnableReceiver implements Runnable {
 	private Decrypter decrypter;
-	private Receiver receiver;
 	private Host host;
+	private Layer layer;
 
-	public RunnableReceiver(Host host, Decrypter decrypter) {
+	public RunnableReceiver(Host host, Layer layer, Decrypter decrypter) {
 		super();
 		this.decrypter = decrypter;
 		this.host = host;
-		try {
-			receiver = new ReliableFactory().makeReceiver(this.host.getIn());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.layer = layer;
 	}
 
 	@Override
@@ -36,7 +28,7 @@ public class RunnableReceiver implements Runnable {
 		// + msgInByte.toString());
 
 		while (host.isActive()) {
-			List<Message> msgs = receiver.receive(null);
+			List<Message> msgs = layer.receive(null);
 			host.addIncomingMessages(msgs);
 		}
 

@@ -1,6 +1,8 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.factories.TCPFactory;
 import it.polimi.distsys.communication.messages.LeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.Signature;
@@ -31,11 +33,17 @@ public class Host {
 		this.socket = socket;
 		outgoing = new MessageQueue();
 
-		sender = new RunnableSender(this, null);
-		receiver = new RunnableReceiver(this, null);
+		try {
+			Layer layer = new TCPFactory().make(getIn(), getOut());
+			sender = new RunnableSender(this, layer,  null);
+			receiver = new RunnableReceiver(this, layer, null);
 
-		new Thread(sender).start();
-		new Thread(receiver).start();
+			new Thread(sender).start();
+			new Thread(receiver).start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public InputStream getIn() throws IOException {
