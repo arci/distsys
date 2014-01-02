@@ -19,7 +19,7 @@ public class StartingIDMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
+	public void onReceive(Peer receiver, Host sender) {
 		receiver.setCommand(new StartingIDCommand(ID));
 		receiver.onReceive(sender);
 		System.out.println("My ID is now " + receiver.getID());

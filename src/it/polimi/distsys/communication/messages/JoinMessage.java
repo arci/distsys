@@ -34,7 +34,7 @@ public class JoinMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
+	public void onReceive(Peer receiver, Host sender) {
 		System.out.println("Joining client" + ID + " on " + address.getHostAddress() + ":"
 				+ port);
 		receiver.setCommand(new JoinCommand(ID, address, port));

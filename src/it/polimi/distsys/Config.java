@@ -23,8 +23,12 @@ public class Config {
 		}
 	}
 	
-	public static String getAction(String key){
-		return actions.getProperty(key);
+	public static String getAction(String key) throws ClassNotFoundException{
+		String value = actions.getProperty(key);
+		if(value == null){
+			throw new ClassNotFoundException();
+		}
+		return value;
 	}
 
 }

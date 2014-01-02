@@ -19,7 +19,7 @@ public class IDMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
+	public void onReceive(Peer receiver, Host sender) {
 		receiver.setCommand(new IDCommand(ID));
 		receiver.onReceive(sender);
 		System.out.println("Host " + sender.getAddress().getHostAddress() + ":"

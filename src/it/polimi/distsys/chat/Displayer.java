@@ -27,7 +27,7 @@ public class Displayer implements Runnable {
 			for (Message m : messages) {
 				Signature signature = (Signature) m;
 				m.display();
-				m.execute(peer, signature.getSender());
+				m.onReceive(peer, signature.getSender());
 			}
 		}
 	}

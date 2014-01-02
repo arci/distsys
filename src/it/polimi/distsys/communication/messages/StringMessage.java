@@ -28,7 +28,7 @@ public class StringMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
+	public void onReceive(Peer receiver, Host sender) {
 		// TODO Auto-generated method stub
 		
 	}

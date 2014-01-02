@@ -25,7 +25,7 @@ public class LeaveMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
+	public void onReceive(Peer receiver, Host sender) {
 		receiver.setCommand(new LeaveCommand(leaverID));
 		receiver.onReceive(sender);
 	}

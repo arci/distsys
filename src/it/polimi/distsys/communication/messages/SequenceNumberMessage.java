@@ -21,8 +21,8 @@ public class SequenceNumberMessage implements MessageDecorator {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
-		message.execute(receiver, sender);
+	public void onReceive(Peer receiver, Host sender) {
+		message.onReceive(receiver, sender);
 	}
 	
 	@Override

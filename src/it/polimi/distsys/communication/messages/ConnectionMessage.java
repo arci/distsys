@@ -33,7 +33,7 @@ public class ConnectionMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
+	public void onReceive(Peer receiver, Host sender) {
 		receiver.setCommand(new ConnectCommand(address, port));
 		receiver.onReceive(sender);
 	}

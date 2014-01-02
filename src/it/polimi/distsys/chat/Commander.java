@@ -15,10 +15,13 @@ public class Commander {
 	public void execute(String string) {
 		String[] parts = string.split(" ");
 		String key = parts[0];
-		String param = parts[1];
-		String className = Config.getAction(key);
+		String param = "";
+		if (parts.length > 1) {
+			param = parts[1];
+		}
 		Action action = null;
 		try {
+			String className = Config.getAction(key);
 			action = (Action) Class.forName(className).newInstance();
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException e) {

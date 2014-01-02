@@ -14,7 +14,7 @@ public class InterruptedMessage implements Message {
 	}
 
 	@Override
-	public void execute(Peer receiver, Host sender) {
+	public void onReceive(Peer receiver, Host sender) {
 		sender.setActive(false);
 		receiver.setCommand(new LeaveCommand(sender.getID()));
 		receiver.onReceive(sender);
