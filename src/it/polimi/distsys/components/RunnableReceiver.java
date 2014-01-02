@@ -1,6 +1,7 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.Stack;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.security.Decrypter;
 
@@ -10,13 +11,13 @@ import java.util.List;
 public class RunnableReceiver implements Runnable {
 	private Decrypter decrypter;
 	private Host host;
-	private Layer layer;
+	private Stack stack;
 
-	public RunnableReceiver(Host host, Layer layer, Decrypter decrypter) {
+	public RunnableReceiver(Host host, Stack stack, Decrypter decrypter) {
 		super();
 		this.decrypter = decrypter;
 		this.host = host;
-		this.layer = layer;
+		this.stack = stack;
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class RunnableReceiver implements Runnable {
 		// + msgInByte.toString());
 
 		while (host.isActive()) {
-			List<Message> msgs = layer.receive(null);
+			List<Message> msgs = stack.receive(null);
 			host.addIncomingMessages(msgs);
 		}
 

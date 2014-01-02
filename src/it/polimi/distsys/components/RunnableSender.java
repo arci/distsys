@@ -1,6 +1,7 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.Stack;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.security.Encrypter;
 
@@ -10,13 +11,13 @@ import java.util.List;
 public class RunnableSender implements Runnable {
 	private Encrypter encrypter;
 	private Host host;
-	private Layer layer;
+	private Stack stack;
 
-	public RunnableSender(Host host, Layer layer, Encrypter encrypter) {
+	public RunnableSender(Host host, Stack stack, Encrypter encrypter) {
 		super();
 		this.encrypter = encrypter;
 		this.host = host;
-		this.layer = layer;
+		this.stack = stack;
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class RunnableSender implements Runnable {
 			List<Message> messages = host.getOutgoingMessages();
 
 			for (Message m : messages) {
-				layer.send(m);
+				stack.send(m);
 			}
 		}
 	}

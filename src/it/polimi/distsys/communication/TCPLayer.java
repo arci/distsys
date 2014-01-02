@@ -16,14 +16,12 @@ import java.util.List;
 public class TCPLayer implements Layer {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	private Layer layer;
 
-	public TCPLayer(InputStream in, OutputStream out, Layer layer) {
+	public TCPLayer(InputStream in, OutputStream out) {
 		super();
 		try {
 			this.out = new ObjectOutputStream(out);
 			this.in = new ObjectInputStream(in);
-			this.layer = layer;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,14 +42,10 @@ public class TCPLayer implements Layer {
 	}
 
 	@Override
-	public List<Message> receive(Message m) {
+	public List<Message> receive(List<Message> msgs) {
 		Message msg = null;
 		try {
 			msg = (Message) in.readObject();
-			//
-			// String className = string.split("#")[0];
-			// msg = (Message) Class.forName(className).newInstance();
-			// list.add(msg);
 		} catch (EOFException e) {
 			Thread.currentThread().interrupt();
 
@@ -68,10 +62,6 @@ public class TCPLayer implements Layer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-
-		if (layer != null) {
-			return layer.receive(msg);
 		}
 
 		return new ArrayList<Message>(Arrays.asList(msg));

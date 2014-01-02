@@ -8,6 +8,6 @@ public interface Layer {
 
 	public Message send(Message msg);
 
-	public List<Message> receive(Message msg);
+	public List<Message> receive(List<Message> msgs);
 
 }

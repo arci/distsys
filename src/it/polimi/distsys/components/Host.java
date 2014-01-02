@@ -1,8 +1,8 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.Layer;
-import it.polimi.distsys.communication.factories.TCPFactory;
+import it.polimi.distsys.communication.Stack;
+import it.polimi.distsys.communication.factories.StackFactory;
 import it.polimi.distsys.communication.messages.LeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.Signature;
@@ -34,9 +34,9 @@ public class Host {
 		outgoing = new MessageQueue();
 
 		try {
-			Layer layer = new TCPFactory().make(getIn(), getOut());
-			sender = new RunnableSender(this, layer,  null);
-			receiver = new RunnableReceiver(this, layer, null);
+			Stack stack = StackFactory.makeTCPStack(getIn(), getOut());
+			sender = new RunnableSender(this, stack,  null);
+			receiver = new RunnableReceiver(this, stack, null);
 
 			new Thread(sender).start();
 			new Thread(receiver).start();
