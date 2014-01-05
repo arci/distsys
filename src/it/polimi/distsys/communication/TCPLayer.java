@@ -63,11 +63,7 @@ public class TCPLayer extends Layer {
 			}
 		}
 
-		try {
-			return sendUp(new ArrayList<Message>(Arrays.asList(msg)));
-		} catch (NullPointerException e) {
-			return new ArrayList<Message>(Arrays.asList(msg));
-		}
+		return sendUp(new ArrayList<Message>(Arrays.asList(msg)));
 	}
 
 	@Override

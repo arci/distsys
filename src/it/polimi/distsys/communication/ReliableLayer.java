@@ -61,10 +61,8 @@ public class ReliableLayer extends Layer {
 		for (Integer i : sorted) {
 			Message element = receivingQueue.get(i);
 			if (element == null) {
-				Printer.printDebug("Stopping at id " + i);
 				break;
 			} else {
-				Printer.printDebug("Adding to receive list message " + i);
 				receivingQueue.remove(i);
 				lastID = i;
 				toReceive.add(element);
