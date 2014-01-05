@@ -16,9 +16,12 @@ public class Commander {
 		String[] parts = string.split(" ");
 		String key = parts[0];
 		String param = "";
-		if (parts.length > 1) {
-			param = parts[1];
+		if (parts.length >= 2) {
+			for (int i = 1; i < parts.length; i++) {
+				param += parts[i] + " ";
+			}
 		}
+
 		Action action = null;
 		try {
 			String className = Config.getAction(key);

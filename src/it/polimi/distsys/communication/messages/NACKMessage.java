@@ -1,6 +1,8 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.ReliableLayer;
+import it.polimi.distsys.components.Printer;
 
 public class NACKMessage implements Message {
 	private static final long serialVersionUID = 4534419416507706053L;
@@ -12,7 +14,7 @@ public class NACKMessage implements Message {
 
 	@Override
 	public void display() {
-		System.out.println("display on " + getClass().getCanonicalName());
+		Printer.printDebug("display on " + getClass().getCanonicalName());
 	}
 
 	@Override
@@ -27,6 +29,16 @@ public class NACKMessage implements Message {
 
 	@Override
 	public void onReceive(Layer layer) {
+		try {
+			ReliableLayer rel = (ReliableLayer) layer;
+			rel.resend(ID);
+		} catch (ClassCastException e) {
+			// TODO: handle exception
+		}
+	}
+
+	@Override
+	public void onSend(Layer layer) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -33,4 +33,10 @@ public class LeaveMessage implements Message {
 		app.leave(leaverID);
 	}
 
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

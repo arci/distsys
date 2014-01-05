@@ -26,6 +26,12 @@ public class DoneMessage implements Message {
 		
 	}
 
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 }

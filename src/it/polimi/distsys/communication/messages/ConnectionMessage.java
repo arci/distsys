@@ -39,4 +39,10 @@ public class ConnectionMessage implements Message {
 		ApplicationLayer app = (ApplicationLayer) layer;
 		app.connect(address, port);
 	}
+
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -35,4 +35,10 @@ public class IDMessage implements Message {
 		return this;
 	}
 
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -26,5 +26,11 @@ public class ACKMessage implements Message {
 		
 	}
 
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

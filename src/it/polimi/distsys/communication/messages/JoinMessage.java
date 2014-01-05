@@ -43,4 +43,10 @@ public class JoinMessage implements Message {
 		ApplicationLayer app = (ApplicationLayer) layer;
 		app.join(ID, address, port);
 	}
+
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
 }

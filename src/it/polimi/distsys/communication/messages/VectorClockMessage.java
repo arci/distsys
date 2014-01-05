@@ -42,4 +42,10 @@ public class VectorClockMessage implements MessageDecorator {
 
 	}
 
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

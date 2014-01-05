@@ -28,12 +28,12 @@ public class ApplicationLayer extends Layer {
 	}
 
 	@Override
-	public void send(Message msg) {
+	public void onSend(Message msg) {
 		sendDown(msg);
 	}
 
 	@Override
-	public List<Message> process(Message msg) {
+	public List<Message> onReceive(Message msg) {
 		return new ArrayList<Message>(Arrays.asList(msg));
 	}
 	
@@ -74,5 +74,4 @@ public class ApplicationLayer extends Layer {
 		// TODO remove
 		Printer.printDebug("My group is: " + peer.getGroup().toString());
 	}
-
 }

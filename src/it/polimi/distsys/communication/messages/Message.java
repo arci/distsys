@@ -10,5 +10,7 @@ public interface Message extends Serializable {
     
     public void onReceive(Layer layer);
     
+    public void onSend(Layer layer);
+    
 	public Message unpack();
 }

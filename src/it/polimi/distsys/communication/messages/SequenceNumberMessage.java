@@ -39,4 +39,10 @@ public class SequenceNumberMessage implements MessageDecorator {
 		return ID;
 	}
 
+	@Override
+	public void onSend(Layer layer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class Peer {
-	public static boolean DEBUG = false;
+	public static boolean DEBUG = true;
 	protected Integer ID;
 	protected Group group;
 	protected Receptionist receptionist;

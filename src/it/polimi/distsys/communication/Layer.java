@@ -1,19 +1,29 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.communication.messages.Message;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import it.polimi.distsys.communication.messages.Message;
 
 public abstract class Layer {
 	protected Layer above;
 	protected Layer underneath;
 	protected boolean sendUp;
+	protected boolean sendDown;
 	protected List<Message> toReceive;
 	
 	public Layer() {
 		sendUp = true;
+		sendDown = true;
 		toReceive = new ArrayList<Message>();
+	}
+	
+	public void send(Message msg){
+		msg.onSend(this);
+		if(sendDown){
+			onSend(msg);
+		}
+		sendDown = true;
 	}
 
 	public List<Message> receive(List<Message> msgs){
@@ -23,7 +33,7 @@ public abstract class Layer {
 		for(Message m : msgs){
 			m.onReceive(this);
 			if(sendUp){
-				cloned.addAll(process(m));
+				cloned.addAll(onReceive(m));
 			}
 			sendUp = true;
 		}
@@ -31,8 +41,12 @@ public abstract class Layer {
 		return cloned;
 	}
 	
-	public void stop(){
+	public void stopReceiving(){
 		sendUp = false;
+	}
+	
+	public void stopSending(){
+		sendDown = false;
 	}
 	
 	public void setAbove(Layer above) {
@@ -50,8 +64,8 @@ public abstract class Layer {
 	public void sendDown(Message msg){
 		underneath.send(msg);
 	}
-	
-	public abstract void send(Message msg);
-	public abstract List<Message> process(Message msg);
+
+	public abstract List<Message> onReceive(Message msg);
+	public abstract void onSend(Message msg);
 
 }

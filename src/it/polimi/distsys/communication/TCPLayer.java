@@ -71,9 +71,15 @@ public class TCPLayer extends Layer {
 	}
 
 	@Override
-	public List<Message> process(Message msg) {
+	public List<Message> onReceive(Message msg) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void onSend(Message msg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
