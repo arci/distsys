@@ -1,6 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.components.Printer;
 
 public class SequenceNumberMessage implements MessageDecorator {
 	private static final long serialVersionUID = -6506203353941938533L;
@@ -15,7 +16,7 @@ public class SequenceNumberMessage implements MessageDecorator {
 
 	@Override
 	public void display() {
-		System.out.println(this.toString());
+		Printer.printDebug(this.toString());
 		message.display();
 	}
 

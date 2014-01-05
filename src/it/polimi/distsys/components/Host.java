@@ -3,9 +3,7 @@ package it.polimi.distsys.components;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.Stack;
 import it.polimi.distsys.communication.factories.StackFactory;
-import it.polimi.distsys.communication.messages.LeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
-import it.polimi.distsys.communication.messages.Signature;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,14 +69,7 @@ public class Host {
 	}
 
 	public void addIncomingMessages(List<Message> msgs) {
-		List<Message> decoratedMsgs = new ArrayList<Message>();
-		for (Message m : msgs) {
-			if (m == null) {
-				m = new LeaveMessage(getID());
-			}
-			decoratedMsgs.add(new Signature(this, m));
-		}
-		coordinator.addIncomingMessages(decoratedMsgs);
+		coordinator.addIncomingMessages(msgs);
 	}
 
 	public List<Message> getIncomingMessages() {

@@ -3,6 +3,7 @@ package it.polimi.distsys.communication;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.NACKMessage;
 import it.polimi.distsys.communication.messages.SequenceNumberMessage;
+import it.polimi.distsys.components.Printer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +34,7 @@ public class ReliableLayer extends Layer {
 	public List<Message> process(Message msg) {
 		List<Message> toReceive = new ArrayList<Message>();
 
-		System.out.println(getClass().getCanonicalName() + ": "
+		Printer.printDebug(getClass().getCanonicalName() + ": "
 				+ msg.toString());
 		SequenceNumberMessage sn = (SequenceNumberMessage) msg;
 		Integer ID = sn.getID();

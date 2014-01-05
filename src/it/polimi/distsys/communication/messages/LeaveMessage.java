@@ -2,6 +2,7 @@ package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.ApplicationLayer;
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.components.Printer;
 
 public class LeaveMessage implements Message {
 	private Integer leaverID;
@@ -15,7 +16,7 @@ public class LeaveMessage implements Message {
 	@Override
 	public void display() {
 		// TODO Auto-generated method stub
-		System.out.println("display on " + getClass().getCanonicalName());
+		Printer.printDebug(getClass().getCanonicalName() + "received!");
 	}
 
 	@Override

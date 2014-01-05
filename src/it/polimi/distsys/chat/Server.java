@@ -7,6 +7,7 @@ public class Server extends Peer {
 	public Server(int port) {
 		super(port);
 		ID = DEFAULT_ID;
+		DEBUG = true;
 	}
 
 	// TODO remove... Only to see things work

@@ -2,6 +2,7 @@ package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.ApplicationLayer;
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.components.Printer;
 
 import java.net.InetAddress;
 
@@ -19,7 +20,7 @@ public class JoinMessage implements Message {
 
 	@Override
 	public void display() {
-		System.out.println(getClass().getCanonicalName() + " received!");
+		Printer.printDebug(getClass().getCanonicalName() + " received!");
 	}
 
 	@Override

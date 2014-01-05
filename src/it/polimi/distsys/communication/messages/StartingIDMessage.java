@@ -2,6 +2,7 @@ package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.ApplicationLayer;
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.components.Printer;
 
 public class StartingIDMessage implements Message {
 	private Integer ID;
@@ -14,7 +15,7 @@ public class StartingIDMessage implements Message {
 
 	@Override
 	public void display() {
-		System.out.println(getClass().getCanonicalName() + ": " + ID);
+		Printer.printDebug(getClass().getCanonicalName() + ": " + ID);
 	}
 
 	@Override

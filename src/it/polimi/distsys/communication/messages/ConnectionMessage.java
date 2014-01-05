@@ -2,6 +2,7 @@ package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.ApplicationLayer;
 import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.components.Printer;
 
 import java.net.InetAddress;
 
@@ -17,8 +18,7 @@ public class ConnectionMessage implements Message {
 
 	@Override
 	public void display() {
-		System.out.print(getClass().getCanonicalName() + " received:  ");
-		System.out.print(this.toString() + "\n");
+		Printer.printDebug(getClass().getCanonicalName() + " received:  " + this.toString());
 	}
 
 	@Override

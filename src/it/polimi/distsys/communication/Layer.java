@@ -17,15 +17,18 @@ public abstract class Layer {
 	}
 
 	public List<Message> receive(List<Message> msgs){
+		List<Message> cloned = new ArrayList<Message>(toReceive);
+		toReceive.clear();
+		
 		for(Message m : msgs){
 			m.onReceive(this);
 			if(sendUp){
-				toReceive.addAll(process(m));
+				cloned.addAll(process(m));
 			}
 			sendUp = true;
 		}
 		
-		return toReceive;
+		return cloned;
 	}
 	
 	public void stop(){
