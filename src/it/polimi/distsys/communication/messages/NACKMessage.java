@@ -31,6 +31,7 @@ public class NACKMessage implements Message {
 	public void onReceive(Layer layer) {
 		try {
 			ReliableLayer rel = (ReliableLayer) layer;
+			rel.stopReceiving();
 			rel.resend(ID);
 		} catch (ClassCastException e) {
 			// TODO: handle exception

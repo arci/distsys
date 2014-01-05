@@ -65,21 +65,21 @@ public class TCPLayer extends Layer {
 
 		try {
 			return sendUp(new ArrayList<Message>(Arrays.asList(msg)));
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			return new ArrayList<Message>(Arrays.asList(msg));
 		}
 	}
 
 	@Override
-	public List<Message> onReceive(Message msg) {
+	public List<Message> processOnReceive(Message msg) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void onSend(Message msg) {
+	public Message processOnSend(Message msg) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 }

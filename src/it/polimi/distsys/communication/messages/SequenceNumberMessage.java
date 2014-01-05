@@ -17,7 +17,6 @@ public class SequenceNumberMessage implements MessageDecorator {
 	@Override
 	public void display() {
 		Printer.printDebug(this.toString());
-		message.display();
 	}
 
 	@Override

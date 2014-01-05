@@ -17,7 +17,6 @@ public class ReliableLayer extends Layer {
 	private Map<Integer, Message> sendingQueue;
 	private Integer lastID;
 	private int ID;
-	
 
 	public ReliableLayer() {
 		super();
@@ -28,15 +27,15 @@ public class ReliableLayer extends Layer {
 	}
 
 	@Override
-	public void onSend(Message msg) {
+	public Message processOnSend(Message msg) {
 		ID++;
 		Message toSend = new SequenceNumberMessage(ID, msg);
 		sendingQueue.put(ID, msg);
-		underneath.send(toSend);
+		return toSend;
 	}
 
 	@Override
-	public List<Message> onReceive(Message msg) {
+	public List<Message> processOnReceive(Message msg) {
 		List<Message> toReceive = new ArrayList<Message>();
 
 		Printer.printDebug(getClass().getCanonicalName() + ": "
@@ -51,6 +50,7 @@ public class ReliableLayer extends Layer {
 		for (int i = 1; i < offset; i++) {
 			if (!receivingQueue.keySet().contains(lastID + i)) {
 				receivingQueue.put(lastID + i, null);
+				Printer.printDebug("Adding null message " + (lastID + i));
 				sendDown(new NACKMessage(lastID + i));
 			}
 		}
@@ -61,33 +61,33 @@ public class ReliableLayer extends Layer {
 		for (Integer i : sorted) {
 			Message element = receivingQueue.get(i);
 			if (element == null) {
+				Printer.printDebug("Stopping at id " + i);
 				break;
 			} else {
+				Printer.printDebug("Adding to receive list message " + i);
 				receivingQueue.remove(i);
 				lastID = i;
 				toReceive.add(element);
 			}
 		}
 
-		try {
-			return sendUp(toReceive);
-		} catch (NullPointerException e) {
-			return toReceive;
-		}
+		return toReceive;
+
 	}
-	
-	public void resend(Integer messageID){
+
+	public void resend(Integer messageID) {
 		Printer.printDebug("Resending message with ID " + messageID);
-		sendDown(new SequenceNumberMessage(messageID, sendingQueue.get(messageID)));
+		sendDown(new SequenceNumberMessage(messageID,
+				sendingQueue.get(messageID)));
 	}
 
 	public void sendWOffset(int offset, Message msg) {
-		for(int i = 1; i< offset; i++){
+		for (int i = 1; i < offset; i++) {
 			sendingQueue.put(ID + i, new StringMessage("Filler message"));
 		}
 		ID += offset;
 		Message toSend = new SequenceNumberMessage(ID, msg);
 		sendingQueue.put(ID, msg);
-		underneath.send(toSend);
+		sendDown(toSend);
 	}
 }

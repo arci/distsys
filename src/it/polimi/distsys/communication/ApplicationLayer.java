@@ -28,12 +28,12 @@ public class ApplicationLayer extends Layer {
 	}
 
 	@Override
-	public void onSend(Message msg) {
-		sendDown(msg);
+	public Message processOnSend(Message msg) {
+		return msg;
 	}
 
 	@Override
-	public List<Message> onReceive(Message msg) {
+	public List<Message> processOnReceive(Message msg) {
 		return new ArrayList<Message>(Arrays.asList(msg));
 	}
 	

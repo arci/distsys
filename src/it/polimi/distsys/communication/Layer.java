@@ -6,39 +6,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Layer {
-	protected Layer above;
-	protected Layer underneath;
-	protected boolean sendUp;
-	protected boolean sendDown;
-	protected List<Message> toReceive;
+	private Layer above;
+	private Layer underneath;
+	private boolean sendUp;
+	private boolean sendDown;
 	
 	public Layer() {
 		sendUp = true;
 		sendDown = true;
-		toReceive = new ArrayList<Message>();
 	}
 	
 	public void send(Message msg){
 		msg.onSend(this);
 		if(sendDown){
-			onSend(msg);
+			msg = processOnSend(msg);
+			sendDown(msg);
 		}
 		sendDown = true;
 	}
 
 	public List<Message> receive(List<Message> msgs){
-		List<Message> cloned = new ArrayList<Message>(toReceive);
-		toReceive.clear();
+		List<Message> toReceive = new ArrayList<Message>();
 		
 		for(Message m : msgs){
 			m.onReceive(this);
 			if(sendUp){
-				cloned.addAll(onReceive(m));
+				toReceive.addAll(processOnReceive(m));
 			}
 			sendUp = true;
 		}
 		
-		return cloned;
+		return sendUp(toReceive);
 	}
 	
 	public void stopReceiving(){
@@ -65,7 +63,7 @@ public abstract class Layer {
 		underneath.send(msg);
 	}
 
-	public abstract List<Message> onReceive(Message msg);
-	public abstract void onSend(Message msg);
+	public abstract List<Message> processOnReceive(Message msg);
+	public abstract Message processOnSend(Message msg);
 
 }
