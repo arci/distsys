@@ -1,10 +1,10 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.chat.commands.Command;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.components.Group;
 import it.polimi.distsys.components.Host;
 import it.polimi.distsys.components.MessageQueue;
+import it.polimi.distsys.components.Printer;
 import it.polimi.distsys.components.Receptionist;
 
 import java.io.IOException;
@@ -14,12 +14,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class Peer {
+	public static boolean DEBUG = true;
 	protected Integer ID;
 	protected Group group;
 	protected Receptionist receptionist;
 	protected ServerSocket serverSocket;
 	protected MessageQueue incoming;
-	protected Command command;
 
 	public Peer(int port) {
 		super();
@@ -34,12 +34,8 @@ public abstract class Peer {
 		}
 	}
 	
-	public void setCommand(Command command) {
-		this.command = command;
-	}
-	
-	public void onReceive(Host sender){
-		command.execute(this, sender);
+	public void join(Host host){
+		group.join(host);
 	}
 
 	public void accept() {
@@ -72,8 +68,7 @@ public abstract class Peer {
 		while (itr.hasNext()) {
 			Host receiver = itr.next();
 			if (!receiver.equals(host)) {
-				// TODO remove println
-				System.out.println("SendExceptOne to " + receiver.getAddress()
+				Printer.printDebug("SendExceptOne to " + receiver.getAddress()
 						+ ":" + receiver.getPort());
 				receiver.addOutgoingMessage(msg);
 			}

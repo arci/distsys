@@ -1,8 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.commands.StartingIDCommand;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.ApplicationLayer;
+import it.polimi.distsys.communication.Layer;
 
 public class StartingIDMessage implements Message {
 	private Integer ID;
@@ -19,10 +18,11 @@ public class StartingIDMessage implements Message {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		receiver.setCommand(new StartingIDCommand(ID));
-		receiver.onReceive(sender);
-		System.out.println("My ID is now " + receiver.getID());
+	public void onReceive(Layer layer) {
+//		receiver.setCommand(new StartingIDCommand(ID));
+//		receiver.onReceive(sender);
+		ApplicationLayer app = (ApplicationLayer) layer;
+		app.startingID(ID);
 	}
 
 	@Override

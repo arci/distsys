@@ -1,34 +1,34 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.VectorClock;
-import it.polimi.distsys.components.Host;
 
 public class VectorClockMessage implements MessageDecorator {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3674718470667194111L;
 	private Message message;
-    private VectorClock clock;
+	private VectorClock clock;
 
-    public VectorClockMessage(Message message, VectorClock clock) {
-    	super();
-    	this.message=message;
-    	this.clock = clock;
-    	
-    }
+	public VectorClockMessage(Message message, VectorClock clock) {
+		super();
+		this.message = message;
+		this.clock = clock;
 
-    @Override
-    public void display() {
+	}
 
-	System.out.println("display on " + getClass().getCanonicalName() + clock.toString());
-    }
+	@Override
+	public void display() {
 
-    @Override
-    public Message unpack() {
-	return message;
-    }
+		System.out.println("display on " + getClass().getCanonicalName()
+				+ clock.toString());
+	}
+
+	@Override
+	public Message unpack() {
+		return message;
+	}
 
 	@Override
 	public String toString() {
@@ -37,11 +37,9 @@ public class VectorClockMessage implements MessageDecorator {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
+	public void onReceive(Layer layer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
-    
 }

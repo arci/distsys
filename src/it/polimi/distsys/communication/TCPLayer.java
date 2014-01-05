@@ -13,10 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TCPLayer implements Layer {
+public class TCPLayer extends Layer {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	private Layer above;
 
 	public TCPLayer(InputStream in, OutputStream out) {
 		super();
@@ -30,7 +29,7 @@ public class TCPLayer implements Layer {
 	}
 
 	@Override
-	public Message send(Message msg) {
+	public void send(Message msg) {
 		try {
 			out.writeObject(msg);
 			out.flush();
@@ -39,7 +38,6 @@ public class TCPLayer implements Layer {
 			e.printStackTrace();
 		}
 
-		return null;
 	}
 
 	@Override
@@ -66,14 +64,16 @@ public class TCPLayer implements Layer {
 		}
 
 		try {
-			return above.receive(new ArrayList<Message>(Arrays.asList(msg)));
+			return sendUp(new ArrayList<Message>(Arrays.asList(msg)));
 		} catch (Exception e) {
 			return new ArrayList<Message>(Arrays.asList(msg));
 		}
 	}
 
-	public void setAbove(Layer above) {
-		this.above = above;
+	@Override
+	public List<Message> process(Message msg) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

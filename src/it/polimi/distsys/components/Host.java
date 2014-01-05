@@ -34,7 +34,7 @@ public class Host {
 		outgoing = new MessageQueue();
 
 		try {
-			Stack stack = StackFactory.makeTCPIDStack(getIn(), getOut());
+			Stack stack = StackFactory.makeTCPIDStack(coordinator, this, getIn(), getOut());
 			sender = new RunnableSender(this, stack,  null);
 			receiver = new RunnableReceiver(this, stack, null);
 

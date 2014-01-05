@@ -1,7 +1,6 @@
 package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.messages.Message;
-import it.polimi.distsys.communication.messages.Signature;
 
 import java.util.List;
 
@@ -16,18 +15,9 @@ public class Displayer implements Runnable {
 	public void run() {
 		while (true) {
 			List<Message> messages = peer.getIncomingMessages();
-			// Iterator<Host> itr = group.iterator();
-			//
-			// while (itr.hasNext()) {
-			// for (Message m : messages) {
-			// itr.next().notifyObservers(m);
-			// }
-			// }
 
 			for (Message m : messages) {
-				Signature signature = (Signature) m;
 				m.display();
-				m.onReceive(peer, signature.getSender());
 			}
 		}
 	}

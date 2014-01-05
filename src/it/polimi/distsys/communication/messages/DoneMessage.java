@@ -1,7 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.Layer;
 
 public class DoneMessage implements Message {
 
@@ -22,7 +21,7 @@ public class DoneMessage implements Message {
     }
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
+	public void onReceive(Layer layer) {
 		// TODO Auto-generated method stub
 		
 	}

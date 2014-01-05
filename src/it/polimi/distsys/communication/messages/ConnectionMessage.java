@@ -1,8 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.commands.ConnectCommand;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.ApplicationLayer;
+import it.polimi.distsys.communication.Layer;
 
 import java.net.InetAddress;
 
@@ -33,8 +32,11 @@ public class ConnectionMessage implements Message {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		receiver.setCommand(new ConnectCommand(address, port));
-		receiver.onReceive(sender);
+	public void onReceive(Layer layer) {
+//		receiver.setCommand(new ConnectCommand(address, port));
+//		receiver.onReceive(sender);
+		
+		ApplicationLayer app = (ApplicationLayer) layer;
+		app.connect(address, port);
 	}
 }

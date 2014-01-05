@@ -1,8 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.commands.LeaveCommand;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.Layer;
 
 public class InterruptedMessage implements Message {
 
@@ -13,17 +11,22 @@ public class InterruptedMessage implements Message {
 		System.out.println(getClass().getCanonicalName() + " received!");
 	}
 
-	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		sender.setActive(false);
-		receiver.setCommand(new LeaveCommand(sender.getID()));
-		receiver.onReceive(sender);
-	}
+//	public void onReceive(Peer receiver, Host sender) {
+//		sender.setActive(false);
+//		receiver.setCommand(new LeaveCommand(sender.getID()));
+//		receiver.onReceive(sender);
+//	}
 
 	@Override
 	public Message unpack() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void onReceive(Layer layer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

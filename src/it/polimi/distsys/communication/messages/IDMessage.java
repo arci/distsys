@@ -1,8 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.commands.IDCommand;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.ApplicationLayer;
+import it.polimi.distsys.communication.Layer;
 
 public class IDMessage implements Message {
 
@@ -19,11 +18,14 @@ public class IDMessage implements Message {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		receiver.setCommand(new IDCommand(ID));
-		receiver.onReceive(sender);
-		System.out.println("Host " + sender.getAddress().getHostAddress() + ":"
-				+ sender.getPort() + " has ID " + sender.getID());
+	public void onReceive(Layer layer) {
+//		receiver.setCommand(new IDCommand(ID));
+//		receiver.onReceive(sender);
+//		System.out.println("Host " + sender.getAddress().getHostAddress() + ":"
+//				+ sender.getPort() + " has ID " + sender.getID());
+		
+		ApplicationLayer app = (ApplicationLayer) layer;
+		app.id(ID);
 	}
 
 	@Override

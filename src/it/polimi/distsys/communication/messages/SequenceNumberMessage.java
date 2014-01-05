@@ -1,7 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.Layer;
 
 public class SequenceNumberMessage implements MessageDecorator {
 	private static final long serialVersionUID = -6506203353941938533L;
@@ -21,8 +20,8 @@ public class SequenceNumberMessage implements MessageDecorator {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		message.onReceive(receiver, sender);
+	public void onReceive(Layer layer) {
+		//does nothing
 	}
 	
 	@Override

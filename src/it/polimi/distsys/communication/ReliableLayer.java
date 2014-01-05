@@ -10,12 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ReliableLayer implements Layer {
+public class ReliableLayer extends Layer {
 	private Map<Integer, Message> receivingQueue;
 	private Integer lastID;
 	private int ID;
-	private Layer above;
-	private Layer underneath;
 
 	public ReliableLayer() {
 		super();
@@ -25,62 +23,50 @@ public class ReliableLayer implements Layer {
 	}
 
 	@Override
-	public List<Message> receive(List<Message> msgs) {
+	public void send(Message msg) {
+		ID++;
+		Message toSend = new SequenceNumberMessage(ID, msg);
+		underneath.send(toSend);
+	}
+
+	@Override
+	public List<Message> process(Message msg) {
 		List<Message> toReceive = new ArrayList<Message>();
 
-		for (Message m : msgs) {
-			System.out.println(getClass().getCanonicalName() + ": "
-					+ m.toString());
-			SequenceNumberMessage sn = (SequenceNumberMessage) m;
-			Integer ID = sn.getID();
+		System.out.println(getClass().getCanonicalName() + ": "
+				+ msg.toString());
+		SequenceNumberMessage sn = (SequenceNumberMessage) msg;
+		Integer ID = sn.getID();
 
-			Integer offset = ID - lastID;
+		Integer offset = ID - lastID;
 
-			receivingQueue.put(ID, sn.unpack());
+		receivingQueue.put(ID, sn.unpack());
 
-			for (int i = 1; i < offset; i++) {
-				if (!receivingQueue.keySet().contains(lastID + i)) {
-					receivingQueue.put(lastID + i, null);
-					underneath.send(new NACKMessage(lastID + i));
-				}
+		for (int i = 1; i < offset; i++) {
+			if (!receivingQueue.keySet().contains(lastID + i)) {
+				receivingQueue.put(lastID + i, null);
+				sendDown(new NACKMessage(lastID + i));
 			}
+		}
 
-			List<Integer> sorted = new ArrayList<Integer>(
-					receivingQueue.keySet());
-			Collections.sort(sorted);
+		List<Integer> sorted = new ArrayList<Integer>(receivingQueue.keySet());
+		Collections.sort(sorted);
 
-			for (Integer i : sorted) {
-				Message element = receivingQueue.get(i);
-				if (element == null) {
-					break;
-				} else {
-					receivingQueue.remove(i);
-					lastID = i;
-					toReceive.add(element);
-				}
+		for (Integer i : sorted) {
+			Message element = receivingQueue.get(i);
+			if (element == null) {
+				break;
+			} else {
+				receivingQueue.remove(i);
+				lastID = i;
+				toReceive.add(element);
 			}
 		}
 
 		try {
-			return above.receive(toReceive);
+			return sendUp(toReceive);
 		} catch (NullPointerException e) {
 			return toReceive;
 		}
-
-	}
-
-	@Override
-	public Message send(Message msg) {
-		ID++;
-		Message toSend = new SequenceNumberMessage(ID, msg);
-		return underneath.send(toSend);
-	}
-
-	public void setAbove(Layer above) {
-		this.above = above;
-	}
-
-	public void setUnderneath(Layer underneath) {
-		this.underneath = underneath;
 	}
 }

@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.components.Printer;
 
 public class StringMessage implements Message {
 	private static final long serialVersionUID = 9052245167443004983L;
@@ -14,7 +14,7 @@ public class StringMessage implements Message {
 
 	@Override
 	public void display() {
-		System.err.println(content);
+		Printer.print(content);
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class StringMessage implements Message {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
+	public void onReceive(Layer layer) {
 		// TODO Auto-generated method stub
 		
 	}

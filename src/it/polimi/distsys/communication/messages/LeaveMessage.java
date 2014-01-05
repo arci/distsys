@@ -1,8 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.commands.LeaveCommand;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.ApplicationLayer;
+import it.polimi.distsys.communication.Layer;
 
 public class LeaveMessage implements Message {
 	private Integer leaverID;
@@ -25,9 +24,12 @@ public class LeaveMessage implements Message {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		receiver.setCommand(new LeaveCommand(leaverID));
-		receiver.onReceive(sender);
+	public void onReceive(Layer layer) {
+//		receiver.setCommand(new LeaveCommand(leaverID));
+//		receiver.onReceive(sender);
+		
+		ApplicationLayer app = (ApplicationLayer) layer;
+		app.leave(leaverID);
 	}
 
 }

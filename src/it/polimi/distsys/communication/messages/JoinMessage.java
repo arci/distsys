@@ -1,8 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.commands.JoinCommand;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.ApplicationLayer;
+import it.polimi.distsys.communication.Layer;
 
 import java.net.InetAddress;
 
@@ -34,10 +33,13 @@ public class JoinMessage implements Message {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		System.out.println("Joining client" + ID + " on " + address.getHostAddress() + ":"
-				+ port);
-		receiver.setCommand(new JoinCommand(ID, address, port));
-		receiver.onReceive(sender);
+	public void onReceive(Layer layer) {
+//		System.out.println("Joining client" + ID + " on " + address.getHostAddress() + ":"
+//				+ port);
+//		receiver.setCommand(new JoinCommand(ID, address, port));
+//		receiver.onReceive(sender);
+		
+		ApplicationLayer app = (ApplicationLayer) layer;
+		app.join(ID, address, port);
 	}
 }

@@ -1,7 +1,6 @@
 package it.polimi.distsys.components;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.chat.commands.BindCommand;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -25,8 +24,7 @@ public class Receptionist implements Runnable {
 				Socket socket = in.accept();
 				System.out.println("Received connection from "
 						+ socket.getInetAddress() + ":" + socket.getPort());
-				peer.setCommand(new BindCommand(socket));
-				peer.onReceive(null);
+				peer.join(new Host(null, peer, socket));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

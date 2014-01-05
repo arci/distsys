@@ -1,7 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.components.Host;
+import it.polimi.distsys.communication.Layer;
 
 import java.io.Serializable;
 
@@ -9,7 +8,7 @@ public interface Message extends Serializable {
 
     public void display();
     
-    public void onReceive(Peer receiver, Host sender);
+    public void onReceive(Layer layer);
     
 	public Message unpack();
 }

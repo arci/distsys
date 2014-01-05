@@ -1,6 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.components.Host;
 
 public class Signature implements MessageDecorator {
@@ -30,8 +30,8 @@ public class Signature implements MessageDecorator {
 	}
 
 	@Override
-	public void onReceive(Peer receiver, Host sender) {
-		message.onReceive(receiver, sender);
+	public void onReceive(Layer layer) {
+		//does nothing
 	}
 
 }
