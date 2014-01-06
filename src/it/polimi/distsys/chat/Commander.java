@@ -20,6 +20,8 @@ public class Commander {
 			for (int i = 1; i < parts.length; i++) {
 				param += parts[i] + " ";
 			}
+
+			param = param.substring(0, param.length() - 1);
 		}
 
 		Action action = null;

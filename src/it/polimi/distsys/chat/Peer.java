@@ -15,6 +15,7 @@ import java.util.List;
 
 public abstract class Peer {
 	public static boolean DEBUG = true;
+	protected String nickname;
 	protected Integer ID;
 	protected Group group;
 	protected Receptionist receptionist;
@@ -93,5 +94,13 @@ public abstract class Peer {
 
 	public Group getGroup() {
 		return group;
+	}
+	
+	public String getNickname() {
+		return nickname;
+	}
+	
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 }

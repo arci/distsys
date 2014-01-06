@@ -23,7 +23,7 @@ public class Reader implements Runnable {
 			if (str.equals("leave")) {
 				break;
 			}
-			Message msg = new StringMessage(str);
+			Message msg = new StringMessage(peer.getNickname() + " > " + str);
 
 			if (str.startsWith("/")) {
 				commander.execute(str.substring(1));

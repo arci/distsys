@@ -48,6 +48,7 @@ public class ApplicationLayer extends Layer {
 	
 	public void startingID(Integer ID){
 		peer.setID(ID);
+		peer.setNickname("sgcc" + ID);
 		Printer.printDebug("My ID is now " + ID);
 	}
 	

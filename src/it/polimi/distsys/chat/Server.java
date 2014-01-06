@@ -8,6 +8,7 @@ public class Server extends Peer {
 		super(port);
 		ID = DEFAULT_ID;
 		DEBUG = true;
+		nickname = "server";
 	}
 
 	// TODO remove... Only to see things work

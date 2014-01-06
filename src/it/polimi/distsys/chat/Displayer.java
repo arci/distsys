@@ -17,7 +17,6 @@ public class Displayer implements Runnable {
 			List<Message> messages = peer.getIncomingMessages();
 
 			for (Message m : messages) {
-				System.out.print("Displayer says: ");
 				m.display();
 			}
 		}
