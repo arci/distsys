@@ -11,6 +11,7 @@ public class Client extends Peer {
 
 	public Client(int accessPort, String serverAddress, int serverPort) {
 		super(accessPort);
+		DEBUG = false;
 		try {
 			this.server = new Host(Server.DEFAULT_ID, this, new Socket(
 					serverAddress, serverPort));

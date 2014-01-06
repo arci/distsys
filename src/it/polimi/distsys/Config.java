@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class Config {
 	private static Properties actions;
-	private static String ACTIONS_FILE_PATH = "src/it/polimi/distsys/actions.properties";
+	private static String ACTIONS_FILE_PATH = "actions.properties";
 	
 	public static void init(){
 		actions = new Properties();
