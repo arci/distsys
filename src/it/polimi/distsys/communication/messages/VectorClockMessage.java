@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.Layer;
-import it.polimi.distsys.communication.VectorClock;
+import it.polimi.distsys.components.VectorClock;
 
 public class VectorClockMessage implements MessageDecorator {
 	/**

@@ -1,8 +1,5 @@
-package it.polimi.distsys.communication.factories;
+package it.polimi.distsys.communication;
 
-import it.polimi.distsys.communication.ReliableLayer;
-import it.polimi.distsys.communication.Stack;
-import it.polimi.distsys.communication.MulticastLayer;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

@@ -1,4 +1,4 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.components;
 
 import java.util.HashMap;
 import java.util.Iterator;
