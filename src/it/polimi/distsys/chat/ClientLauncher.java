@@ -14,7 +14,7 @@ public class ClientLauncher {
 		client.startDisplayer();
 		client.startReader();
 		
-		Printer.printDebug(null, "Client ready");
+		Printer.printDebug(ClientLauncher.class.getClass(), "Client ready");
 	}
 
 }

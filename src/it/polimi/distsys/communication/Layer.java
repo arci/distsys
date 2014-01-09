@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Layer {
-	private Layer above;
-	private Layer underneath;
-	private boolean sendUp;
-	private boolean sendDown;
+	protected Layer above;
+	protected Layer underneath;
+	protected boolean sendUp;
+	protected boolean sendDown;
 
 	public Layer() {
 		sendUp = true;

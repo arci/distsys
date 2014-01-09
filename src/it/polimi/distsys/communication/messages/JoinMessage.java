@@ -35,11 +35,6 @@ public class JoinMessage implements Message {
 
 	@Override
 	public void onReceive(Layer layer) {
-//		System.out.println("Joining client" + ID + " on " + address.getHostAddress() + ":"
-//				+ port);
-//		receiver.setCommand(new JoinCommand(ID, address, port));
-//		receiver.onReceive(sender);
-		
 		ApplicationLayer app = (ApplicationLayer) layer;
 		app.join(ID, address, port);
 	}

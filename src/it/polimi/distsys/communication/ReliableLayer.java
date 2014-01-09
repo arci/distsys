@@ -105,7 +105,6 @@ public class ReliableLayer extends Layer {
 
 	@Override
 	public void join() throws IOException {
-		// TODO Auto-generated method stub
-
+		underneath.join();
 	}
 }

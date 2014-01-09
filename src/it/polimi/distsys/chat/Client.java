@@ -10,7 +10,7 @@ public class Client extends Peer {
 	}
 
 	public void startReader() {
-		new Thread(new Reader(this)).start();
+		new Thread(new AutomaticReader(this)).start();
 	}
 
 	public void startDisplayer() {

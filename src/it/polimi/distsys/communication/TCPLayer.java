@@ -1,6 +1,7 @@
 package it.polimi.distsys.communication;
 
 import it.polimi.distsys.communication.messages.Message;
+import it.polimi.distsys.components.Printer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -53,6 +54,8 @@ public class TCPLayer extends Layer {
 		byte[] buffer = new byte[1000] ;
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		socket.receive(packet);
+		
+		Printer.printDebug(getClass(), "received from: " + packet.getAddress().toString() + ":" + packet.getPort());
 		
 		ByteArrayInputStream bs = new ByteArrayInputStream(buffer);
 		ObjectInputStream os = new ObjectInputStream(new BufferedInputStream(bs));

@@ -24,16 +24,12 @@ public class NACKMessage implements Message {
 		return this;
 	}
 
-//	public void onReceive(Peer receiver, Host sender) {
-//		receiver.setCommand(new RetransmissionCommand(ID));
-//		receiver.onReceive(sender);
-//	}
-
 	@Override
 	public void onReceive(Layer layer) {
 		try {
 			ReliableLayer rel = (ReliableLayer) layer;
 			rel.stopReceiving();
+			rel.stopSending();
 			rel.resend(ID);
 		} catch (ClassCastException | IOException e) {
 			// TODO: handle exception
