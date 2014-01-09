@@ -2,6 +2,7 @@ package it.polimi.distsys.communication;
 
 import it.polimi.distsys.communication.messages.Message;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public abstract class Layer {
 		sendDown = true;
 	}
 
-	public void send(Message msg) {
+	public void send(Message msg) throws IOException {
 		msg.onSend(this);
 		if (sendDown) {
 			msg = processOnSend(msg);
@@ -25,7 +26,7 @@ public abstract class Layer {
 		sendDown = true;
 	}
 
-	public List<Message> receive(List<Message> msgs) {
+	public List<Message> receive(List<Message> msgs) throws IOException {
 		List<Message> toReceive = new ArrayList<Message>();
 
 		for (Message m : msgs) {
@@ -55,7 +56,7 @@ public abstract class Layer {
 		this.underneath = underneath;
 	}
 
-	public List<Message> sendUp(List<Message> msgs) {
+	public List<Message> sendUp(List<Message> msgs) throws IOException {
 		try {
 			return above.receive(msgs);
 		} catch (NullPointerException e) {
@@ -63,12 +64,14 @@ public abstract class Layer {
 		}
 	}
 
-	public void sendDown(Message msg) {
+	public void sendDown(Message msg) throws IOException {
 		underneath.send(msg);
 	}
 
 	public abstract List<Message> processOnReceive(Message msg);
 
 	public abstract Message processOnSend(Message msg);
+	
+	public abstract void join() throws IOException;
 
 }

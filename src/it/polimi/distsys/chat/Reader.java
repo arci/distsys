@@ -1,9 +1,9 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.communication.messages.LeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Reader implements Runnable {
@@ -23,17 +23,22 @@ public class Reader implements Runnable {
 			if (str.equals("leave")) {
 				break;
 			}
-			Message msg = new StringMessage(peer.getNickname() + " > " + str);
+			Message msg = new StringMessage(" > " + str);
 
 			if (str.startsWith("/")) {
 				commander.execute(str.substring(1));
 			} else {
-				peer.sendMulticast(msg);
+				try {
+					peer.send(msg);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
 		// Client client = (Client) peer;
-		peer.sendMulticast(new LeaveMessage(peer.getID()));
+		//peer.send(new LeaveMessage());
 		in.close();
 	}
 }

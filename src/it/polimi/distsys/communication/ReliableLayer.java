@@ -6,6 +6,7 @@ import it.polimi.distsys.communication.messages.SequenceNumberMessage;
 import it.polimi.distsys.communication.messages.StringMessage;
 import it.polimi.distsys.components.Printer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,7 +52,12 @@ public class ReliableLayer extends Layer {
 			if (!receivingQueue.keySet().contains(lastID + i)) {
 				receivingQueue.put(lastID + i, null);
 				Printer.printDebug("Adding null message " + (lastID + i));
-				sendDown(new NACKMessage(lastID + i));
+				try {
+					sendDown(new NACKMessage(lastID + i));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -73,13 +79,13 @@ public class ReliableLayer extends Layer {
 
 	}
 
-	public void resend(Integer messageID) {
+	public void resend(Integer messageID) throws IOException {
 		Printer.printDebug("Resending message with ID " + messageID);
 		sendDown(new SequenceNumberMessage(messageID,
 				sendingQueue.get(messageID)));
 	}
 
-	public void sendWOffset(int offset, Message msg) {
+	public void sendWOffset(int offset, Message msg) throws IOException {
 		for (int i = 1; i < offset; i++) {
 			sendingQueue.put(ID + i, new StringMessage("Filler message"));
 		}
@@ -87,5 +93,11 @@ public class ReliableLayer extends Layer {
 		Message toSend = new SequenceNumberMessage(ID, msg);
 		sendingQueue.put(ID, msg);
 		sendDown(toSend);
+	}
+
+	@Override
+	public void join() throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }

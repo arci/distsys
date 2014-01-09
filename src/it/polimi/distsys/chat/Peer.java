@@ -1,106 +1,37 @@
 package it.polimi.distsys.chat;
 
+import it.polimi.distsys.communication.Stack;
+import it.polimi.distsys.communication.factories.StackFactory;
 import it.polimi.distsys.communication.messages.Message;
-import it.polimi.distsys.components.Group;
-import it.polimi.distsys.components.Host;
-import it.polimi.distsys.components.MessageQueue;
-import it.polimi.distsys.components.Printer;
-import it.polimi.distsys.components.Receptionist;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class Peer {
 	public static boolean DEBUG = true;
 	protected String nickname;
 	protected Integer ID;
-	protected Group group;
-	protected Receptionist receptionist;
-	protected ServerSocket serverSocket;
-	protected MessageQueue incoming;
+	protected Stack stack;
 
-	public Peer(int port) {
+	public Peer() throws IOException {
 		super();
-		group = new Group();
-		incoming = new MessageQueue();
-		try {
-			serverSocket = new ServerSocket(port);
-			receptionist = new Receptionist(serverSocket, this);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		stack = StackFactory.makeTCPStack();
+		stack.join();
 	}
 	
-	public void join(Host host){
-		group.join(host);
+	public void send(Message m) throws IOException{
+		stack.send(m);
+	}
+	
+	public List<Message> receive() throws IOException{
+		return stack.receive(null);
 	}
 
-	public void accept() {
-		new Thread(receptionist).start();
-	}
-
-	public void addIncomingMessages(List<Message> msgs) {
-		incoming.addMessages(msgs);
-	}
-
-	public List<Message> getIncomingMessages() {
-		return incoming.getMessages();
-	}
-
-	public void sendUnicast(Host host, Message msg) {
-		host.addOutgoingMessage(msg);
-	}
-
-	public void sendMulticast(Message msg) {
-		Iterator<Host> itr = group.iterator();
-
-		while (itr.hasNext()) {
-			itr.next().addOutgoingMessage(msg);
-		}
-	}
-
-	public void sendExceptOne(Host host, Message msg) {
-		Iterator<Host> itr = group.iterator();
-
-		while (itr.hasNext()) {
-			Host receiver = itr.next();
-			if (!receiver.equals(host)) {
-				Printer.printDebug("SendExceptOne to " + receiver.getAddress()
-						+ ":" + receiver.getPort());
-				receiver.addOutgoingMessage(msg);
-			}
-		}
-	}
-
-	public InetAddress getAddress() {
-		return serverSocket.getInetAddress();
-	}
-
-	public int getListeningPort() {
-		return serverSocket.getLocalPort();
-	}
-
-	public Integer getID() {
-		return ID;
-	}
-
-	public void setID(Integer ID) {
-		this.ID = ID;
-	}
-
-	public Group getGroup() {
-		return group;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	
 	public String getNickname() {
 		return nickname;
-	}
-	
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
 	}
 }

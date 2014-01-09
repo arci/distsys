@@ -1,5 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
+import java.io.IOException;
+
 import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.ReliableLayer;
 import it.polimi.distsys.components.Printer;
@@ -33,7 +35,7 @@ public class NACKMessage implements Message {
 			ReliableLayer rel = (ReliableLayer) layer;
 			rel.stopReceiving();
 			rel.resend(ID);
-		} catch (ClassCastException e) {
+		} catch (ClassCastException | IOException e) {
 			// TODO: handle exception
 		}
 	}
