@@ -16,7 +16,7 @@ public class LeaveMessage implements Message {
 	@Override
 	public void display() {
 		// TODO Auto-generated method stub
-		Printer.printDebug(getClass().getCanonicalName() + "received!");
+		Printer.printDebug(getClass(), "received");
 	}
 
 	@Override

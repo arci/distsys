@@ -4,9 +4,10 @@ import it.polimi.distsys.chat.Peer;
 
 public class Printer {
 
-	public static void printDebug(String string) {
+	public static void printDebug(Class<?> clazz, String string) {
 		if (Peer.DEBUG) {
-			System.err.println(string);
+			
+			System.err.println(clazz.getSimpleName() + ": " + string);
 		}
 	}
 	

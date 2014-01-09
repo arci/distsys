@@ -20,7 +20,7 @@ public class JoinMessage implements Message {
 
 	@Override
 	public void display() {
-		Printer.printDebug(getClass().getCanonicalName() + " received!");
+		Printer.printDebug(getClass(), "received");
 	}
 
 	@Override

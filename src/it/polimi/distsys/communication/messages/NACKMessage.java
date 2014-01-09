@@ -16,7 +16,7 @@ public class NACKMessage implements Message {
 
 	@Override
 	public void display() {
-		Printer.printDebug("display on " + getClass().getCanonicalName());
+		Printer.printDebug(getClass(), "received");
 	}
 
 	@Override

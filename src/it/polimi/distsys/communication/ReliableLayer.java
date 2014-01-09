@@ -18,11 +18,13 @@ public class ReliableLayer extends Layer {
 	private Map<Integer, Message> sendingQueue;
 	private Integer lastID;
 	private int ID;
+	private int timeout;
 
 	public ReliableLayer() {
 		super();
 		ID = 0;
 		lastID = 0;
+		timeout = (int) (Math.random() * 10);
 		receivingQueue = new HashMap<Integer, Message>();
 		sendingQueue = new HashMap<Integer, Message>();
 	}
@@ -39,8 +41,7 @@ public class ReliableLayer extends Layer {
 	public List<Message> processOnReceive(Message msg) {
 		List<Message> toReceive = new ArrayList<Message>();
 
-		Printer.printDebug(getClass().getCanonicalName() + ": "
-				+ msg.toString());
+		Printer.printDebug(getClass(), msg.toString());
 		SequenceNumberMessage sn = (SequenceNumberMessage) msg;
 		Integer ID = sn.getID();
 
@@ -51,10 +52,17 @@ public class ReliableLayer extends Layer {
 		for (int i = 1; i < offset; i++) {
 			if (!receivingQueue.keySet().contains(lastID + i)) {
 				receivingQueue.put(lastID + i, null);
-				Printer.printDebug("Adding null message " + (lastID + i));
+				Printer.printDebug(getClass(), "Adding null message " + (lastID + i));
 				try {
-					sendDown(new NACKMessage(lastID + i));
+					Printer.printDebug(getClass(), "Sleeping for " + timeout);
+					Thread.sleep(timeout * 1000);
+					if (isSending()) {
+						sendDown(new NACKMessage(lastID + i));
+					}
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -80,7 +88,7 @@ public class ReliableLayer extends Layer {
 	}
 
 	public void resend(Integer messageID) throws IOException {
-		Printer.printDebug("Resending message with ID " + messageID);
+		Printer.printDebug(getClass(), "Resending message with ID " + messageID);
 		sendDown(new SequenceNumberMessage(messageID,
 				sendingQueue.get(messageID)));
 	}
@@ -98,6 +106,6 @@ public class ReliableLayer extends Layer {
 	@Override
 	public void join() throws IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

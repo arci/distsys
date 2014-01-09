@@ -47,6 +47,14 @@ public abstract class Layer {
 	public void stopSending() {
 		sendDown = false;
 	}
+	
+	public boolean isSending() {
+		return sendDown;
+	}
+	
+	public boolean isReceiving() {
+		return sendUp;
+	}
 
 	public void setAbove(Layer above) {
 		this.above = above;

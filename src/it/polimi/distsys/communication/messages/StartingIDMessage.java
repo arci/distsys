@@ -15,7 +15,7 @@ public class StartingIDMessage implements Message {
 
 	@Override
 	public void display() {
-		Printer.printDebug(getClass().getCanonicalName() + ": " + ID);
+		Printer.printDebug(getClass(), ID.toString());
 	}
 
 	@Override

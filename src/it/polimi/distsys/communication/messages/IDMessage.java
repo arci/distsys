@@ -15,16 +15,17 @@ public class IDMessage implements Message {
 
 	@Override
 	public void display() {
-		Printer.printDebug(getClass().getCanonicalName() + ": " + ID);
+		Printer.printDebug(getClass(), ID.toString());
 	}
 
 	@Override
 	public void onReceive(Layer layer) {
-//		receiver.setCommand(new IDCommand(ID));
-//		receiver.onReceive(sender);
-//		System.out.println("Host " + sender.getAddress().getHostAddress() + ":"
-//				+ sender.getPort() + " has ID " + sender.getID());
-		
+		// receiver.setCommand(new IDCommand(ID));
+		// receiver.onReceive(sender);
+		// System.out.println("Host " + sender.getAddress().getHostAddress() +
+		// ":"
+		// + sender.getPort() + " has ID " + sender.getID());
+
 		ApplicationLayer app = (ApplicationLayer) layer;
 		app.id(ID);
 	}
@@ -38,7 +39,7 @@ public class IDMessage implements Message {
 	@Override
 	public void onSend(Layer layer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

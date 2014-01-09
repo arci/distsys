@@ -18,7 +18,7 @@ public class ConnectionMessage implements Message {
 
 	@Override
 	public void display() {
-		Printer.printDebug(getClass().getCanonicalName() + " received:  " + this.toString());
+		Printer.printDebug(getClass(), this.toString());
 	}
 
 	@Override

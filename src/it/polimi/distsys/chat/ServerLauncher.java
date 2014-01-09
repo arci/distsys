@@ -16,7 +16,7 @@ public class ServerLauncher {
 		server.startDisplayer();
 		server.startReader();
 		
-		Printer.printDebug("Server ready");
+		Printer.printDebug(null, "Server ready");
 	}
 
 }
