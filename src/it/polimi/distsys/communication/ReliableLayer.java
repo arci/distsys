@@ -5,35 +5,39 @@ import it.polimi.distsys.communication.messages.NACKMessage;
 import it.polimi.distsys.communication.messages.SequenceNumberMessage;
 import it.polimi.distsys.communication.messages.StringMessage;
 import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.components.SequenceNumber;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ReliableLayer extends Layer {
-	private Map<Integer, Message> receivingQueue;
-	private Map<Integer, Message> sendingQueue;
-	private Integer lastID;
+	private List<Message> sendingQueue;
+	private Map<UUID, Integer> lastIDs;
 	private int ID;
 	private int timeout;
+	private UUID uniqueID;
+	private boolean sendNACK;
 
 	public ReliableLayer() {
 		super();
 		ID = 0;
-		lastID = 0;
+		sendNACK = true;
+		lastIDs = new HashMap<UUID, Integer>();
+		uniqueID = UUID.randomUUID();
 		timeout = (int) (Math.random() * 10);
-		receivingQueue = new HashMap<Integer, Message>();
-		sendingQueue = new HashMap<Integer, Message>();
+		sendingQueue = new ArrayList<Message>();
 	}
 
 	@Override
 	public Message processOnSend(Message msg) {
 		ID++;
-		Message toSend = new SequenceNumberMessage(ID, msg);
-		sendingQueue.put(ID, msg);
+		SequenceNumber sn = new SequenceNumber(uniqueID, ID);
+		SequenceNumberMessage toSend = new SequenceNumberMessage(sn, msg);
+		sendingQueue.add(toSend);
 		return toSend;
 	}
 
@@ -43,64 +47,75 @@ public class ReliableLayer extends Layer {
 
 		Printer.printDebug(getClass(), msg.toString());
 		SequenceNumberMessage sn = (SequenceNumberMessage) msg;
-		Integer ID = sn.getID();
 
-		Integer offset = ID - lastID;
+		UUID uuid = sn.getSender();
+		Integer msgid = sn.getSN();
 
-		receivingQueue.put(ID, sn.unpack());
-
-		for (int i = 1; i < offset; i++) {
-			if (!receivingQueue.keySet().contains(lastID + i)) {
-				receivingQueue.put(lastID + i, null);
-				Printer.printDebug(getClass(), "Adding null message " + (lastID + i));
-				try {
-					Printer.printDebug(getClass(), "Sleeping for " + timeout);
-					Thread.sleep(timeout * 1000);
-					if (isSending()) {
-						sendDown(new NACKMessage(lastID + i));
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		if (isMe(uuid)) {
+			return toReceive;
 		}
 
-		List<Integer> sorted = new ArrayList<Integer>(receivingQueue.keySet());
-		Collections.sort(sorted);
+		Integer lastID = lastIDs.get(uuid);
+		if (lastID == null) {
+			lastID = 0;
+		}
+		Integer offset = msgid - lastID;
 
-		for (Integer i : sorted) {
-			Message element = receivingQueue.get(i);
-			if (element == null) {
-				break;
-			} else {
-				receivingQueue.remove(i);
-				lastID = i;
-				toReceive.add(element);
+		if (offset == 1) {
+			// Printer.printDebug(getClass(), "offset == 1");
+			lastIDs.put(uuid, msgid);
+			toReceive.add(sn.unpack());
+		} else if (offset > 1) {
+			try {
+				Printer.printDebug(getClass(), "sleeping for " + timeout);
+				Thread.sleep(timeout * 1000);
+				if (sendNACK) {
+					Printer.printDebug(getClass(), "Sending NACK");
+					sendDown(new NACKMessage(new SequenceNumber(uuid, lastID)));
+				}
+				sendNACK = true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+
 		}
 
 		return toReceive;
-
 	}
 
-	public void resend(Integer messageID) throws IOException {
-		Printer.printDebug(getClass(), "Resending message with ID " + messageID);
-		sendDown(new SequenceNumberMessage(messageID,
-				sendingQueue.get(messageID)));
+	public void resend(SequenceNumber sn) throws IOException {
+		Printer.printDebug(getClass(), "Resending message with ID " + sn);
+		for (Message msg : sendingQueue) {
+			SequenceNumberMessage casted = (SequenceNumberMessage) msg;
+			if (casted.getSN() > sn.getMessageID()) {
+				sendDown(msg);
+			}
+		}
 	}
 
 	public void sendWOffset(int offset, Message msg) throws IOException {
 		for (int i = 1; i < offset; i++) {
-			sendingQueue.put(ID + i, new StringMessage("Filler message"));
+			Message m = new SequenceNumberMessage(new SequenceNumber(uniqueID,
+					ID + i), new StringMessage("Filler message"));
+			sendingQueue.add(m);
 		}
 		ID += offset;
-		Message toSend = new SequenceNumberMessage(ID, msg);
-		sendingQueue.put(ID, msg);
+		Message toSend = new SequenceNumberMessage(new SequenceNumber(uniqueID,
+				ID), msg);
+		sendingQueue.add(toSend);
 		sendDown(toSend);
+	}
+
+	public boolean isMe(UUID id) {
+		return id.equals(uniqueID);
+	}
+
+	public void stopNACK() {
+		sendNACK = false;
 	}
 
 	@Override

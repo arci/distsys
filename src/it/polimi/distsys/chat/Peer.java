@@ -15,7 +15,7 @@ public abstract class Peer {
 
 	public Peer() throws IOException {
 		super();
-		stack = StackFactory.makeTCPIDStack();
+		stack = StackFactory.makeRelMultiStack();
 		stack.join();
 	}
 	

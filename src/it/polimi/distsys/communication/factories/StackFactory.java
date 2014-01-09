@@ -2,23 +2,23 @@ package it.polimi.distsys.communication.factories;
 
 import it.polimi.distsys.communication.ReliableLayer;
 import it.polimi.distsys.communication.Stack;
-import it.polimi.distsys.communication.TCPLayer;
+import it.polimi.distsys.communication.MulticastLayer;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 
 public class StackFactory {
-	public static Stack makeTCPStack() throws UnknownHostException {
+	public static Stack makeMultiStack() throws UnknownHostException {
 		//ApplicationLayer app = new ApplicationLayer(null, null);
-		TCPLayer tcp = new TCPLayer();
+		MulticastLayer tcp = new MulticastLayer();
 		//tcp.setAbove(app);
 		//app.setUnderneath(tcp);
 		return new Stack(tcp, tcp);
 	}
 	
-	public static Stack makeTCPIDStack() throws IOException {
+	public static Stack makeRelMultiStack() throws IOException {
 		//ApplicationLayer app = new ApplicationLayer(coordinator, host);
-		TCPLayer tcp = new TCPLayer();
+		MulticastLayer tcp = new MulticastLayer();
 		ReliableLayer rel = new ReliableLayer();
 		tcp.setAbove(rel);
 		rel.setUnderneath(tcp);

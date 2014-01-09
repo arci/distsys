@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TCPLayer extends Layer {
+public class MulticastLayer extends Layer {
 	public static final String ADDRESS = "224.0.0.1";
 	public static final int PORT = 1234;
 	private InetAddress group;
 	private MulticastSocket socket;
 	
-	public TCPLayer() throws UnknownHostException {
+	public MulticastLayer() throws UnknownHostException {
 		super();
 		group = InetAddress.getByName(ADDRESS);
 	}
@@ -33,6 +33,7 @@ public class TCPLayer extends Layer {
 	public void join() throws IOException{
 		socket = new MulticastSocket(PORT);
 		socket.joinGroup(group);
+		Printer.printDebug(getClass(), "connected: " + socket.getLocalAddress() + ":" + socket.getLocalPort());
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class TCPLayer extends Layer {
 
 	@Override
 	public List<Message> receive(List<Message> msgs) throws IOException {
-		byte[] buffer = new byte[1000] ;
+		byte[] buffer = new byte[5000] ;
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		socket.receive(packet);
 		

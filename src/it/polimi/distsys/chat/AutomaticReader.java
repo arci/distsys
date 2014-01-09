@@ -14,6 +14,7 @@ public class AutomaticReader implements Runnable {
 	}
 
 	@Override
+	@SuppressWarnings("all")
 	public void run() {
 		Scanner in = new Scanner(System.in);
 		int i = 0;

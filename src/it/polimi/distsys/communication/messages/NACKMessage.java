@@ -5,13 +5,14 @@ import java.io.IOException;
 import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.ReliableLayer;
 import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.components.SequenceNumber;
 
 public class NACKMessage implements Message {
 	private static final long serialVersionUID = 4534419416507706053L;
-	private int ID;
+	private SequenceNumber sn;
 
-	public NACKMessage(int ID) {
-		this.ID = ID;
+	public NACKMessage(SequenceNumber sn) {
+		this.sn = sn;
 	}
 
 	@Override
@@ -29,8 +30,10 @@ public class NACKMessage implements Message {
 		try {
 			ReliableLayer rel = (ReliableLayer) layer;
 			rel.stopReceiving();
-			rel.stopSending();
-			rel.resend(ID);
+			rel.stopNACK();
+			if (rel.isMe(sn.getClientID())) {
+				rel.resend(sn);
+			}
 		} catch (ClassCastException | IOException e) {
 			// TODO: handle exception
 		}
@@ -39,7 +42,7 @@ public class NACKMessage implements Message {
 	@Override
 	public void onSend(Layer layer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

@@ -2,26 +2,24 @@ package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.components.SequenceNumber;
+
+import java.util.UUID;
 
 public class SequenceNumberMessage implements MessageDecorator {
 	private static final long serialVersionUID = -6506203353941938533L;
 	private Message message;
-	int ID;
-
-	public SequenceNumberMessage(int ID, Message message) {
+	private SequenceNumber sn;
+	
+	public SequenceNumberMessage(SequenceNumber sn, Message message) {
 		super();
 		this.message = message;
-		this.ID = ID;
+		this.sn = sn;
 	}
 
 	@Override
 	public void display() {
 		Printer.printDebug(getClass(), this.toString());
-	}
-
-	@Override
-	public void onReceive(Layer layer) {
-		//does nothing
 	}
 	
 	@Override
@@ -31,17 +29,26 @@ public class SequenceNumberMessage implements MessageDecorator {
 	
 	@Override
 	public String toString() {
-		return "[SN: " + ID + ", " + message.toString() + "]";
+		return "[SN: " + sn.toString() + ", " + message.toString() + "]";
 	}
 
-	public int getID() {
-		return ID;
+	public UUID getSender() {
+		return sn.getClientID();
+	}
+	
+	public Integer getSN(){
+		return sn.getMessageID();
 	}
 
 	@Override
 	public void onSend(Layer layer) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void onReceive(Layer layer) {
+		//does nothing
 	}
 
 }
