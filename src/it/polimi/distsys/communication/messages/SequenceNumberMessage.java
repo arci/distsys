@@ -4,8 +4,6 @@ import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.components.Printer;
 import it.polimi.distsys.components.SequenceNumber;
 
-import java.util.UUID;
-
 public class SequenceNumberMessage implements MessageDecorator {
 	private static final long serialVersionUID = -6506203353941938533L;
 	private Message message;
@@ -31,13 +29,9 @@ public class SequenceNumberMessage implements MessageDecorator {
 	public String toString() {
 		return "[SN: " + sn.toString() + ", " + message.toString() + "]";
 	}
-
-	public UUID getSender() {
-		return sn.getClientID();
-	}
 	
-	public Integer getSN(){
-		return sn.getMessageID();
+	public SequenceNumber getSn() {
+		return sn;
 	}
 
 	@Override

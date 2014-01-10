@@ -1,6 +1,7 @@
 package it.polimi.distsys.communication;
 
 import it.polimi.distsys.communication.messages.Message;
+import it.polimi.distsys.components.Printer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public abstract class Layer {
 	}
 
 	public void send(Message msg) throws IOException {
+		Printer.printDebug(getClass(), "sending " + msg.getClass().getSimpleName());
 		msg.onSend(this);
 		if (sendDown) {
 			msg = processOnSend(msg);
@@ -30,6 +32,7 @@ public abstract class Layer {
 		List<Message> toReceive = new ArrayList<Message>();
 
 		for (Message m : msgs) {
+			Printer.printDebug(getClass(), "receiving " + m.getClass().getSimpleName());
 			m.onReceive(this);
 			if (sendUp) {
 				toReceive.addAll(processOnReceive(m));
@@ -47,11 +50,11 @@ public abstract class Layer {
 	public void stopSending() {
 		sendDown = false;
 	}
-	
+
 	public boolean isSending() {
 		return sendDown;
 	}
-	
+
 	public boolean isReceiving() {
 		return sendUp;
 	}
@@ -65,21 +68,22 @@ public abstract class Layer {
 	}
 
 	public List<Message> sendUp(List<Message> msgs) throws IOException {
-		try {
-			return above.receive(msgs);
-		} catch (NullPointerException e) {
+		if (above == null) {
 			return msgs;
 		}
+		Printer.printDebug(getClass(), "sending up to " + above.getClass().getSimpleName());
+		return above.receive(msgs);
 	}
 
 	public void sendDown(Message msg) throws IOException {
+		Printer.printDebug(getClass(), "sending down to " + underneath.getClass().getSimpleName());
 		underneath.send(msg);
 	}
 
-	public abstract List<Message> processOnReceive(Message msg);
+	public abstract List<Message> processOnReceive(Message msg) throws IOException;
 
 	public abstract Message processOnSend(Message msg);
-	
+
 	public abstract void join() throws IOException;
 
 }

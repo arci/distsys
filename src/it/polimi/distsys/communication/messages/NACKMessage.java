@@ -30,7 +30,8 @@ public class NACKMessage implements Message {
 		try {
 			ReliableLayer rel = (ReliableLayer) layer;
 			rel.stopReceiving();
-			rel.stopNACK();
+			Printer.printDebug(getClass(), "stopping NACK sending on " + sn.getClientID());
+			rel.stopNACK(sn.getClientID());
 			if (rel.isMe(sn.getClientID())) {
 				rel.resend(sn);
 			}

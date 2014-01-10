@@ -23,46 +23,53 @@ public class MulticastLayer extends Layer {
 	public static final int PORT = 1234;
 	private InetAddress group;
 	private MulticastSocket socket;
-	
+
 	public MulticastLayer() throws UnknownHostException {
 		super();
 		group = InetAddress.getByName(ADDRESS);
 	}
-	
+
 	@Override
-	public void join() throws IOException{
+	public void join() throws IOException {
 		socket = new MulticastSocket(PORT);
 		socket.joinGroup(group);
-		Printer.printDebug(getClass(), "connected: " + socket.getLocalAddress() + ":" + socket.getLocalPort());
+		Printer.printDebug(getClass(), "connected: " + socket.getLocalAddress()
+				+ ":" + socket.getLocalPort());
 	}
 
 	@Override
 	public void send(Message msg) throws IOException {
+		Printer.printDebug(getClass(), "sending "
+				+ msg.getClass().getSimpleName());
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(bs));
+		ObjectOutputStream os = new ObjectOutputStream(
+				new BufferedOutputStream(bs));
 		os.flush();
 		os.writeObject(msg);
 		os.flush();
-		
+
 		byte[] buffer = bs.toByteArray();
-		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, PORT);
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+				group, PORT);
 		socket.send(packet);
 		os.close();
 	}
 
 	@Override
 	public List<Message> receive(List<Message> msgs) throws IOException {
-		byte[] buffer = new byte[5000] ;
+		byte[] buffer = new byte[5000];
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		socket.receive(packet);
-		
-		Printer.printDebug(getClass(), "received from: " + packet.getAddress().toString() + ":" + packet.getPort());
-		
+
 		ByteArrayInputStream bs = new ByteArrayInputStream(buffer);
-		ObjectInputStream os = new ObjectInputStream(new BufferedInputStream(bs));
+		ObjectInputStream os = new ObjectInputStream(
+				new BufferedInputStream(bs));
 		Message msg = null;
 		try {
 			msg = (Message) os.readObject();
+			Printer.printDebug(getClass(), "received "
+					+ msg.getClass().getSimpleName() + " from "
+					+ packet.getAddress().toString() + ":" + packet.getPort());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

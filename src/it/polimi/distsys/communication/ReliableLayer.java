@@ -9,27 +9,31 @@ import it.polimi.distsys.components.SequenceNumber;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ReliableLayer extends Layer {
 	private List<Message> sendingQueue;
 	private Map<UUID, Integer> lastIDs;
 	private int ID;
-	private int timeout;
+	private final static int ACK_INTERVAL = 30;
+
 	private UUID uniqueID;
-	private boolean sendNACK;
+
+	private NACKer nacker;
 
 	public ReliableLayer() {
 		super();
 		ID = 0;
-		sendNACK = true;
 		lastIDs = new HashMap<UUID, Integer>();
 		uniqueID = UUID.randomUUID();
-		timeout = (int) (Math.random() * 10);
 		sendingQueue = new ArrayList<Message>();
+		nacker = new NACKer(this);
 	}
 
 	@Override
@@ -42,16 +46,17 @@ public class ReliableLayer extends Layer {
 	}
 
 	@Override
-	public List<Message> processOnReceive(Message msg) {
+	public List<Message> processOnReceive(Message msg) throws IOException {
 		List<Message> toReceive = new ArrayList<Message>();
 
 		Printer.printDebug(getClass(), msg.toString());
 		SequenceNumberMessage sn = (SequenceNumberMessage) msg;
 
-		UUID uuid = sn.getSender();
-		Integer msgid = sn.getSN();
+		UUID uuid = sn.getSn().getClientID();
+		Integer msgid = sn.getSn().getMessageID();
 
 		if (isMe(uuid)) {
+			Printer.printDebug(getClass(), "sent by myself... don't care");
 			return toReceive;
 		}
 
@@ -65,33 +70,23 @@ public class ReliableLayer extends Layer {
 			// Printer.printDebug(getClass(), "offset == 1");
 			lastIDs.put(uuid, msgid);
 			toReceive.add(sn.unpack());
+			// if(msgid % ACK_INTERVAL == 0){
+			// SequenceNumber toProcess = new SequenceNumber(uuid, msgid);
+			// sendDown(new ACKMessage(toProcess));
+			// }
 		} else if (offset > 1) {
-			try {
-				Printer.printDebug(getClass(), "sleeping for " + timeout);
-				Thread.sleep(timeout * 1000);
-				if (sendNACK) {
-					Printer.printDebug(getClass(), "Sending NACK");
-					sendDown(new NACKMessage(new SequenceNumber(uuid, lastID)));
-				}
-				sendNACK = true;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			SequenceNumber toProcess = new SequenceNumber(uuid, lastID);
+			nacker.processNACK(toProcess);
 		}
 
 		return toReceive;
 	}
 
 	public void resend(SequenceNumber sn) throws IOException {
-		Printer.printDebug(getClass(), "Resending message with ID " + sn);
+		Printer.printDebug(getClass(), "Resending messages from ID " + sn);
 		for (Message msg : sendingQueue) {
 			SequenceNumberMessage casted = (SequenceNumberMessage) msg;
-			if (casted.getSN() > sn.getMessageID()) {
+			if (casted.getSn().getMessageID() > sn.getMessageID()) {
 				sendDown(msg);
 			}
 		}
@@ -114,12 +109,100 @@ public class ReliableLayer extends Layer {
 		return id.equals(uniqueID);
 	}
 
-	public void stopNACK() {
-		sendNACK = false;
+	public void stopNACK(UUID id) {
+		nacker.stopNACK(id);
+	}
+	
+	public void cleanQueue(int messageID) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void join() throws IOException {
 		underneath.join();
+	}
+
+	// NACKer and Processer classes handle all the timeout part.
+	// Why separate classes and Threads?
+	// I cannot let the main receiving thread sleep, if so,
+	// who will receive messages and process NACKs?!
+	// So:
+	// 1. let's create a thread pool
+	// 2. in order to have one thread processing NACK for each member of the
+	// group
+	// 3. if a NACK has to be sent (and there is not a thread already processing
+	// another NACK for that process) let's create a thread
+	// 4. the thread will sleep for a random timeout
+	// 5. eventually it will send a NACK, only if a NACK message hasn't stopped
+	// it
+	//
+	// Points from 1 to 3 are performed by the NACKer, points 4 and 5 by the
+	// Processer.
+	private class NACKer {
+		private ExecutorService executor;
+		private Map<UUID, Processer> processing;
+		private ReliableLayer layer;
+
+		public NACKer(ReliableLayer layer) {
+			executor = Executors.newCachedThreadPool();
+			processing = Collections
+					.synchronizedMap(new HashMap<UUID, Processer>());
+			this.layer = layer;
+		}
+
+		public void stopNACK(UUID id) {
+			try {
+				processing.get(id).stopNACK();
+			} catch (NullPointerException e) {
+				Printer.printDebug(getClass(), "process not active on id " + id);
+			}
+		}
+
+		public void processNACK(SequenceNumber sn) {
+			UUID id = sn.getClientID();
+			if (!processing.keySet().contains(id)) {
+				Processer proc = new Processer(sn);
+				processing.put(id, proc);
+				executor.execute(proc);
+			}
+		}
+
+		private class Processer implements Runnable {
+			private SequenceNumber sn;
+			private boolean sendNACK = true;
+
+			public Processer(SequenceNumber sn) {
+				this.sn = sn;
+			}
+
+			@Override
+			public void run() {
+				int timeout = (int) (Math.random() * 10);
+				try {
+					Printer.printDebug(getClass(), "UUID: " + sn.getClientID()
+							+ " sleeping for " + timeout);
+					Thread.sleep(timeout * 1000);
+					if (isNACKtoSend()) {
+						layer.sendDown(new NACKMessage(sn));
+					}
+				} catch (IOException | InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				processing.remove(sn.getClientID());
+			}
+
+			public synchronized void stopNACK() {
+				Printer.printDebug(getClass(), "NACK stopped");
+				sendNACK = false;
+			}
+
+			private synchronized boolean isNACKtoSend() {
+				return sendNACK;
+			}
+		}
+
 	}
 }
