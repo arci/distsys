@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.NACKMessage;
 import it.polimi.distsys.communication.messages.SequenceNumberMessage;
@@ -22,14 +23,13 @@ public class ReliableLayer extends Layer {
 	private Map<UUID, Integer> lastIDs;
 	private int ID;
 	// private final static int ACK_INTERVAL = 30;
-	private final UUID uniqueID;
+	private final UUID uniqueID = Peer.ID;
 	private NACKer nacker;
 
 	public ReliableLayer() {
 		super();
 		ID = 0;
 		lastIDs = Collections.synchronizedMap(new HashMap<UUID, Integer>());
-		uniqueID = UUID.randomUUID();
 		sendingQueue = Collections.synchronizedList(new ArrayList<Message>());
 		nacker = new NACKer(this);
 	}

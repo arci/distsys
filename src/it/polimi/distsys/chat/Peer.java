@@ -6,15 +6,18 @@ import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class Peer {
 	public static boolean DEBUG = true;
 	protected String nickname;
-	protected Integer ID;
 	protected Stack stack;
+	public static final UUID ID = UUID.randomUUID();
+	
 
 	public Peer() throws IOException {
 		super();
+		nickname = "sgcc#" + ID.toString().substring(0, 4);
 		stack = StackFactory.makeCausRelMultiStack();
 		stack.join();
 	}

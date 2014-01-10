@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.VectorClockMessage;
 import it.polimi.distsys.components.Printer;
@@ -13,12 +14,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public class CausalLayer extends Layer {
-	private UUID id;
+	private final UUID id = Peer.ID;
 	private VectorClock vc;
 	private Set<VectorClockMessage> receiving;
 
 	public CausalLayer() {
-		id = UUID.randomUUID();
 		vc = new VectorClock(id);
 		receiving = new HashSet<VectorClockMessage>();
 	}
