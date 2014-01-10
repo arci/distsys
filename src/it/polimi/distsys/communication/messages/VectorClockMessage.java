@@ -4,14 +4,11 @@ import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.components.VectorClock;
 
 public class VectorClockMessage implements MessageDecorator {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3674718470667194111L;
 	private Message message;
 	private VectorClock clock;
 
-	public VectorClockMessage(Message message, VectorClock clock) {
+	public VectorClockMessage(VectorClock clock, Message message) {
 		super();
 		this.message = message;
 		this.clock = clock;

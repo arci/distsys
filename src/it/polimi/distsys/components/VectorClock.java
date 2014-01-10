@@ -1,25 +1,27 @@
 package it.polimi.distsys.components;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
-public class VectorClock {
+public class VectorClock implements Serializable {
+	private static final long serialVersionUID = 1019945114852671821L;
+	private Map<UUID, Integer> vector;
+	private UUID clientID;
 	
-	private Map<Integer, Integer> vector;
-	private int clientID;
-	
-	public VectorClock(int clientID) {
+	public VectorClock(UUID clientID) {
 		super();
 		this.clientID = clientID;
-		vector = new HashMap<Integer, Integer>();
+		vector = new HashMap<UUID, Integer>();
 		vector.put(clientID, 0);
 		
 	}
 
 
 	/**
-	 * update number of client in the correspond position
+	 * update number of client in the corresponding position
 	 */
 	public synchronized void increment() {
 		int value = vector.get(clientID);
@@ -34,9 +36,9 @@ public class VectorClock {
 	 * 
 	 */
 	public synchronized void merge(VectorClock v){
-		Iterator<Integer> iterator = vector.keySet().iterator();
+		Iterator<UUID> iterator = vector.keySet().iterator();
 		while(iterator.hasNext()){
-			int key = iterator.next();
+			UUID key = iterator.next();
 			Integer value = vector.get(key);
 			Integer otherValue = v.getScalar(key);
 			
@@ -51,7 +53,7 @@ public class VectorClock {
 	 * @param clientID
 	 * @return the scalar clock associated with the passed client ID
 	 */
-	public synchronized int getScalar(int clientID){
+	public synchronized int getScalar(UUID clientID){
 		Integer value = vector.get(clientID);
 		if(value == null){
 			value = 0;
@@ -63,9 +65,9 @@ public class VectorClock {
 	@Override
 	public String toString() {
 		String returnString = "VectorClock [clientID=" + clientID +", vector= " ;
-		Iterator<Integer> iterator = vector.keySet().iterator();
+		Iterator<UUID> iterator = vector.keySet().iterator();
 		while(iterator.hasNext()){
-			returnString = returnString +","+ vector.get(iterator.next());
+			returnString += vector.get(iterator.next()) + ",";
 		}
 		return returnString  + "]";
 	}

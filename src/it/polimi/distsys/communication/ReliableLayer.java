@@ -21,7 +21,7 @@ public class ReliableLayer extends Layer {
 	private List<Message> sendingQueue;
 	private Map<UUID, Integer> lastIDs;
 	private int ID;
-	private final static int ACK_INTERVAL = 30;
+	//private final static int ACK_INTERVAL = 30;
 
 	private UUID uniqueID;
 
