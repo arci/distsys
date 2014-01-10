@@ -15,11 +15,13 @@ public class VectorClockMessage implements MessageDecorator {
 
 	}
 
+	public VectorClock getClock() {
+		return clock;
+	}
+
 	@Override
 	public void display() {
 
-		System.out.println("display on " + getClass().getCanonicalName()
-				+ clock.toString());
 	}
 
 	@Override
@@ -29,8 +31,7 @@ public class VectorClockMessage implements MessageDecorator {
 
 	@Override
 	public String toString() {
-		return "VectorClockMessage [message=" + message + ", clock=" + clock
-				+ "]";
+		return "[VC: " + clock.toString() + ", " + message.getClass().getSimpleName() + "]";
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class VectorClockMessage implements MessageDecorator {
 	@Override
 	public void onSend(Layer layer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

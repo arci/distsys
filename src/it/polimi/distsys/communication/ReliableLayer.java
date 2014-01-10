@@ -21,18 +21,16 @@ public class ReliableLayer extends Layer {
 	private List<Message> sendingQueue;
 	private Map<UUID, Integer> lastIDs;
 	private int ID;
-	//private final static int ACK_INTERVAL = 30;
-
-	private UUID uniqueID;
-
+	// private final static int ACK_INTERVAL = 30;
+	private final UUID uniqueID;
 	private NACKer nacker;
 
 	public ReliableLayer() {
 		super();
 		ID = 0;
-		lastIDs = new HashMap<UUID, Integer>();
+		lastIDs = Collections.synchronizedMap(new HashMap<UUID, Integer>());
 		uniqueID = UUID.randomUUID();
-		sendingQueue = new ArrayList<Message>();
+		sendingQueue = Collections.synchronizedList(new ArrayList<Message>());
 		nacker = new NACKer(this);
 	}
 
@@ -48,8 +46,6 @@ public class ReliableLayer extends Layer {
 	@Override
 	public List<Message> processOnReceive(Message msg) throws IOException {
 		List<Message> toReceive = new ArrayList<Message>();
-
-		Printer.printDebug(getClass(), msg.toString());
 		SequenceNumberMessage sn = (SequenceNumberMessage) msg;
 
 		UUID uuid = sn.getSn().getClientID();
@@ -62,7 +58,9 @@ public class ReliableLayer extends Layer {
 
 		Integer lastID = lastIDs.get(uuid);
 		if (lastID == null) {
-			lastID = 0;
+			// if i'm new to that client, I suppose this is his first message to
+			// me. So i force its receiving.
+			lastID = msgid - 1;
 		}
 		Integer offset = msgid - lastID;
 
@@ -112,10 +110,10 @@ public class ReliableLayer extends Layer {
 	public void stopNACK(UUID id) {
 		nacker.stopNACK(id);
 	}
-	
+
 	public void cleanQueue(int messageID) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

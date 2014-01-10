@@ -33,6 +33,7 @@ public abstract class Layer {
 
 		for (Message m : msgs) {
 			Printer.printDebug(getClass(), "receiving " + m.getClass().getSimpleName());
+			Printer.printDebug(getClass(), m.toString());
 			m.onReceive(this);
 			if (sendUp) {
 				toReceive.addAll(processOnReceive(m));

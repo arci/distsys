@@ -27,7 +27,7 @@ public class SequenceNumberMessage implements MessageDecorator {
 	
 	@Override
 	public String toString() {
-		return "[SN: " + sn.toString() + ", " + message.toString() + "]";
+		return "[SN: " + sn.toString() + ", " + message.getClass().getSimpleName() + "]";
 	}
 	
 	public SequenceNumber getSn() {

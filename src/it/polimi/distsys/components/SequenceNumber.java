@@ -24,7 +24,7 @@ public class SequenceNumber implements Serializable, Comparable<SequenceNumber> 
 
 	@Override
 	public String toString() {
-		return clientID.toString() + "." + messageID;
+		return clientID.toString().substring(0, 4) + "." + messageID;
 	}
 
 	@Override
