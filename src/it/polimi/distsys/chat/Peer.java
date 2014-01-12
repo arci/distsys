@@ -18,7 +18,7 @@ public abstract class Peer {
 	public Peer() throws IOException {
 		super();
 		nickname = "sgcc#" + ID.toString().substring(0, 4);
-		stack = StackFactory.makeCausRelMultiStack();
+		stack = StackFactory.makeSecCausRelMultiStack();
 		stack.join();
 	}
 	

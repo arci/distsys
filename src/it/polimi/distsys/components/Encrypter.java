@@ -1,4 +1,4 @@
-package it.polimi.distsys.security;
+package it.polimi.distsys.components;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
