@@ -4,7 +4,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 
 public class Decrypter {
-
+	public static final String ALGORITHM = "AES";
     private SecretKey dek;
 
     public Decrypter(SecretKey dek) {
@@ -19,7 +19,7 @@ public class Decrypter {
 	Cipher cipher;
 	byte[] decrypted = null;
 	try {
-	    cipher = Cipher.getInstance("DES");
+	    cipher = Cipher.getInstance(ALGORITHM);
 	    cipher.init(Cipher.DECRYPT_MODE, this.dek);
 	    decrypted = cipher.doFinal(string.getBytes());
 	} catch (Exception e) {

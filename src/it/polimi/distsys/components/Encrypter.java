@@ -19,7 +19,7 @@ public class Encrypter {
 	Cipher cipher;
 	byte[] encrypted = null;
 	try {
-	    cipher = Cipher.getInstance("DES");
+	    cipher = Cipher.getInstance(Decrypter.ALGORITHM);
 	    cipher.init(Cipher.ENCRYPT_MODE, this.dek);
 	    encrypted = cipher.doFinal(string.getBytes());
 	} catch (Exception e) {
