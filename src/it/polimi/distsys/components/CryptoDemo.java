@@ -12,7 +12,7 @@ public class CryptoDemo {
 		
 		String string = args[0];
 		
-		String enc = encrypter.encrypt(string);
+		byte[] enc = encrypter.encrypt(string);
 		String dec = decrypter.decrypt(enc);
 		
 		System.out.println("You entered " + string);

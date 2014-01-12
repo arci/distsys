@@ -1,18 +1,17 @@
 package it.polimi.distsys.components;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 public class Decrypter {
-	public static final String ALGORITHM = "DES";
+	public static final String ALGORITHM = "AES";
 	private Key dek;
 	private Cipher cipher;
 
@@ -38,16 +37,13 @@ public class Decrypter {
 		}
 	}
 
-	public String decrypt(String string) {
-		ByteArrayInputStream bs = new ByteArrayInputStream(string.getBytes());
-		CipherInputStream cs = new CipherInputStream(bs, cipher);
-		byte[] decrypted = new byte[5000];
+	public String decrypt(byte[] buffer) {
+		byte[] decrypted = null;
 		try {
-			cs.read(decrypted);
-			cs.close();
-		} catch (IOException e1) {
+			decrypted = cipher.doFinal(buffer);
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 		return new String(decrypted);
 	}

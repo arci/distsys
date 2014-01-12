@@ -1,13 +1,12 @@
 package it.polimi.distsys.components;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.CipherOutputStream;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public class Encrypter {
@@ -37,19 +36,15 @@ public class Encrypter {
 		}
 	}
 
-	public String encrypt(String string) {
-		ByteArrayOutputStream bs = new ByteArrayOutputStream();
-		CipherOutputStream cs = new CipherOutputStream(bs, cipher);
+	public byte[] encrypt(String string) {
+		byte[] encrypted = null;
 		try {
-			cs.write(string.getBytes());
-			cs.flush();
-			cs.close();
-		} catch (IOException e1) {
+			encrypted = cipher.doFinal(string.getBytes());
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
-		byte[] encrypted = bs.toByteArray();
-		return new String(encrypted);
+		return encrypted;
 	}
 
 }
