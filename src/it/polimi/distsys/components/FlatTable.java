@@ -16,6 +16,7 @@ public class FlatTable {
 	private List<Key> ones;
 	private Map<UUID, Integer> members;
 	private KeyGenerator keygen;
+	private Key dek;
 
 	public FlatTable() {
 		zeros = new ArrayList<Key>();
@@ -24,6 +25,7 @@ public class FlatTable {
 		try {
 			keygen = KeyGenerator.getInstance(Decrypter.ALGORITHM);
 			keygen.init(new SecureRandom());
+			dek = keygen.generateKey();
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -125,6 +127,15 @@ public class FlatTable {
 				}
 			};
 		}
+	}
+	
+	public Key getDEK() {
+		return dek;
+	}
+	
+	public Key refreshDEK(){
+		dek = keygen.generateKey();
+		return dek;
 	}
 
 	@Override
