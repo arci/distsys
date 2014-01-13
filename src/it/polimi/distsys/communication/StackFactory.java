@@ -1,7 +1,5 @@
 package it.polimi.distsys.communication;
 
-import it.polimi.distsys.chat.Peer;
-
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -30,13 +28,22 @@ public class StackFactory {
 		return new Stack(caus, tcp);
 	}
 
-	public static Stack makeSecCausRelMultiStack() throws IOException {
-		SecureLayer sec = null;
-		if (Peer.IS_SERVER) {
-			sec = new ServerSecureLayer();
-		} else {
-			sec = new ClientSecureLayer();
-		}
+	public static Stack makeCompleteClientStack() throws IOException {
+		SecureLayer sec = new ClientSecureLayer();
+		CausalLayer caus = new CausalLayer();
+		MulticastLayer tcp = new MulticastLayer();
+		ReliableLayer rel = new ReliableLayer();
+		tcp.setAbove(rel);
+		rel.setUnderneath(tcp);
+		rel.setAbove(caus);
+		caus.setUnderneath(rel);
+		caus.setAbove(sec);
+		sec.setUnderneath(caus);
+		return new Stack(sec, tcp);
+	}
+	
+	public static Stack makeCompleteServerStack() throws IOException {
+		SecureLayer sec = new ServerSecureLayer();
 		CausalLayer caus = new CausalLayer();
 		MulticastLayer tcp = new MulticastLayer();
 		ReliableLayer rel = new ReliableLayer();

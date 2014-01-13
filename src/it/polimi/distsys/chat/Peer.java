@@ -1,7 +1,6 @@
 package it.polimi.distsys.chat;
 
 import it.polimi.distsys.communication.Stack;
-import it.polimi.distsys.communication.StackFactory;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
@@ -18,8 +17,6 @@ public abstract class Peer {
 	public Peer() throws IOException {
 		super();
 		nickname = "sgcc#" + ID.toString().substring(0, 4);
-		stack = StackFactory.makeSecCausRelMultiStack();
-		stack.join();
 	}
 	
 	public void send(Message m) throws IOException{

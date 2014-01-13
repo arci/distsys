@@ -1,6 +1,8 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.messages.EncryptedMessage;
+import it.polimi.distsys.communication.messages.JoinMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
 import it.polimi.distsys.components.Decrypter;
@@ -17,7 +19,7 @@ import java.util.UUID;
 public abstract class SecureLayer extends Layer {
 	private Encrypter enc;
 	private Decrypter dec;
-	private Key dek;
+	protected Key dek;
 	
 	public SecureLayer() {
 		dek = new FlatTable().getDEK();
@@ -41,6 +43,11 @@ public abstract class SecureLayer extends Layer {
 	@Override
 	public void join() throws IOException {
 		underneath.join();
+		sendDown(new JoinMessage(Peer.ID));
+	}
+	
+	public boolean isForMe(UUID id){
+		return Peer.ID.equals(id);
 	}
 	
 	public abstract void join(UUID memberID);
