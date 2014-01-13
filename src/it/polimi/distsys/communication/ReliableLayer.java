@@ -203,4 +203,9 @@ public class ReliableLayer extends Layer {
 		}
 
 	}
+
+	@Override
+	public void leave() throws IOException {
+		underneath.leave();
+	}
 }

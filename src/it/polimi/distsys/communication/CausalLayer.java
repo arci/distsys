@@ -62,4 +62,9 @@ public class CausalLayer extends Layer {
 		underneath.join();
 	}
 
+	@Override
+	public void leave() throws IOException {
+		underneath.leave();
+	}
+
 }

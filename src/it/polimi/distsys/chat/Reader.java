@@ -1,6 +1,5 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.communication.messages.LeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
 
@@ -39,7 +38,7 @@ public class Reader implements Runnable {
 		}
 
 		try {
-			peer.send(new LeaveMessage(Peer.ID));
+			peer.leave();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

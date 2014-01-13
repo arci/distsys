@@ -26,5 +26,9 @@ public class Stack {
 	public void join() throws IOException{
 		first.join();
 	}
+	
+	public void leave() throws IOException{
+		first.leave();
+	}
 
 }

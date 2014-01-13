@@ -38,6 +38,11 @@ public class MulticastLayer extends Layer {
 	}
 
 	@Override
+	public void leave() throws IOException {
+		socket.leaveGroup(group);
+	}
+
+	@Override
 	public void send(Message msg) throws IOException {
 		Printer.printDebug(getClass(), "sending "
 				+ msg.getClass().getSimpleName());

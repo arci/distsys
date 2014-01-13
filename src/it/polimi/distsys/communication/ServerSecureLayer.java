@@ -6,6 +6,7 @@ import it.polimi.distsys.components.Decrypter;
 import it.polimi.distsys.components.Encrypter;
 import it.polimi.distsys.components.FixedFlatTable;
 
+import java.io.IOException;
 import java.security.Key;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +58,11 @@ public class ServerSecureLayer extends SecureLayer {
 	public void updateDEK(Key dek) {
 		enc.updateKey(dek);
 		dec.updateKey(dek);
+	}
+
+	@Override
+	public void leave() throws IOException {
+		//it shouldn't happen that the server leaves
 	}
 
 }

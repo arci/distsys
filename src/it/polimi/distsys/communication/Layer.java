@@ -90,5 +90,6 @@ public abstract class Layer {
 	public abstract Message processOnSend(Message msg);
 
 	public abstract void join() throws IOException;
+	public abstract void leave() throws IOException;
 
 }

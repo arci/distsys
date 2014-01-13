@@ -34,4 +34,8 @@ public abstract class Peer {
 	public String getNickname() {
 		return nickname;
 	}
+	
+	public void leave() throws IOException{
+		stack.leave();
+	}
 }
