@@ -1,6 +1,6 @@
 package it.polimi.distsys.communication;
 
-import it.polimi.distsys.communication.messages.CryptedMessage;
+import it.polimi.distsys.communication.messages.EncryptedMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
 import it.polimi.distsys.components.Decrypter;
@@ -25,14 +25,14 @@ public class SecureLayer extends Layer {
 
 	@Override
 	public List<Message> processOnReceive(Message msg) throws IOException {
-		CryptedMessage encrypted = (CryptedMessage) msg;
+		EncryptedMessage encrypted = (EncryptedMessage) msg;
 		String content = dec.decrypt(encrypted.getContent());
 		return new ArrayList<Message>(Arrays.asList(new StringMessage(content)));
 	}
 
 	@Override
 	public Message processOnSend(Message msg) {
-		Message encrypted = new CryptedMessage(enc.encrypt(msg.toString()));
+		Message encrypted = new EncryptedMessage(enc.encrypt(msg.toString()));
 		return encrypted;
 	}
 

@@ -3,6 +3,8 @@ package it.polimi.distsys.components;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +12,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class FlatTable {
 	private List<Key> zeros;
@@ -25,8 +31,16 @@ public class FlatTable {
 		try {
 			keygen = KeyGenerator.getInstance(Decrypter.ALGORITHM);
 			keygen.init(new SecureRandom());
-			dek = keygen.generateKey();
+			//dek = keygen.generateKey();
+			//TODO remove, only to have the same key on everyone
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+			KeySpec spec = new PBEKeySpec("fuckin".toCharArray(), "cazzo".getBytes(), 65536, 256);
+			SecretKey tmp = factory.generateSecret(spec);
+			dek = new SecretKeySpec(tmp.getEncoded(), "AES");
 		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
