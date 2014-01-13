@@ -4,12 +4,13 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import javax.crypto.KeyGenerator;
 
-public class FixedFlatTable {
+public class FixedFlatTable implements Iterable<UUID>{
 	public final static int MAX_GROUP_SIZE = 8;
 	public final static int BITS = (int) Math.ceil(Math.log(MAX_GROUP_SIZE)/Math.log(2));
 	private Key[] zeros;
@@ -99,6 +100,11 @@ public class FixedFlatTable {
 		
 		return toReturn;
 	}
+	
+	@Override
+	public Iterator<UUID> iterator() {
+		return members.iterator();
+	}
 
 	@Override
 	public String toString() {
@@ -118,5 +124,4 @@ public class FixedFlatTable {
 		}
 		return string;
 	}
-
 }

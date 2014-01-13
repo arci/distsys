@@ -8,13 +8,22 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 
 public class Decrypter {
 	public static final String ALGORITHM = "AES";
 	private Key dek;
 	private Cipher cipher;
 
+	public Decrypter() {
+		super();
+		try {
+			this.cipher = Cipher.getInstance(ALGORITHM);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public Decrypter(Key dek) {
 		this.dek = dek;
 		try {
@@ -27,7 +36,7 @@ public class Decrypter {
 		}
 	}
 
-	public void updateKey(SecretKey newKey) {
+	public void updateKey(Key newKey) {
 		this.dek = newKey;
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, this.dek);

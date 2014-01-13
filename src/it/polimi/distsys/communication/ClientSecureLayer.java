@@ -1,5 +1,8 @@
 package it.polimi.distsys.communication;
 
+import it.polimi.distsys.components.Decrypter;
+import it.polimi.distsys.components.Encrypter;
+
 import java.security.Key;
 import java.util.List;
 import java.util.UUID;
@@ -7,6 +10,11 @@ import java.util.UUID;
 public class ClientSecureLayer extends SecureLayer {
 	private List<Key> keks;
 	
+	public ClientSecureLayer() {
+		super();
+		enc = new Encrypter();
+		dec = new Decrypter();
+	}
 
 	@Override
 	public void join(UUID memberID) {}
@@ -22,6 +30,8 @@ public class ClientSecureLayer extends SecureLayer {
 	@Override
 	public void updateDEK(Key dek) {
 		this.dek = dek;
+		enc.updateKey(dek);
+		dec.updateKey(dek);
 	}
 	
 	public Key getKEK(int index){

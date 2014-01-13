@@ -19,7 +19,8 @@ public abstract class Layer {
 	}
 
 	public void send(Message msg) throws IOException {
-		Printer.printDebug(getClass(), "sending " + msg.getClass().getSimpleName());
+		Printer.printDebug(getClass(), "sending "
+				+ msg.getClass().getSimpleName());
 		msg.onSend(this);
 		if (sendDown) {
 			msg = processOnSend(msg);
@@ -32,8 +33,8 @@ public abstract class Layer {
 		List<Message> toReceive = new ArrayList<Message>();
 
 		for (Message m : msgs) {
-			Printer.printDebug(getClass(), "receiving " + m.getClass().getSimpleName());
-			Printer.printDebug(getClass(), m.toString());
+			Printer.printDebug(getClass(), "receiving "
+					+ m.getClass().getSimpleName() + "-> " + m.toString());
 			m.onReceive(this);
 			if (sendUp) {
 				toReceive.addAll(processOnReceive(m));
@@ -72,16 +73,19 @@ public abstract class Layer {
 		if (above == null) {
 			return msgs;
 		}
-		Printer.printDebug(getClass(), "sending up to " + above.getClass().getSimpleName());
+		Printer.printDebug(getClass(), "sending up to "
+				+ above.getClass().getSimpleName());
 		return above.receive(msgs);
 	}
 
 	public void sendDown(Message msg) throws IOException {
-		Printer.printDebug(getClass(), "sending down to " + underneath.getClass().getSimpleName());
+		Printer.printDebug(getClass(), "sending down to "
+				+ underneath.getClass().getSimpleName());
 		underneath.send(msg);
 	}
 
-	public abstract List<Message> processOnReceive(Message msg) throws IOException;
+	public abstract List<Message> processOnReceive(Message msg)
+			throws IOException;
 
 	public abstract Message processOnSend(Message msg);
 

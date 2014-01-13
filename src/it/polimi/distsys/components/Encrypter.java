@@ -14,6 +14,16 @@ public class Encrypter {
 	private Key dek;
 	private Cipher cipher;
 
+	public Encrypter() {
+		super();
+		try {
+			cipher = Cipher.getInstance(Decrypter.ALGORITHM);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public Encrypter(Key dek) {
 		this.dek = dek;
 		try {

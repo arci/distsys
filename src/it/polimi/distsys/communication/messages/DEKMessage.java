@@ -37,5 +37,10 @@ public class DEKMessage implements Message {
 		// TODO Auto-generated method stub
 		return this;
 	}
+	
+	@Override
+	public String toString() {
+		return dek.getEncoded().toString();
+	}
 
 }

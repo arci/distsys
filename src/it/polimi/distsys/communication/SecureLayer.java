@@ -7,7 +7,6 @@ import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
 import it.polimi.distsys.components.Decrypter;
 import it.polimi.distsys.components.Encrypter;
-import it.polimi.distsys.components.FlatTable;
 
 import java.io.IOException;
 import java.security.Key;
@@ -17,15 +16,9 @@ import java.util.List;
 import java.util.UUID;
 
 public abstract class SecureLayer extends Layer {
-	private Encrypter enc;
-	private Decrypter dec;
+	protected Encrypter enc;
+	protected Decrypter dec;
 	protected Key dek;
-	
-	public SecureLayer() {
-		dek = new FlatTable().getDEK();
-		enc = new Encrypter(dek);
-		dec = new Decrypter(dek);
-	}
 
 	@Override
 	public List<Message> processOnReceive(Message msg) throws IOException {
