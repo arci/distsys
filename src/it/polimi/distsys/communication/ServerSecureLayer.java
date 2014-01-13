@@ -33,6 +33,7 @@ public class ServerSecureLayer extends SecureLayer {
 		try {
 			sendDown(new DEKMessage(table.refreshDEK()));
 			table.leave(memberID);
+			//TODO add iterator into flattable to iterate over group
 			sendDown(new KEKsMessage(memberID, table.updateKEKs(memberID)));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

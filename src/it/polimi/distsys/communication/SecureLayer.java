@@ -36,8 +36,13 @@ public abstract class SecureLayer extends Layer {
 
 	@Override
 	public Message processOnSend(Message msg) {
-		Message encrypted = new EncryptedMessage(enc.encrypt(msg.toString()));
-		return encrypted;
+		try {
+			StringMessage strmsg = (StringMessage) msg;
+			Message encrypted = new EncryptedMessage(enc.encrypt(strmsg.toString()));
+			return encrypted;
+		} catch (ClassCastException e) {
+			return msg;
+		}
 	}
 	
 	@Override
