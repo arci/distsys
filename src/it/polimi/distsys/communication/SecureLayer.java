@@ -8,19 +8,21 @@ import it.polimi.distsys.components.Encrypter;
 import it.polimi.distsys.components.FlatTable;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
-public class SecureLayer extends Layer {
+public abstract class SecureLayer extends Layer {
 	private Encrypter enc;
 	private Decrypter dec;
-	private FlatTable table;
+	private Key dek;
 	
 	public SecureLayer() {
-		table = new FlatTable();
-		enc = new Encrypter(table.getDEK());
-		dec = new Decrypter(table.getDEK());
+		dek = new FlatTable().getDEK();
+		enc = new Encrypter(dek);
+		dec = new Decrypter(dek);
 	}
 
 	@Override
@@ -35,11 +37,15 @@ public class SecureLayer extends Layer {
 		Message encrypted = new EncryptedMessage(enc.encrypt(msg.toString()));
 		return encrypted;
 	}
-
+	
 	@Override
 	public void join() throws IOException {
-		// TODO Auto-generated method stub
 		underneath.join();
 	}
+	
+	public abstract void join(UUID memberID);
+	public abstract void leave(UUID memberID);
+	public abstract void updateKEKs(List<Key> keks);
+	public abstract void updateDEK(Key dek);
 
 }

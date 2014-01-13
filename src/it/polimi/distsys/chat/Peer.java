@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public abstract class Peer {
 	public static boolean DEBUG = true;
+	public static final UUID ID = UUID.randomUUID();
+	public static boolean IS_SERVER = false;
 	protected String nickname;
 	protected Stack stack;
-	public static final UUID ID = UUID.randomUUID();
-	
 
 	public Peer() throws IOException {
 		super();

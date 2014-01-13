@@ -7,6 +7,7 @@ public class Server extends Peer {
 		super();
 		DEBUG = true;
 		nickname = "server";
+		IS_SERVER = true;
 	}
 
 	// TODO remove... Only to see things work

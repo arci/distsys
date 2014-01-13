@@ -23,7 +23,7 @@ public class FlatTable {
 	private Map<UUID, Integer> members;
 	private KeyGenerator keygen;
 	private Key dek;
-
+	
 	public FlatTable() {
 		zeros = new ArrayList<Key>();
 		ones = new ArrayList<Key>();
@@ -31,10 +31,12 @@ public class FlatTable {
 		try {
 			keygen = KeyGenerator.getInstance(Decrypter.ALGORITHM);
 			keygen.init(new SecureRandom());
-			//dek = keygen.generateKey();
-			//TODO remove, only to have the same key on everyone
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-			KeySpec spec = new PBEKeySpec("fuckin".toCharArray(), "cazzo".getBytes(), 65536, 256);
+			// dek = keygen.generateKey();
+			// TODO remove, only to have the same key on everyone
+			SecretKeyFactory factory = SecretKeyFactory
+					.getInstance("PBKDF2WithHmacSHA1");
+			KeySpec spec = new PBEKeySpec("fuckin".toCharArray(),
+					"cazzo".getBytes(), 65536, 256);
 			SecretKey tmp = factory.generateSecret(spec);
 			dek = new SecretKeySpec(tmp.getEncoded(), "AES");
 		} catch (NoSuchAlgorithmException e) {
@@ -142,13 +144,13 @@ public class FlatTable {
 			};
 		}
 	}
-	
-	public Key getDEK() {
+
+	public Key refreshDEK() {
+		dek = keygen.generateKey();
 		return dek;
 	}
 	
-	public Key refreshDEK(){
-		dek = keygen.generateKey();
+	public Key getDEK() {
 		return dek;
 	}
 
