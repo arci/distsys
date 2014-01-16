@@ -59,8 +59,7 @@ public class ClientSecureLayer extends SecureLayer {
 	}
 
 	@Override
-	public void leave(UUID memberID) {
-	}
+	public void leave(UUID memberID) {}
 
 	@Override
 	public void updateDEK(Key dek) {

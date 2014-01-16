@@ -12,15 +12,16 @@ import java.util.UUID;
 
 import javax.crypto.KeyGenerator;
 
-public class FlatTable implements Iterable<UUID>{
+public class FlatTable implements Iterable<UUID> {
 	public final static int MAX_GROUP_SIZE = 8;
-	public final static int BITS = (int) Math.ceil(Math.log(MAX_GROUP_SIZE)/Math.log(2));
+	public final static int BITS = (int) Math.ceil(Math.log(MAX_GROUP_SIZE)
+			/ Math.log(2));
 	private Key[] zeros;
 	private Key[] ones;
 	private Key dek;
 	private List<UUID> members;
 	private KeyGenerator keygen;
-	
+
 	public FlatTable() {
 		zeros = new Key[BITS];
 		ones = new Key[BITS];
@@ -35,7 +36,7 @@ public class FlatTable implements Iterable<UUID>{
 		}
 	}
 
-	public Key[] getKEKs(UUID memberID) throws TableException {
+	public Key[] getKEKs(UUID memberID) {
 		Key[] keks = new Key[BITS];
 		int[] bits = getBits(memberID);
 		for (int i = 0; i < bits.length; i++) {
@@ -49,6 +50,9 @@ public class FlatTable implements Iterable<UUID>{
 	}
 
 	public Key[] updateKEKs(UUID memberID) throws TableException {
+		if (!members.contains(memberID)) {
+			throw new TableException("The given UUID isn't in members!");
+		}
 		Key[] keks = new Key[BITS];
 		int[] bits = getBits(memberID);
 		for (int i = 0; i < bits.length; i++) {
@@ -64,36 +68,42 @@ public class FlatTable implements Iterable<UUID>{
 	}
 
 	public Key[] join(UUID memberID) throws TableException {
-		if(members.size() + 1 > MAX_GROUP_SIZE){
+		if (members.size() + 1 > MAX_GROUP_SIZE) {
 			throw new TableException("Group size exceeded!");
 		}
 		members.add(memberID);
-		
+
 		return getKEKs(memberID);
 	}
 
-	public void leave(UUID memberID) {
+	public Key[] leave(UUID memberID) throws TableException {
+		if (!members.contains(memberID)) {
+			throw new TableException("The given UUID isn't in members!");
+		}
+		Key[] keks = getKEKs(memberID);
 		members.remove(memberID);
+		return keks;
 	}
 
 	public Key refreshDEK() {
 		dek = keygen.generateKey();
 		return dek;
 	}
-	
+
 	public Key getDEK() {
 		return dek;
 	}
-	
-	public Map<UUID, List<Integer>> getInterested(UUID id) throws TableException {
+
+	public Map<UUID, List<Integer>> getInterested(UUID id)
+			throws TableException {
 		Map<UUID, List<Integer>> interested = new HashMap<UUID, List<Integer>>();
 		int[] bits = getBits(id);
-		
-		for(UUID member : members){
+
+		for (UUID member : members) {
 			int[] otherBits = getBits(member);
-			for(int i= 0; i< bits.length; i++){
-				if(bits[i] == otherBits[i]){
-					if(interested.get(member) == null){
+			for (int i = 0; i < bits.length; i++) {
+				if (bits[i] == otherBits[i]) {
+					if (interested.get(member) == null) {
 						interested.put(member, new ArrayList<Integer>());
 					}
 					interested.get(member).add(i);
@@ -101,30 +111,27 @@ public class FlatTable implements Iterable<UUID>{
 				}
 			}
 		}
-		
+
 		return interested;
 	}
-	
-	private int[] getBits(UUID memberID) throws TableException{
-		if (!members.contains(memberID)) {
-			throw new TableException("The given UUID isn't in members!");
-		}
+
+	private int[] getBits(UUID memberID) {
 		Integer ID = members.indexOf(memberID);
 		String base2 = Integer.toBinaryString(ID);
-		while(base2.length() < BITS){
+		while (base2.length() < BITS) {
 			base2 = "0" + base2;
 		}
-		
+
 		String[] splitted = base2.split("(?!^)");
 		int[] toReturn = new int[splitted.length];
-		
-		for(int i=0; i< toReturn.length; i++){
+
+		for (int i = 0; i < toReturn.length; i++) {
 			toReturn[i] = Integer.valueOf(splitted[i]);
 		}
-		
+
 		return toReturn;
 	}
-	
+
 	@Override
 	public Iterator<UUID> iterator() {
 		return members.iterator();
