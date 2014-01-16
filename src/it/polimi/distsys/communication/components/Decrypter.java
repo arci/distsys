@@ -1,4 +1,4 @@
-package it.polimi.distsys.components;
+package it.polimi.distsys.communication.components;
 
 import java.security.InvalidKeyException;
 import java.security.Key;

@@ -1,7 +1,7 @@
 package it.polimi.distsys.chat.actions;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.communication.components.Printer;
 
 public class NickNameAction implements Action {
 

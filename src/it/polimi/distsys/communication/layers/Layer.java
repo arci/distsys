@@ -1,7 +1,7 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.communication.layers;
 
+import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.messages.Message;
-import it.polimi.distsys.components.Printer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,10 +21,14 @@ public abstract class Layer {
 	public void send(Message msg) throws IOException {
 		Printer.printDebug(getClass(), "sending "
 				+ msg.getClass().getSimpleName());
+		
+		List<Message> toSend = new ArrayList<Message>();
 		msg.onSend(this);
 		if (sendDown) {
-			msg = processOnSend(msg);
-			sendDown(msg);
+			toSend = processOnSend(msg);
+			for(Message m : toSend){
+				sendDown(m);
+			}
 		}
 		sendDown = true;
 	}
@@ -87,7 +91,7 @@ public abstract class Layer {
 	public abstract List<Message> processOnReceive(Message msg)
 			throws IOException;
 
-	public abstract Message processOnSend(Message msg);
+	public abstract List<Message> processOnSend(Message msg);
 
 	public abstract void join() throws IOException;
 	public abstract void leave() throws IOException;

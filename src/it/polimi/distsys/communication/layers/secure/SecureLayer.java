@@ -1,12 +1,12 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.communication.layers.secure;
 
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.communication.components.Decrypter;
+import it.polimi.distsys.communication.components.Encrypter;
+import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.messages.EncryptedMessage;
-import it.polimi.distsys.communication.messages.JoinMessage;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
-import it.polimi.distsys.components.Decrypter;
-import it.polimi.distsys.components.Encrypter;
 
 import java.io.IOException;
 import java.security.Key;
@@ -28,20 +28,14 @@ public abstract class SecureLayer extends Layer {
 	}
 
 	@Override
-	public Message processOnSend(Message msg) {
+	public List<Message> processOnSend(Message msg) {
 		try {
 			StringMessage strmsg = (StringMessage) msg;
 			Message encrypted = new EncryptedMessage(enc.encrypt(strmsg.toString()));
-			return encrypted;
+			return new ArrayList<Message>(Arrays.asList(encrypted));
 		} catch (ClassCastException e) {
-			return msg;
+			return new ArrayList<Message>(Arrays.asList(msg));
 		}
-	}
-	
-	@Override
-	public void join() throws IOException {
-		underneath.join();
-		sendDown(new JoinMessage(Peer.ID));
 	}
 	
 	public boolean isForMe(UUID id){

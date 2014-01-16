@@ -1,13 +1,15 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.communication.layers.causal;
 
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.components.VectorClock;
+import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.VectorClockMessage;
-import it.polimi.distsys.components.Printer;
-import it.polimi.distsys.components.VectorClock;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,10 +26,10 @@ public class CausalLayer extends Layer {
 	}
 	
 	@Override
-	public Message processOnSend(Message msg) {
+	public List<Message> processOnSend(Message msg) {
 		vc.increment();
 		Message toSend = new VectorClockMessage(vc, msg);
-		return toSend;
+		return new ArrayList<Message>(Arrays.asList(toSend));
 	}
 
 	@Override

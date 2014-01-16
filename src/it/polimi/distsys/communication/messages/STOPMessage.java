@@ -1,19 +1,13 @@
 package it.polimi.distsys.communication.messages;
 
+import java.io.IOException;
+
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.layers.Layer;
-import it.polimi.distsys.communication.layers.secure.SecureLayer;
+import it.polimi.distsys.communication.layers.secure.ClientSecureLayer;
 
-import java.util.UUID;
-
-public class JoinMessage implements Message {
-	private static final long serialVersionUID = 8037414378256193328L;
-	private UUID id;
-
-	public JoinMessage(UUID id) {
-		super();
-		this.id = id;
-	}
+public class STOPMessage implements Message {
+	private static final long serialVersionUID = 305630151031207741L;
 
 	@Override
 	public void display() {
@@ -23,8 +17,13 @@ public class JoinMessage implements Message {
 	@Override
 	public void onReceive(Layer layer) {
 		layer.stopReceiving();
-		SecureLayer sec = (SecureLayer) layer;
-		sec.join(id);
+		ClientSecureLayer sec = (ClientSecureLayer) layer;
+		try {
+			sec.stop();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

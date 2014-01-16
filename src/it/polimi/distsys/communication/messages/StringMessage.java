@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.communication.Layer;
-import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.layers.Layer;
 
 public class StringMessage implements Message {
 	private static final long serialVersionUID = 9052245167443004983L;

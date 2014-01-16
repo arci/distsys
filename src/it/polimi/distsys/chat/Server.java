@@ -1,6 +1,6 @@
 package it.polimi.distsys.chat;
 
-import it.polimi.distsys.communication.StackFactory;
+import it.polimi.distsys.communication.layers.StackFactory;
 
 import java.io.IOException;
 

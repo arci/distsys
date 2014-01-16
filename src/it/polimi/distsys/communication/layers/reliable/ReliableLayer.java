@@ -1,15 +1,17 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.communication.layers.reliable;
 
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.components.SequenceNumber;
+import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.NACKMessage;
 import it.polimi.distsys.communication.messages.SequenceNumberMessage;
 import it.polimi.distsys.communication.messages.StringMessage;
-import it.polimi.distsys.components.Printer;
-import it.polimi.distsys.components.SequenceNumber;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,12 +37,12 @@ public class ReliableLayer extends Layer {
 	}
 
 	@Override
-	public Message processOnSend(Message msg) {
+	public List<Message> processOnSend(Message msg) {
 		ID++;
 		SequenceNumber sn = new SequenceNumber(uniqueID, ID);
 		SequenceNumberMessage toSend = new SequenceNumberMessage(sn, msg);
 		sendingQueue.add(toSend);
-		return toSend;
+		return new ArrayList<Message>(Arrays.asList(toSend));
 	}
 
 	@Override

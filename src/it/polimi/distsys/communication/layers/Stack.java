@@ -1,4 +1,4 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.communication.layers;
 
 import it.polimi.distsys.communication.messages.Message;
 

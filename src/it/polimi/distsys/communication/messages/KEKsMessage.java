@@ -4,9 +4,9 @@ import java.security.Key;
 import java.util.List;
 import java.util.UUID;
 
-import it.polimi.distsys.communication.Layer;
-import it.polimi.distsys.communication.SecureLayer;
-import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.communication.layers.secure.SecureLayer;
 
 public class KEKsMessage implements Message {
 	private static final long serialVersionUID = -2283156939799401703L;

@@ -1,7 +1,8 @@
-package it.polimi.distsys.communication;
+package it.polimi.distsys.communication.layers.multicast;
 
+import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.messages.Message;
-import it.polimi.distsys.components.Printer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -90,7 +91,7 @@ public class MulticastLayer extends Layer {
 	}
 
 	@Override
-	public Message processOnSend(Message msg) {
+	public List<Message> processOnSend(Message msg) {
 		// TODO Auto-generated method stub
 		return null;
 	}

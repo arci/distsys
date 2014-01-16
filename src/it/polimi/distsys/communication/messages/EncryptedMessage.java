@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.communication.Layer;
-import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.layers.Layer;
 
 public class EncryptedMessage implements Message {
 	private static final long serialVersionUID = 107158341380726137L;

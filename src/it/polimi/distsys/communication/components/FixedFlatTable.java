@@ -1,4 +1,4 @@
-package it.polimi.distsys.components;
+package it.polimi.distsys.communication.components;
 
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -46,7 +46,7 @@ public class FixedFlatTable implements Iterable<UUID>{
 		return keks;
 	}
 
-	public List<Key> updateKEKs(UUID memberID) throws Exception {
+	public List<Key> updateKEKs(UUID memberID) throws TableException {
 		List<Key> keks = new ArrayList<Key>();
 		int[] bits = getBits(memberID);
 		for (int i = 0; i < bits.length; i++) {
@@ -68,7 +68,7 @@ public class FixedFlatTable implements Iterable<UUID>{
 		members.add(memberID);
 	}
 
-	public void leave(UUID memberID) throws Exception {
+	public void leave(UUID memberID) {
 		members.remove(memberID);
 	}
 

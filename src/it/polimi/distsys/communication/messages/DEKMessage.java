@@ -2,9 +2,9 @@ package it.polimi.distsys.communication.messages;
 
 import java.security.Key;
 
-import it.polimi.distsys.communication.Layer;
-import it.polimi.distsys.communication.SecureLayer;
-import it.polimi.distsys.components.Printer;
+import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.communication.layers.secure.SecureLayer;
 
 public class DEKMessage implements Message {
 	private static final long serialVersionUID = -8156497824267452282L;
