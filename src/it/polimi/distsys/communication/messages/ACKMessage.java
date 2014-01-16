@@ -1,6 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.layers.secure.ServerSecureLayer;
 
@@ -23,17 +24,28 @@ public class ACKMessage implements Message {
 	@Override
 	public void onReceive(Layer layer) {
 		layer.stopReceiving();
-		ServerSecureLayer sec = (ServerSecureLayer) layer;
 		try {
-			sec.ACKReceived(id);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			ServerSecureLayer sec = (ServerSecureLayer) layer;
+			try {
+				sec.ACKReceived(id);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} catch (ClassCastException e) {
+			// TODO: handle exception
+			//ACKs are only for servers!
 		}
 	}
 
 	@Override
-	public void onSend(Layer layer) {}
+	public void onSend(Layer layer) {
+	}
 
 	@Override
 	public Message unpack() {

@@ -44,7 +44,7 @@ public abstract class SecureLayer extends Layer {
 	
 	public abstract void join(UUID memberID);
 	public abstract void leave(UUID memberID);
-	public abstract void updateKEKs(List<Key> keks);
 	public abstract void updateDEK(Key dek);
+	public abstract void updateKEK(Integer position, Key key);
 
 }

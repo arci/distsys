@@ -17,15 +17,19 @@ public class NormalState implements ServerState {
 	@Override
 	public void join(UUID id) throws IOException, TableException {
 		layer.getTable().join(id);
+		layer.getTable().refreshDEK();
+		layer.addJoiner(id);
 		layer.sendDown(new STOPMessage());
-		layer.setState(layer.getStoppingState());
+		layer.setState(new StoppingState(layer));
 	}
 
 	@Override
 	public void leave(UUID id) throws TableException, IOException {
 		layer.getTable().leave(id);
+		layer.getTable().refreshDEK();
+		layer.addLeaver(id);
 		layer.sendDown(new STOPMessage());
-		layer.setState(layer.getStoppingState());
+		layer.setState(new StoppingState(layer));
 	}
 
 	@Override

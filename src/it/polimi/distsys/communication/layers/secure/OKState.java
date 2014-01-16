@@ -3,9 +3,6 @@ package it.polimi.distsys.communication.layers.secure;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OKState implements ClientState {
@@ -17,11 +14,11 @@ public class OKState implements ClientState {
 	}
 	
 	@Override
-	public void keysReceived(List<Key> keks, Key dek) {}
+	public void keysReceived() {}
 
 	@Override
 	public void stop() throws IOException {
-		layer.setState(layer.getStopState());
+		layer.setState(new STOPState(layer));
 		layer.sendACK();
 	}
 
@@ -29,13 +26,13 @@ public class OKState implements ClientState {
 	public void done() {}
 
 	@Override
-	public List<Message> send(Message msg) {
-		return new ArrayList<Message>(Arrays.asList(msg));
+	public boolean send(Message msg) {
+		return true;
 	}
 
 	@Override
-	public List<Message> receive(Message msg) throws IOException {
-		return new ArrayList<Message>(Arrays.asList(msg));
+	public boolean receive(Message msg) throws IOException {
+		return true;
 	}
 
 	@Override

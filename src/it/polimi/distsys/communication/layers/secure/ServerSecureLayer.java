@@ -2,35 +2,32 @@ package it.polimi.distsys.communication.layers.secure;
 
 import it.polimi.distsys.communication.components.Decrypter;
 import it.polimi.distsys.communication.components.Encrypter;
-import it.polimi.distsys.communication.components.FixedFlatTable;
+import it.polimi.distsys.communication.components.FlatTable;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.components.TableException;
 
 import java.io.IOException;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ServerSecureLayer extends SecureLayer {
-	private FixedFlatTable table;
-	private ServerState normal;
-	private ServerState stopping;
-	private ServerState keys;
+	private FlatTable table;
 	
 	private ServerState state;
+	private List<UUID> joiners = new ArrayList<UUID>();
+	private List<UUID> leavers = new ArrayList<UUID>();
 	
 	
 	public ServerSecureLayer() {
 		super();
-		table = new FixedFlatTable();
+		table = new FlatTable();
 		dek = table.getDEK();
 		enc = new Encrypter(dek);
 		dec = new Decrypter(dek);
 		
-		normal = new NormalState(this);
-		stopping = new StoppingState(this);
-		keys = new KeysState(this);
-		state = normal;
+		state = new NormalState(this);
 	}
 
 	@Override
@@ -43,7 +40,7 @@ public class ServerSecureLayer extends SecureLayer {
 		}
 	}
 	
-	public void ACKReceived(UUID id) throws IOException {
+	public void ACKReceived(UUID id) throws IOException, TableException {
 		state.ACKReceived(id);
 	}
 	
@@ -62,21 +59,23 @@ public class ServerSecureLayer extends SecureLayer {
 		}
 	}
 
-	@Override
-	public void updateKEKs(List<Key> keks) {}
+	
 
 	@Override
 	public void updateDEK(Key dek) {
 		enc.updateKey(dek);
 		dec.updateKey(dek);
 	}
+	
+	@Override
+	public void updateKEK(Integer position, Key key) {}
 
 	@Override
 	public void leave() throws IOException {
 		//it shouldn't happen that the server leaves
 	}
 	
-	public FixedFlatTable getTable() {
+	public FlatTable getTable() {
 		return table;
 	}
 	
@@ -85,15 +84,23 @@ public class ServerSecureLayer extends SecureLayer {
 		this.state = state;
 	}
 	
-	public ServerState getNormalState() {
-		return normal;
+	public void addJoiner(UUID id){
+		joiners.add(id);
 	}
 	
-	public ServerState getKeysState() {
-		return keys;
+	public void addLeaver(UUID id){
+		leavers.add(id);
 	}
 	
-	public ServerState getStoppingState() {
-		return stopping;
+	public List<UUID> getJoiners(){
+		List<UUID> cloned = new ArrayList<UUID>(joiners);
+		joiners.clear();
+		return cloned;
+	}
+	
+	public List<UUID> getLeavers(){
+		List<UUID> cloned = new ArrayList<UUID>(leavers);
+		leavers.clear();
+		return cloned;
 	}
 }

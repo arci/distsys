@@ -10,5 +10,5 @@ public interface ServerState {
 
 	public void leave(UUID id) throws IOException, TableException;
 
-	public void ACKReceived(UUID id) throws IOException;
+	public void ACKReceived(UUID id) throws IOException, TableException;
 }

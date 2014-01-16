@@ -4,13 +4,14 @@ import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.messages.DONEMessage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 public class KeysState implements ServerState {
 	private ServerSecureLayer layer;
-	private List<UUID> waitingACK;
+	private List<UUID> waitingACK = new ArrayList<UUID>();
 
 	public KeysState(ServerSecureLayer layer) {
 		super();
@@ -29,7 +30,8 @@ public class KeysState implements ServerState {
 	@Override
 	public void leave(UUID id) throws IOException, TableException {
 		waitingACK.clear();
-		layer.getNormalState().leave(id);
+		layer.setState(new StoppingState(layer));
+		layer.leave(id);
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class KeysState implements ServerState {
 		waitingACK.remove(id);
 		if(waitingACK.isEmpty()){
 			layer.sendDown(new DONEMessage());
-			layer.setState(layer.getNormalState());
+			layer.setState(new NormalState(layer));
 		}
 	}
 

@@ -3,146 +3,77 @@ package it.polimi.distsys.communication.components;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
-public class FlatTable {
-	private List<Key> zeros;
-	private List<Key> ones;
-	private Map<UUID, Integer> members;
-	private KeyGenerator keygen;
+public class FlatTable implements Iterable<UUID>{
+	public final static int MAX_GROUP_SIZE = 8;
+	public final static int BITS = (int) Math.ceil(Math.log(MAX_GROUP_SIZE)/Math.log(2));
+	private Key[] zeros;
+	private Key[] ones;
 	private Key dek;
+	private List<UUID> members;
+	private KeyGenerator keygen;
 	
 	public FlatTable() {
-		zeros = new ArrayList<Key>();
-		ones = new ArrayList<Key>();
-		members = new HashMap<UUID, Integer>();
+		zeros = new Key[BITS];
+		ones = new Key[BITS];
+		members = new ArrayList<UUID>();
 		try {
 			keygen = KeyGenerator.getInstance(Decrypter.ALGORITHM);
 			keygen.init(new SecureRandom());
-			// dek = keygen.generateKey();
-			// TODO remove, only to have the same key on everyone
-			SecretKeyFactory factory = SecretKeyFactory
-					.getInstance("PBKDF2WithHmacSHA1");
-			KeySpec spec = new PBEKeySpec("fuckin".toCharArray(),
-					"cazzo".getBytes(), 65536, 256);
-			SecretKey tmp = factory.generateSecret(spec);
-			dek = new SecretKeySpec(tmp.getEncoded(), "AES");
+			dek = keygen.generateKey();
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InvalidKeySpecException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
-	public List<Key> getKEKs(UUID memberID) throws Exception {
-		if (!members.keySet().contains(memberID)) {
-			throw new Exception() {
-				private static final long serialVersionUID = 4813696989637416032L;
-
-				@Override
-				public String getMessage() {
-					return "Member unknown";
-				}
-			};
-		}
-		Integer ID = members.get(memberID);
-		List<Key> keks = new ArrayList<Key>();
-		String[] base2 = Integer.toBinaryString(ID).split("(?!^)");
-		for (int i = 0; i < base2.length; i++) {
-			if (Integer.valueOf(base2[i]) == 1) {
-				keks.add(ones.get(i));
+	public Key[] getKEKs(UUID memberID) throws TableException {
+		Key[] keks = new Key[BITS];
+		int[] bits = getBits(memberID);
+		for (int i = 0; i < bits.length; i++) {
+			if (Integer.valueOf(bits[i]) == 1) {
+				keks[i] = ones[i];
 			} else {
-				keks.add(zeros.get(i));
+				keks[i] = zeros[i];
 			}
 		}
 		return keks;
 	}
 
-	public List<Key> updateKEKs(UUID memberID) throws Exception {
-		if (!members.keySet().contains(memberID)) {
-			throw new Exception() {
-				private static final long serialVersionUID = -6061049907345352656L;
-
-				@Override
-				public String getMessage() {
-					return "Member unknown";
-				}
-			};
-		}
-		Integer ID = members.get(memberID);
-		List<Key> keks = new ArrayList<Key>();
-		String[] base2 = Integer.toBinaryString(ID).split("(?!^)");
-		for (int i = 0; i < base2.length; i++) {
-			if (Integer.valueOf(base2[i]) == 1) {
-				ones.remove(i);
-				ones.add(i, keygen.generateKey());
-				keks.add(ones.get(i));
+	public Key[] updateKEKs(UUID memberID) throws TableException {
+		Key[] keks = new Key[BITS];
+		int[] bits = getBits(memberID);
+		for (int i = 0; i < bits.length; i++) {
+			if (Integer.valueOf(bits[i]) == 1) {
+				ones[i] = keygen.generateKey();
+				keks[i] = ones[i];
 			} else {
-				zeros.remove(i);
-				zeros.add(i, keygen.generateKey());
-				keks.add(zeros.get(i));
+				zeros[i] = keygen.generateKey();
+				keks[i] = zeros[i];
 			}
 		}
 		return keks;
 	}
 
-	public void join(UUID memberID) throws Exception {
-		Integer id = members.keySet().size();
-		members.put(memberID, id);
-
-		Integer size = (int) Math
-				.ceil((Math.log(members.keySet().size()) / Math.log(2)));
-		while (zeros.size() < size) {
-			zeros.add(0, keygen.generateKey());
-			ones.add(0, keygen.generateKey());
+	public Key[] join(UUID memberID) throws TableException {
+		if(members.size() + 1 > MAX_GROUP_SIZE){
+			throw new TableException("Group size exceeded!");
 		}
-
-		if (zeros.size() != ones.size()) {
-			throw new Exception() {
-				private static final long serialVersionUID = 7423062483366813294L;
-
-				@Override
-				public String getMessage() {
-					return "Inconsistency in flat table lines";
-				}
-			};
-		}
+		members.add(memberID);
+		
+		return getKEKs(memberID);
 	}
 
-	public void leave(UUID memberID) throws Exception {
+	public void leave(UUID memberID) {
 		members.remove(memberID);
-
-		Integer size = (int) Math
-				.ceil((Math.log(members.keySet().size()) / Math.log(2)));
-		while (zeros.size() > size) {
-			zeros.remove(0);
-			ones.remove(0);
-		}
-
-		if (zeros.size() != ones.size()) {
-			throw new Exception() {
-				private static final long serialVersionUID = 7423062483366813294L;
-
-				@Override
-				public String getMessage() {
-					return "Inconsistency in flat table lines";
-				}
-			};
-		}
 	}
 
 	public Key refreshDEK() {
@@ -153,14 +84,59 @@ public class FlatTable {
 	public Key getDEK() {
 		return dek;
 	}
+	
+	public Map<UUID, List<Integer>> getInterested(UUID id) throws TableException {
+		Map<UUID, List<Integer>> interested = new HashMap<UUID, List<Integer>>();
+		int[] bits = getBits(id);
+		
+		for(UUID member : members){
+			int[] otherBits = getBits(member);
+			for(int i= 0; i< bits.length; i++){
+				if(bits[i] == otherBits[i]){
+					if(interested.get(member) == null){
+						interested.put(member, new ArrayList<Integer>());
+					}
+					interested.get(member).add(i);
+					break;
+				}
+			}
+		}
+		
+		return interested;
+	}
+	
+	private int[] getBits(UUID memberID) throws TableException{
+		if (!members.contains(memberID)) {
+			throw new TableException("The given UUID isn't in members!");
+		}
+		Integer ID = members.indexOf(memberID);
+		String base2 = Integer.toBinaryString(ID);
+		while(base2.length() < BITS){
+			base2 = "0" + base2;
+		}
+		
+		String[] splitted = base2.split("(?!^)");
+		int[] toReturn = new int[splitted.length];
+		
+		for(int i=0; i< toReturn.length; i++){
+			toReturn[i] = Integer.valueOf(splitted[i]);
+		}
+		
+		return toReturn;
+	}
+	
+	@Override
+	public Iterator<UUID> iterator() {
+		return members.iterator();
+	}
 
 	@Override
 	public String toString() {
 		String string = "";
 
-		for (UUID id : members.keySet()) {
+		for (UUID id : members) {
 			string += "\t" + id.toString().substring(0, 4) + "#"
-					+ members.get(id);
+					+ members.indexOf(id);
 		}
 		string += "\n0:";
 		for (Key k : zeros) {
@@ -172,5 +148,4 @@ public class FlatTable {
 		}
 		return string;
 	}
-
 }

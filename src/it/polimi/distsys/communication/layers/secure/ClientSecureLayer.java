@@ -3,6 +3,7 @@ package it.polimi.distsys.communication.layers.secure;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.components.Decrypter;
 import it.polimi.distsys.communication.components.Encrypter;
+import it.polimi.distsys.communication.components.FlatTable;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.messages.ACKMessage;
 import it.polimi.distsys.communication.messages.JoinMessage;
@@ -16,47 +17,41 @@ import java.util.List;
 import java.util.UUID;
 
 public class ClientSecureLayer extends SecureLayer {
-	private List<Key> keks;
-	
+	private Key[] keks = new Key[FlatTable.BITS];
+
 	private ClientState init;
-	private ClientState ok;
 	private ClientState stop;
 	private ClientState state;
-	
+
 	public ClientSecureLayer() {
 		super();
 		enc = new Encrypter();
 		dec = new Decrypter();
-		
+
 		init = new InitState(this);
-		ok = new OKState(this);
 		stop = new STOPState(this);
 		state = init;
 	}
-	
+
 	@Override
 	public List<Message> processOnSend(Message msg) {
-		List<Message> messages = state.send(msg);
-		List<Message> toReturn = new ArrayList<Message>();
-		for(Message m : messages){
-			toReturn.addAll(super.processOnSend(m));
+		if (state.send(msg)) {
+			return super.processOnSend(msg);
 		}
-		return toReturn;
+		return new ArrayList<Message>();
 	}
-	
+
 	@Override
 	public List<Message> processOnReceive(Message msg) throws IOException {
-		List<Message> messages = state.receive(msg);
-		List<Message> toReturn = new ArrayList<Message>();
-		for(Message m : messages){
-			toReturn.addAll(super.processOnSend(m));
+		if (state.receive(msg)) {
+			return super.processOnReceive(msg);
 		}
-		return toReturn;
+		return new ArrayList<Message>();
 	}
 
 	@Override
 	public void join(UUID memberID) {}
-	
+
 	@Override
 	public void join() throws IOException {
 		underneath.join();
@@ -64,11 +59,7 @@ public class ClientSecureLayer extends SecureLayer {
 	}
 
 	@Override
-	public void leave(UUID memberID) {}
-
-	@Override
-	public void updateKEKs(List<Key> keks) {
-		this.keks = keks;
+	public void leave(UUID memberID) {
 	}
 
 	@Override
@@ -77,39 +68,36 @@ public class ClientSecureLayer extends SecureLayer {
 		enc.updateKey(dek);
 		dec.updateKey(dek);
 	}
+	
+	@Override
+	public void updateKEK(Integer position, Key key) {
+		keks[position] = key;
+	}
 
 	@Override
 	public void leave() throws IOException {
 		sendDown(new LeaveMessage(Peer.ID));
 	}
-	
+
 	public void sendACK() throws IOException {
 		sendDown(new ACKMessage(Peer.ID));
 	}
-	
-	public Key getKEK(int index){
-		return keks.get(index);
+
+	public Key getKEK(int index) {
+		return keks[index];
 	}
-	
+
 	public void setState(ClientState state) {
-		Printer.printDebug(getClass(), "state set to " + state.getClass().getSimpleName());
+		Printer.printDebug(getClass(), "state set to "
+				+ state.getClass().getSimpleName());
 		this.state = state;
 	}
-	
-	public ClientState getInitState() {
-		return init;
-	}
-	
-	public ClientState getStopState() {
-		return stop;
-	}
-	
-	public ClientState getOkState() {
-		return ok;
-	}
-	
-	public void keysReceived(List<Key> keks, Key dek) {
-		state.keysReceived(keks, dek);
+
+	public void keysReceived() throws IOException {
+		state.keysReceived();
+		for (Message m : init.getMessages()) {
+			send(m);
+		}
 	}
 
 	public void stop() throws IOException {
@@ -118,7 +106,7 @@ public class ClientSecureLayer extends SecureLayer {
 
 	public void done() throws IOException {
 		state.done();
-		for(Message m : stop.getMessages()){
+		for (Message m : stop.getMessages()) {
 			send(m);
 		}
 	}

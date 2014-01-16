@@ -3,25 +3,22 @@ package it.polimi.distsys.communication.layers.secure;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InitState implements ClientState {
 	private ClientSecureLayer layer;
-	private List<Message> sendingQueue;
+	private List<Message> sendingQueue = new ArrayList<Message>();
 
 	public InitState(ClientSecureLayer layer) {
 		super();
 		this.layer = layer;
-		sendingQueue = new ArrayList<Message>();
 	}
 
 	@Override
-	public void keysReceived(List<Key> keks, Key dek) {
-		layer.updateKEKs(keks);
-		layer.updateDEK(dek);
-		layer.setState(layer.getOkState());
+	public void keysReceived() throws IOException {
+		layer.setState(new OKState(layer));
+		layer.sendACK();
 	}
 
 	@Override
@@ -33,18 +30,20 @@ public class InitState implements ClientState {
 	public void done() {}
 
 	@Override
-	public List<Message> send(Message msg) {
+	public boolean send(Message msg) {
 		sendingQueue.add(msg);
-		return new ArrayList<Message>();
+		return false;
 	}
 
 	@Override
-	public List<Message> receive(Message msg) throws IOException {
-		return new ArrayList<Message>();
+	public boolean receive(Message msg) throws IOException {
+		return false;
 	}
 	
 	public List<Message> getMessages() {
-		return sendingQueue;
+		List<Message> cloned = new ArrayList<Message>(sendingQueue);
+		sendingQueue.clear();
+		return cloned;
 	}
 
 }
