@@ -16,6 +16,7 @@ public class NormalState implements ServerState {
 
 	@Override
 	public void join(UUID id) throws IOException, TableException {
+		layer.reset();
 		layer.getTable().join(id);
 		layer.getTable().refreshDEK();
 		layer.addJoiner(id);
@@ -25,6 +26,7 @@ public class NormalState implements ServerState {
 
 	@Override
 	public void leave(UUID id) throws TableException, IOException {
+		layer.reset();
 		layer.getTable().updateKEKs(id);
 		layer.getTable().leave(id);
 		layer.getTable().refreshDEK();

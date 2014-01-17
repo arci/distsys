@@ -81,14 +81,15 @@ public class ServerSecureLayer extends SecureLayer {
 	}
 
 	public List<UUID> getJoiners() {
-		List<UUID> cloned = new ArrayList<UUID>(joiners);
-		joiners.clear();
-		return cloned;
+		return joiners;
 	}
 
 	public List<UUID> getLeavers() {
-		List<UUID> cloned = new ArrayList<UUID>(leavers);
+		return leavers;
+	}
+	
+	public void reset(){
+		joiners.clear();
 		leavers.clear();
-		return cloned;
 	}
 }
