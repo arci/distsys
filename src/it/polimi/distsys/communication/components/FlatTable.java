@@ -23,6 +23,7 @@ public class FlatTable implements Iterable<UUID> {
 	private KeyGenerator keygen;
 
 	public FlatTable() {
+		Printer.printDebug(getClass(), "FlatTable initialized: max group size: " + MAX_GROUP_SIZE + ", bits: " + BITS);
 		zeros = new Key[BITS];
 		ones = new Key[BITS];
 		members = new ArrayList<UUID>();
@@ -36,7 +37,7 @@ public class FlatTable implements Iterable<UUID> {
 		}
 	}
 
-	public Key[] getKEKs(UUID memberID) {
+	public Key[] getKEKs(UUID memberID) throws TableException {
 		Key[] keks = new Key[BITS];
 		int[] bits = getBits(memberID);
 		for (int i = 0; i < bits.length; i++) {
@@ -50,9 +51,6 @@ public class FlatTable implements Iterable<UUID> {
 	}
 
 	public Key[] updateKEKs(UUID memberID) throws TableException {
-		if (!members.contains(memberID)) {
-			throw new TableException("The given UUID isn't in members!");
-		}
 		Key[] keks = new Key[BITS];
 		int[] bits = getBits(memberID);
 		for (int i = 0; i < bits.length; i++) {
@@ -115,20 +113,23 @@ public class FlatTable implements Iterable<UUID> {
 		return interested;
 	}
 
-	private int[] getBits(UUID memberID) {
+	private int[] getBits(UUID memberID) throws TableException {
+		if (!members.contains(memberID)) {
+			throw new TableException("The given UUID isn't in members!");
+		}
 		Integer ID = members.indexOf(memberID);
 		String base2 = Integer.toBinaryString(ID);
 		while (base2.length() < BITS) {
 			base2 = "0" + base2;
 		}
 
-		String[] splitted = base2.split("(?!^)");
+		char[] splitted = base2.toCharArray();
 		int[] toReturn = new int[splitted.length];
 
 		for (int i = 0; i < toReturn.length; i++) {
 			toReturn[i] = Integer.valueOf(splitted[i]);
 		}
-
+		
 		return toReturn;
 	}
 

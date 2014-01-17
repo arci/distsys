@@ -3,6 +3,7 @@ package it.polimi.distsys.communication.layers.secure;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.components.Decrypter;
 import it.polimi.distsys.communication.components.Encrypter;
+import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.messages.EncryptedMessage;
 import it.polimi.distsys.communication.messages.Message;
@@ -42,8 +43,8 @@ public abstract class SecureLayer extends Layer {
 		return Peer.ID.equals(id);
 	}
 	
-	public abstract void join(UUID memberID);
-	public abstract void leave(UUID memberID);
+	public abstract void join(UUID memberID) throws IOException, TableException;
+	public abstract void leave(UUID memberID) throws IOException, TableException;
 	public abstract void updateDEK(Key dek);
 	public abstract void updateKEK(Integer position, Key key);
 

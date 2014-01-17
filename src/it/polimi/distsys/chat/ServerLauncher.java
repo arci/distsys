@@ -12,11 +12,9 @@ public class ServerLauncher {
 		Server server = new Server();
 		
 		Config.init();
-		//TODO remove these lines
 		server.startDisplayer();
-		server.startReader();
 		
-		Printer.printDebug(ServerLauncher.class.getClass(), "Server ready");
+		Printer.printDebug(ServerLauncher.class, "Server ready");
 	}
 
 }

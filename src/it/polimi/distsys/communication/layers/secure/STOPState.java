@@ -26,7 +26,7 @@ public class STOPState implements ClientState {
 
 	@Override
 	public void done() {
-		layer.setState(new OKState(layer));
+		layer.setState(new ReadyState(layer));
 	}
 
 	@Override

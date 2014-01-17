@@ -5,10 +5,10 @@ import it.polimi.distsys.communication.messages.Message;
 import java.io.IOException;
 import java.util.List;
 
-public class OKState implements ClientState {
+public class ReadyState implements ClientState {
 	private ClientSecureLayer layer;
 
-	public OKState(ClientSecureLayer layer) {
+	public ReadyState(ClientSecureLayer layer) {
 		super();
 		this.layer = layer;
 	}

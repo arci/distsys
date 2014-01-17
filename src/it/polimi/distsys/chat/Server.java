@@ -14,11 +14,6 @@ public class Server extends Peer {
 		stack.join();
 	}
 
-	// TODO remove... Only to see things work
-	public void startReader() {
-		new Thread(new Reader(this)).start();
-	}
-
 	public void startDisplayer() {
 		new Thread(new Displayer(this)).start();
 	}

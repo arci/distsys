@@ -9,11 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class KeysState implements ServerState {
+public class SendingDoneState implements ServerState {
 	private ServerSecureLayer layer;
 	private List<UUID> waitingACK = new ArrayList<UUID>();
 
-	public KeysState(ServerSecureLayer layer) {
+	public SendingDoneState(ServerSecureLayer layer) {
 		super();
 		this.layer = layer;
 		Iterator<UUID> itr = layer.getTable().iterator();
@@ -30,7 +30,7 @@ public class KeysState implements ServerState {
 	@Override
 	public void leave(UUID id) throws IOException, TableException {
 		waitingACK.clear();
-		layer.setState(new StoppingState(layer));
+		layer.setState(new SendingKeysState(layer));
 		layer.leave(id);
 	}
 

@@ -20,16 +20,17 @@ public class NormalState implements ServerState {
 		layer.getTable().refreshDEK();
 		layer.addJoiner(id);
 		layer.sendDown(new STOPMessage());
-		layer.setState(new StoppingState(layer));
+		layer.setState(new SendingKeysState(layer));
 	}
 
 	@Override
 	public void leave(UUID id) throws TableException, IOException {
+		layer.getTable().updateKEKs(id);
 		layer.getTable().leave(id);
 		layer.getTable().refreshDEK();
 		layer.addLeaver(id);
 		layer.sendDown(new STOPMessage());
-		layer.setState(new StoppingState(layer));
+		layer.setState(new SendingKeysState(layer));
 	}
 
 	@Override

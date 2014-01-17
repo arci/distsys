@@ -1,9 +1,11 @@
 package it.polimi.distsys.communication.messages;
 
 import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.layers.secure.SecureLayer;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class JoinMessage implements Message {
@@ -21,10 +23,15 @@ public class JoinMessage implements Message {
 	}
 
 	@Override
-	public void onReceive(Layer layer) {
+	public void onReceive(Layer layer) throws IOException {
 		layer.stopReceiving();
 		SecureLayer sec = (SecureLayer) layer;
-		sec.join(id);
+		try {
+			sec.join(id);
+		} catch (TableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

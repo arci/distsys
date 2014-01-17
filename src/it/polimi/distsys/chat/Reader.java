@@ -44,5 +44,7 @@ public class Reader implements Runnable {
 			e.printStackTrace();
 		}
 		in.close();
+		
+		System.exit(0);
 	}
 }

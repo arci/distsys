@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class StoppingState implements ServerState {
+public class SendingKeysState implements ServerState {
 	private ServerSecureLayer layer;
 	private List<UUID> waitingACK = new ArrayList<UUID>();
 
-	public StoppingState(ServerSecureLayer layer) {
+	public SendingKeysState(ServerSecureLayer layer) {
 		super();
 		this.layer = layer;
 		Iterator<UUID> itr = layer.getTable().iterator();
@@ -35,6 +35,7 @@ public class StoppingState implements ServerState {
 
 	@Override
 	public void leave(UUID id) throws IOException, TableException {
+		layer.getTable().updateKEKs(id);
 		layer.getTable().leave(id);
 		layer.addLeaver(id);
 		ACKReceived(id);
@@ -44,7 +45,7 @@ public class StoppingState implements ServerState {
 	public void ACKReceived(UUID id) throws IOException, TableException {
 		waitingACK.remove(id);
 		if (waitingACK.isEmpty()) {
-			layer.setState(new KeysState(layer));
+			layer.setState(new SendingDoneState(layer));
 			// key exchange
 			Key dek = layer.getTable().refreshDEK();
 			layer.updateDEK(dek);
@@ -52,7 +53,7 @@ public class StoppingState implements ServerState {
 			List<UUID> leavers = layer.getLeavers();
 
 			for (UUID leaver : leavers) {
-				Key[] keks = layer.getTable().updateKEKs(leaver);
+				Key[] keks = layer.getTable().getKEKs(leaver);
 				layer.sendDown(new KeysMessage(layer.getTable().getInterested(leaver), layer
 						.getTable().getDEK(), keks));
 			}
