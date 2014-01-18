@@ -36,6 +36,7 @@ public class NormalState implements ServerState {
 	public void leave(UUID id) throws TableException, IOException {
 		members.remove(id);
 		if(members.isEmpty()){
+			layer.getTable().leave(id);
 			return;
 		}
 		leavers.add(id);
