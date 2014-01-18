@@ -5,21 +5,20 @@ import it.polimi.distsys.communication.messages.DONEMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class SendingDoneState implements ServerState {
 	private ServerSecureLayer layer;
 	private List<UUID> waitingACK = new ArrayList<UUID>();
+	private List<UUID> members = new ArrayList<UUID>();
 
-	public SendingDoneState(ServerSecureLayer layer) {
+	public SendingDoneState(ServerSecureLayer layer, List<UUID> members) {
 		super();
 		this.layer = layer;
-		Iterator<UUID> itr = layer.getTable().iterator();
-		while(itr.hasNext()){
-			waitingACK.add(itr.next());
-		}
+		this.members = members;
+		waitingACK = new ArrayList<UUID>(members);
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class SendingDoneState implements ServerState {
 	@Override
 	public void leave(UUID id) throws IOException, TableException {
 		waitingACK.clear();
-		layer.setState(new SendingKeysState(layer));
+		layer.setState(new SendingKeysState(layer, members, new ArrayList<UUID>(), Arrays.asList(id)));
 		layer.leave(id);
 	}
 

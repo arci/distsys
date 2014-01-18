@@ -8,16 +8,11 @@ import it.polimi.distsys.communication.components.TableException;
 
 import java.io.IOException;
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class ServerSecureLayer extends SecureLayer {
 	private FlatTable table;
-
 	private ServerState state;
-	private List<UUID> joiners = new ArrayList<UUID>();
-	private List<UUID> leavers = new ArrayList<UUID>();
 
 	public ServerSecureLayer() {
 		super();
@@ -70,26 +65,5 @@ public class ServerSecureLayer extends SecureLayer {
 		Printer.printDebug(getClass(), "state set to "
 				+ state.getClass().getSimpleName());
 		this.state = state;
-	}
-
-	public void addJoiner(UUID id) {
-		joiners.add(id);
-	}
-
-	public void addLeaver(UUID id) {
-		leavers.add(id);
-	}
-
-	public List<UUID> getJoiners() {
-		return joiners;
-	}
-
-	public List<UUID> getLeavers() {
-		return leavers;
-	}
-	
-	public void reset(){
-		joiners.clear();
-		leavers.clear();
 	}
 }

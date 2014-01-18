@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,28 +15,29 @@ import java.util.UUID;
 public class SendingKeysState implements ServerState {
 	private ServerSecureLayer layer;
 	private List<UUID> waitingACK = new ArrayList<UUID>();
+	private List<UUID> members = new ArrayList<UUID>();
+	private List<UUID> joiners = new ArrayList<UUID>();
+	private List<UUID> leavers = new ArrayList<UUID>();
 
-	public SendingKeysState(ServerSecureLayer layer) {
+	public SendingKeysState(ServerSecureLayer layer, List<UUID> members,
+			List<UUID> joiners, List<UUID> leavers) {
 		super();
 		this.layer = layer;
-		Iterator<UUID> itr = layer.getTable().iterator();
-		while (itr.hasNext()) {
-			waitingACK.add(itr.next());
-		}
+		this.members = members;
+		this.joiners = joiners;
+		this.leavers = leavers;
+		waitingACK = new ArrayList<UUID>(members);
 	}
 
 	@Override
 	public void join(UUID id) throws TableException {
-		layer.getTable().join(id);
-		layer.addJoiner(id);
+		joiners.add(id);
 		waitingACK.add(id);
 	}
 
 	@Override
 	public void leave(UUID id) throws IOException, TableException {
-		layer.getTable().updateKEKs(id);
-		layer.getTable().leave(id);
-		layer.addLeaver(id);
+		leavers.add(id);
 		ACKReceived(id);
 	}
 
@@ -45,29 +45,32 @@ public class SendingKeysState implements ServerState {
 	public void ACKReceived(UUID id) throws IOException, TableException {
 		waitingACK.remove(id);
 		if (waitingACK.isEmpty()) {
-			layer.setState(new SendingDoneState(layer));
 			// key exchange
-			Key dek = layer.getTable().refreshDEK();
+			FlatTable table = layer.getTable();
+			Key dek = table.refreshDEK();
 			layer.updateDEK(dek);
-			List<UUID> joiners = layer.getJoiners();
-			List<UUID> leavers = layer.getLeavers();
 
 			for (UUID leaver : leavers) {
-				Key[] keks = layer.getTable().getKEKs(leaver);
-				layer.sendDown(new KeysMessage(layer.getTable().getInterested(leaver), layer
-						.getTable().getDEK(), keks));
+				Key[] keks = table.updateKEKs(leaver);
+				Map<UUID, List<Integer>> interested = table.getInterested(leaver);
+				table.leave(leaver);
+				layer.sendDown(new KeysMessage(interested,
+						dek, keks));
 			}
-			
+
 			for (UUID joiner : joiners) {
+				table.join(joiner);
 				Map<UUID, List<Integer>> receiver = new HashMap<UUID, List<Integer>>();
 				List<Integer> positions = new ArrayList<Integer>();
-				for(int i = 0; i< FlatTable.BITS; i++){
+				for (int i = 0; i < FlatTable.BITS; i++) {
 					positions.add(i);
 				}
 				receiver.put(joiner, positions);
-				layer.sendDown(new KeysMessage(receiver, layer
-						.getTable().getDEK(), layer.getTable().getKEKs(joiner)));
+				layer.sendDown(new KeysMessage(receiver, dek, table
+						.getKEKs(joiner)));
 			}
+
+			layer.setState(new SendingDoneState(layer, members));
 		}
 	}
 
