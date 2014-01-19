@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.layers.secure;
 
-import it.polimi.distsys.communication.components.Decrypter;
-import it.polimi.distsys.communication.components.Encrypter;
+import it.polimi.distsys.communication.components.MessageDecrypter;
+import it.polimi.distsys.communication.components.MessageEncrypter;
 import it.polimi.distsys.communication.components.FlatTable;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.components.TableException;
@@ -18,8 +18,8 @@ public class ServerSecureLayer extends SecureLayer {
 		super();
 		table = new FlatTable();
 		dek = table.getDEK();
-		enc = new Encrypter(dek);
-		dec = new Decrypter(dek);
+		enc = new MessageEncrypter(dek);
+		dec = new MessageDecrypter(dek);
 
 		state = new NormalState(this);
 	}

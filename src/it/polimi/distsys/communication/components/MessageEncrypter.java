@@ -1,34 +1,37 @@
 package it.polimi.distsys.communication.components;
 
+import it.polimi.distsys.communication.messages.EncryptedMessage;
+import it.polimi.distsys.communication.messages.Message;
+
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-public class Decrypter {
-	public static final String ALGORITHM = "AES";
-	private Key dek;
+public class MessageEncrypter {
+
+	private Key key;
 	private Cipher cipher;
 
-	public Decrypter() {
+	public MessageEncrypter() {
 		super();
 		try {
-			this.cipher = Cipher.getInstance(ALGORITHM);
+			cipher = Cipher.getInstance(MessageDecrypter.ALGORITHM);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public Decrypter(Key dek) {
-		this.dek = dek;
+	public MessageEncrypter(Key key) {
+		this.key = key;
 		try {
-			this.cipher = Cipher.getInstance(ALGORITHM);
-			cipher.init(Cipher.DECRYPT_MODE, this.dek);
+			cipher = Cipher.getInstance(MessageDecrypter.ALGORITHM);
+			cipher.init(Cipher.ENCRYPT_MODE, this.key);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
 			// TODO Auto-generated catch block
@@ -37,24 +40,17 @@ public class Decrypter {
 	}
 
 	public void updateKey(Key newKey) {
-		this.dek = newKey;
+		this.key = newKey;
 		try {
-			cipher.init(Cipher.DECRYPT_MODE, this.dek);
+			cipher.init(Cipher.ENCRYPT_MODE, this.key);
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public String decrypt(byte[] buffer) {
-		byte[] decrypted = null;
-		try {
-			decrypted = cipher.doFinal(buffer);
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return new String(decrypted);
+	public EncryptedMessage encrypt(Message m) throws IllegalBlockSizeException, IOException {
+		return new EncryptedMessage(m, cipher);
 	}
 
 }

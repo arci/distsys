@@ -1,5 +1,9 @@
 package it.polimi.distsys.communication.components;
 
+import it.polimi.distsys.communication.messages.EncryptedMessage;
+import it.polimi.distsys.communication.messages.Message;
+
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -9,26 +13,26 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-public class Encrypter {
-
-	private Key dek;
+public class MessageDecrypter {
+	public static final String ALGORITHM = "AES";
+	private Key key;
 	private Cipher cipher;
 
-	public Encrypter() {
+	public MessageDecrypter() {
 		super();
 		try {
-			cipher = Cipher.getInstance(Decrypter.ALGORITHM);
+			this.cipher = Cipher.getInstance(ALGORITHM);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	public Encrypter(Key dek) {
-		this.dek = dek;
+
+	public MessageDecrypter(Key key) {
+		this.key = key;
 		try {
-			cipher = Cipher.getInstance(Decrypter.ALGORITHM);
-			cipher.init(Cipher.ENCRYPT_MODE, this.dek);
+			this.cipher = Cipher.getInstance(ALGORITHM);
+			cipher.init(Cipher.DECRYPT_MODE, this.key);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
 			// TODO Auto-generated catch block
@@ -37,24 +41,18 @@ public class Encrypter {
 	}
 
 	public void updateKey(Key newKey) {
-		this.dek = newKey;
+		this.key = newKey;
 		try {
-			cipher.init(Cipher.ENCRYPT_MODE, this.dek);
+			cipher.init(Cipher.DECRYPT_MODE, this.key);
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public byte[] encrypt(String string) {
-		byte[] encrypted = null;
-		try {
-			encrypted = cipher.doFinal(string.getBytes());
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return encrypted;
+	public Message decrypt(EncryptedMessage m) throws ClassNotFoundException,
+			IllegalBlockSizeException, BadPaddingException, IOException {
+		return m.getContent(cipher);
 	}
 
 }

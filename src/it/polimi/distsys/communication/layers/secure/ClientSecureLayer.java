@@ -1,8 +1,8 @@
 package it.polimi.distsys.communication.layers.secure;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.components.Decrypter;
-import it.polimi.distsys.communication.components.Encrypter;
+import it.polimi.distsys.communication.components.MessageDecrypter;
+import it.polimi.distsys.communication.components.MessageEncrypter;
 import it.polimi.distsys.communication.components.FlatTable;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.messages.ACKMessage;
@@ -25,8 +25,8 @@ public class ClientSecureLayer extends SecureLayer {
 
 	public ClientSecureLayer() {
 		super();
-		enc = new Encrypter();
-		dec = new Decrypter();
+		enc = new MessageEncrypter();
+		dec = new MessageDecrypter();
 
 		init = new InitState(this);
 		stop = new STOPState(this);

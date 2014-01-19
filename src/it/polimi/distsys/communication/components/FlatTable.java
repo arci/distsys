@@ -28,7 +28,7 @@ public class FlatTable implements Iterable<UUID> {
 		ones = new Key[BITS];
 		members = new ArrayList<UUID>();
 		try {
-			keygen = KeyGenerator.getInstance(Decrypter.ALGORITHM);
+			keygen = KeyGenerator.getInstance(MessageDecrypter.ALGORITHM);
 			keygen.init(new SecureRandom());
 			dek = keygen.generateKey();
 		} catch (NoSuchAlgorithmException e) {
