@@ -6,15 +6,18 @@ import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.layers.secure.SecureLayer;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.UUID;
 
 public class JoinMessage implements Message {
 	private static final long serialVersionUID = 8037414378256193328L;
 	private UUID id;
+	private Key publicKey;
 
-	public JoinMessage(UUID id) {
+	public JoinMessage(UUID id, Key publicKey) {
 		super();
 		this.id = id;
+		this.publicKey = publicKey;
 	}
 
 	@Override
@@ -27,7 +30,7 @@ public class JoinMessage implements Message {
 		layer.stopReceiving();
 		SecureLayer sec = (SecureLayer) layer;
 		try {
-			sec.join(id);
+			sec.join(id, publicKey);
 		} catch (TableException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

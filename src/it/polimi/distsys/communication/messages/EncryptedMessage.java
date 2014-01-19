@@ -14,12 +14,14 @@ public class EncryptedMessage implements Message {
 	private static final long serialVersionUID = 107158341380726137L;
 	private SealedObject content;
 
-	public EncryptedMessage(Message m, Cipher c) throws IllegalBlockSizeException, IOException {
+	public EncryptedMessage(Message m, Cipher c)
+			throws IllegalBlockSizeException, IOException {
 		super();
 		this.content = new SealedObject(m, c);
 	}
 
-	public Message getContent(Cipher c) throws ClassNotFoundException, IllegalBlockSizeException, BadPaddingException, IOException {
+	public Message getContent(Cipher c) throws ClassNotFoundException,
+			IllegalBlockSizeException, BadPaddingException, IOException {
 		return (Message) content.getObject(c);
 	}
 
@@ -33,7 +35,8 @@ public class EncryptedMessage implements Message {
 	}
 
 	@Override
-	public void onSend(Layer layer) {}
+	public void onSend(Layer layer) {
+	}
 
 	@Override
 	public Message unpack() {

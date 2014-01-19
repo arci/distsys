@@ -77,14 +77,10 @@ public abstract class Layer {
 		if (above == null) {
 			return msgs;
 		}
-		Printer.printDebug(getClass(), "sending up to "
-				+ above.getClass().getSimpleName());
 		return above.receive(msgs);
 	}
 
 	public void sendDown(Message msg) throws IOException {
-		Printer.printDebug(getClass(), "sending down to "
-				+ underneath.getClass().getSimpleName());
 		underneath.send(msg);
 	}
 

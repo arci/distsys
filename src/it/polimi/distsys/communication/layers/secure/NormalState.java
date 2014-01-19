@@ -4,6 +4,7 @@ import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.messages.STOPMessage;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,23 +26,28 @@ public class NormalState implements ServerState {
 	}
 
 	@Override
-	public void join(UUID id) throws IOException, TableException {
+	public void join(UUID id, Key publicKey) throws IOException, TableException {
 		members.add(id);
 		joiners.add(id);
+		layer.getTable().addPublicKey(id, publicKey);
 		layer.sendDown(new STOPMessage());
-		layer.setState(new SendingKeysState(layer, members, joiners, leavers));
+		layer.setState(new KeysState(layer, members, joiners, leavers));
 	}
 
 	@Override
 	public void leave(UUID id) throws TableException, IOException {
 		members.remove(id);
+		layer.getTable().removePublicKey(id);
 		if(members.isEmpty()){
+			//execute all the algorithm without sending messages
+			layer.getTable().updateKEKs(id);
 			layer.getTable().leave(id);
+			layer.updateDEK(layer.getTable().refreshDEK());
 			return;
 		}
 		leavers.add(id);
 		layer.sendDown(new STOPMessage());
-		layer.setState(new SendingKeysState(layer, members, joiners, leavers));
+		layer.setState(new KeysState(layer, members, joiners, leavers));
 	}
 
 	@Override

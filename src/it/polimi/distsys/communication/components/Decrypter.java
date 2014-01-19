@@ -12,13 +12,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SealedObject;
 
-public class MessageDecrypter {
+public class Decrypter {
 	public static final String ALGORITHM = "AES";
 	private Key key;
 	private Cipher cipher;
 
-	public MessageDecrypter() {
+	public Decrypter() {
 		super();
 		try {
 			this.cipher = Cipher.getInstance(ALGORITHM);
@@ -28,7 +29,7 @@ public class MessageDecrypter {
 		}
 	}
 
-	public MessageDecrypter(Key key) {
+	public Decrypter(Key key) {
 		this.key = key;
 		try {
 			this.cipher = Cipher.getInstance(ALGORITHM);
@@ -40,7 +41,7 @@ public class MessageDecrypter {
 		}
 	}
 
-	public void updateKey(Key newKey) {
+	public void setKey(Key newKey) {
 		this.key = newKey;
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, this.key);
@@ -50,9 +51,18 @@ public class MessageDecrypter {
 		}
 	}
 
-	public Message decrypt(EncryptedMessage m) throws ClassNotFoundException,
+	public Message decryptMsg(EncryptedMessage m) throws ClassNotFoundException,
 			IllegalBlockSizeException, BadPaddingException, IOException {
 		return m.getContent(cipher);
+	}
+	
+	public Object decrypt(Object o, Key k)
+			throws NoSuchAlgorithmException, NoSuchPaddingException,
+			InvalidKeyException, ClassNotFoundException, IllegalBlockSizeException, BadPaddingException, IOException{
+		SealedObject so = (SealedObject) o;
+		Cipher cipher = Cipher.getInstance(ALGORITHM);
+		cipher.init(Cipher.DECRYPT_MODE, k);
+		return so.getObject(cipher);
 	}
 
 }

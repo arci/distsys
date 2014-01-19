@@ -9,7 +9,7 @@ public interface ClientState {
 	
 	public void keysReceived() throws IOException;
 	public void stop() throws IOException;
-	public void done();
+	public void done() throws IOException;
 	public boolean send(Message msg);
 	public boolean receive(Message msg) throws IOException;
 	public List<Message> getMessages();

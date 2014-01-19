@@ -16,21 +16,24 @@ public class FlatTable implements Iterable<UUID> {
 	public final static int MAX_GROUP_SIZE = 8;
 	public final static int BITS = (int) Math.ceil(Math.log(MAX_GROUP_SIZE)
 			/ Math.log(2));
-	private Key[] zeros;
-	private Key[] ones;
+	private Key[] zeros = new Key[BITS];
+	private Key[] ones = new Key[BITS];
 	private Key dek;
-	private List<UUID> members;
+	private List<UUID> members = new ArrayList<UUID>();
+	private Map<UUID, Key> publicKeys = new HashMap<UUID, Key>();
 	private KeyGenerator keygen;
 
 	public FlatTable() {
 		Printer.printDebug(getClass(), "FlatTable initialized: max group size: " + MAX_GROUP_SIZE + ", bits: " + BITS);
-		zeros = new Key[BITS];
-		ones = new Key[BITS];
-		members = new ArrayList<UUID>();
 		try {
-			keygen = KeyGenerator.getInstance(MessageDecrypter.ALGORITHM);
+			keygen = KeyGenerator.getInstance(Decrypter.ALGORITHM);
 			keygen.init(new SecureRandom());
 			dek = keygen.generateKey();
+			
+			for(int i = 0; i< BITS; i++){
+				ones[i] = keygen.generateKey();
+				zeros[i] = keygen.generateKey();
+			}
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,6 +48,19 @@ public class FlatTable implements Iterable<UUID> {
 				keks[i] = ones[i];
 			} else {
 				keks[i] = zeros[i];
+			}
+		}
+		return keks;
+	}
+	
+	public Key[] getOtherKEKs(UUID memberID) throws TableException {
+		Key[] keks = new Key[BITS];
+		int[] bits = getBits(memberID);
+		for (int i = 0; i < bits.length; i++) {
+			if (Integer.valueOf(bits[i]) == 1) {
+				keks[i] = zeros[i];
+			} else {
+				keks[i] = ones[i];
 			}
 		}
 		return keks;
@@ -91,27 +107,40 @@ public class FlatTable implements Iterable<UUID> {
 	public Key getDEK() {
 		return dek;
 	}
-
-	public Map<UUID, List<Integer>> getInterested(UUID id)
-			throws TableException {
-		Map<UUID, List<Integer>> interested = new HashMap<UUID, List<Integer>>();
-		int[] bits = getBits(id);
-
-		for (UUID member : members) {
-			int[] otherBits = getBits(member);
-			for (int i = 0; i < bits.length; i++) {
-				if (bits[i] == otherBits[i]) {
-					if (interested.get(member) == null) {
-						interested.put(member, new ArrayList<Integer>());
-					}
-					interested.get(member).add(i);
-					break;
-				}
-			}
-		}
-
-		return interested;
+	
+	public void addPublicKey(UUID member, Key publicKey){
+		publicKeys.put(member, publicKey);
 	}
+	
+	public void removePublicKey(UUID member){
+		publicKeys.remove(member);
+	}
+	
+	public Key getPublicKey(UUID member){
+		return publicKeys.get(member);
+	}
+	
+
+//	public Map<UUID, List<Integer>> getInterested(UUID id)
+//			throws TableException {
+//		Map<UUID, List<Integer>> interested = new HashMap<UUID, List<Integer>>();
+//		int[] bits = getBits(id);
+//
+//		for (UUID member : members) {
+//			int[] otherBits = getBits(member);
+//			for (int i = 0; i < bits.length; i++) {
+//				if (bits[i] == otherBits[i]) {
+//					if (interested.get(member) == null) {
+//						interested.put(member, new ArrayList<Integer>());
+//					}
+//					interested.get(member).add(i);
+//					break;
+//				}
+//			}
+//		}
+//
+//		return interested;
+//	}
 
 	private int[] getBits(UUID memberID) throws TableException {
 		if (!members.contains(memberID)) {

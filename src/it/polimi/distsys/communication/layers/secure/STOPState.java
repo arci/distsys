@@ -25,7 +25,8 @@ public class STOPState implements ClientState {
 	public void stop() {}
 
 	@Override
-	public void done() {
+	public void done() throws IOException {
+		layer.sendACK();
 		layer.setState(new ReadyState(layer));
 	}
 

@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.layers.secure;
 
-import it.polimi.distsys.communication.components.MessageDecrypter;
-import it.polimi.distsys.communication.components.MessageEncrypter;
+import it.polimi.distsys.communication.components.Decrypter;
+import it.polimi.distsys.communication.components.Encrypter;
 import it.polimi.distsys.communication.components.FlatTable;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.components.TableException;
@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.UUID;
 
+import javax.crypto.SealedObject;
+
 public class ServerSecureLayer extends SecureLayer {
 	private FlatTable table;
 	private ServerState state;
@@ -17,9 +19,8 @@ public class ServerSecureLayer extends SecureLayer {
 	public ServerSecureLayer() {
 		super();
 		table = new FlatTable();
-		dek = table.getDEK();
-		enc = new MessageEncrypter(dek);
-		dec = new MessageDecrypter(dek);
+		enc = new Encrypter(table.getDEK());
+		dec = new Decrypter(table.getDEK());
 
 		state = new NormalState(this);
 	}
@@ -30,8 +31,8 @@ public class ServerSecureLayer extends SecureLayer {
 	}
 	
 	@Override
-	public void join(UUID memberID) throws IOException, TableException {
-		state.join(memberID);
+	public void join(UUID memberID, Key publicKey) throws IOException, TableException {
+		state.join(memberID, publicKey);
 	}
 
 	@Override
@@ -42,16 +43,7 @@ public class ServerSecureLayer extends SecureLayer {
 	public void ACKReceived(UUID id) throws IOException, TableException {
 		state.ACKReceived(id);
 	}
-
-	@Override
-	public void updateDEK(Key dek) {
-		enc.updateKey(dek);
-		dec.updateKey(dek);
-	}
-
-	@Override
-	public void updateKEK(Integer position, Key key) {}
-
+	
 	@Override
 	public void leave() throws IOException {
 		// it shouldn't happen that the server leaves
@@ -62,8 +54,19 @@ public class ServerSecureLayer extends SecureLayer {
 	}
 
 	public void setState(ServerState state) {
-		Printer.printDebug(getClass(), "state set to "
-				+ state.getClass().getSimpleName());
+		Printer.printDebug(getClass(), "\t\t\t\tSTATE SET TO "
+				+ state.getClass().getSimpleName().toUpperCase());
 		this.state = state;
+	}
+
+	@Override
+	public void updateDEK(SealedObject dek) {}
+
+	@Override
+	public void updateKEK(SealedObject kek) {}
+	
+	public void updateDEK(Key dek) {
+		enc.setKey(dek);
+		dec.setKey(dek);
 	}
 }

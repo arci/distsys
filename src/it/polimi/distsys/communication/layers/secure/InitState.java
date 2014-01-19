@@ -17,8 +17,8 @@ public class InitState implements ClientState {
 
 	@Override
 	public void keysReceived() throws IOException {
-		layer.setState(new ReadyState(layer));
 		layer.sendACK();
+		layer.setState(new ReadyState(layer));
 	}
 
 	@Override
