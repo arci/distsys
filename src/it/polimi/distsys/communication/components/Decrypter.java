@@ -24,7 +24,6 @@ public class Decrypter {
 		try {
 			this.cipher = Cipher.getInstance(ALGORITHM);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -36,7 +35,6 @@ public class Decrypter {
 			cipher.init(Cipher.DECRYPT_MODE, this.key);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -46,7 +44,6 @@ public class Decrypter {
 		try {
 			cipher.init(Cipher.DECRYPT_MODE, this.key);
 		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
