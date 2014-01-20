@@ -215,6 +215,46 @@ public class ClientSecureLayer extends SecureLayer {
 			e.printStackTrace();
 		}
 	}
+	
+	public void updateOnLeave(SealedObject[] keks, SealedObject[] deks) {
+		if (this.keks == null) {
+			return;
+		}
+		try {
+			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+			Cipher dekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+			dekCipher.init(Cipher.DECRYPT_MODE, this.dek);
+			for (int i = 0; i < keks.length; i++) {
+				kekCipher.init(Cipher.DECRYPT_MODE, this.keks[i]);
+				try {
+					SealedObject firstStep = (SealedObject) keks[i].getObject(dekCipher);
+					this.keks[i] = (Key)firstStep.getObject(kekCipher);
+					Printer.printDebug(getClass(), "KEK " + i + " updated");
+				} catch (ClassNotFoundException | IllegalBlockSizeException
+						| BadPaddingException | IOException e) {
+					Printer.printDebug(getClass(), "KEK " + i + " NOT updated");
+				}
+			}
+			
+			for (int i = 0; i < keks.length; i++) {
+				kekCipher.init(Cipher.DECRYPT_MODE, this.keks[i]);
+				try {
+					this.dek = (Key) deks[i].getObject(kekCipher);
+					dec.setKey(this.dek);
+					enc.setKey(this.dek);
+					Printer.printDebug(getClass(), "DEK updated");
+					break;
+				} catch (ClassNotFoundException | IllegalBlockSizeException
+						| BadPaddingException | IOException e) {
+					//I was only trying with the wrong key...
+				}
+			}
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeyException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	@Override
 	public void leave() throws IOException {

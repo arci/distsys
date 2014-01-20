@@ -15,12 +15,12 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
 
-public class JoinKeysMessage implements Message {
+public class KeysJoinMessage implements Message {
 	private static final long serialVersionUID = -4459093759662524595L;
 	private SealedObject[] keks;
 	private SealedObject dek;
 
-	public JoinKeysMessage(Key[] enckeks, Key encdek, Key[] keks, Key dek)
+	public KeysJoinMessage(Key[] enckeks, Key encdek, Key[] keks, Key dek)
 			throws NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, IllegalBlockSizeException, IOException {
 		

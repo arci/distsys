@@ -3,11 +3,10 @@ package it.polimi.distsys.communication.layers.secure;
 import it.polimi.distsys.communication.components.FlatTable;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.components.TableException;
-import it.polimi.distsys.communication.messages.DEKMessage;
 import it.polimi.distsys.communication.messages.DONEMessage;
 import it.polimi.distsys.communication.messages.InitMessage;
-import it.polimi.distsys.communication.messages.JoinKeysMessage;
-import it.polimi.distsys.communication.messages.KEKMessage;
+import it.polimi.distsys.communication.messages.KeysJoinMessage;
+import it.polimi.distsys.communication.messages.KeysLeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
@@ -65,16 +64,7 @@ public class KeysState implements ServerState {
 					Key[] newKeks = table.updateKEKs(leaver);
 					Key[] remainingKeks = table.getOtherKEKs(leaver);
 					table.leave(leaver);
-					for (int i = 0; i < oldKeks.length; i++) {
-						// encrypting: oldDEK(oldKEK(newKEK))
-						toSend.add(new KEKMessage(newKeks[i], oldKeks[i],
-								oldDek));
-					}
-					
-					//encrypting: remainingKEKs(newDEK)
-					for(Key k : remainingKeks){
-						toSend.add(new DEKMessage(newDek, k));
-					}
+					toSend.add(new KeysLeaveMessage(newKeks, newDek, oldKeks, remainingKeks, oldDek));
 				}
 
 				for (UUID joiner : joiners) {
@@ -85,8 +75,7 @@ public class KeysState implements ServerState {
 					Key[] oldKeks = table.join(joiner);
 					Key[] newKeks = table.updateKEKs(joiner);
 					// encrypting: oldKEK(newKEK), oldDEK(newDEK)
-					toSend.add(new JoinKeysMessage(newKeks, newDek, oldKeks, oldDek));
-					//toSend.add(new DEKMessage(newDek, oldDek));
+					toSend.add(new KeysJoinMessage(newKeks, newDek, oldKeks, oldDek));
 					toSend.add(new InitMessage(joiner, newKeks, newDek, table.getPublicKey(joiner)));
 				}
 				
