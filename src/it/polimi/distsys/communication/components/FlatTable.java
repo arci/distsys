@@ -37,7 +37,6 @@ public class FlatTable implements Iterable<UUID> {
 				zeros[i] = keygen.generateKey();
 			}
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -99,11 +98,9 @@ public class FlatTable implements Iterable<UUID> {
 
 		for (int i = 0; i < bits.length; i++) {
 			if (bits[i] == 1) {
-				keygen.init(new SecureRandom());
 				ones[i] = keygen.generateKey();
 				keks[i] = ones[i];
 			} else {
-				keygen.init(new SecureRandom());
 				zeros[i] = keygen.generateKey();
 				keks[i] = zeros[i];
 			}
@@ -128,7 +125,6 @@ public class FlatTable implements Iterable<UUID> {
 	}
 
 	public Key refreshDEK() {
-		keygen.init(new SecureRandom());
 		dek = keygen.generateKey();
 		return dek;
 	}
@@ -148,27 +144,6 @@ public class FlatTable implements Iterable<UUID> {
 	public Key getPublicKey(UUID member) {
 		return publicKeys.get(member);
 	}
-
-	// public Map<UUID, List<Integer>> getInterested(UUID id)
-	// throws TableException {
-	// Map<UUID, List<Integer>> interested = new HashMap<UUID, List<Integer>>();
-	// int[] bits = getBits(id);
-	//
-	// for (UUID member : members) {
-	// int[] otherBits = getBits(member);
-	// for (int i = 0; i < bits.length; i++) {
-	// if (bits[i] == otherBits[i]) {
-	// if (interested.get(member) == null) {
-	// interested.put(member, new ArrayList<Integer>());
-	// }
-	// interested.get(member).add(i);
-	// break;
-	// }
-	// }
-	// }
-	//
-	// return interested;
-	// }
 
 	private int[] getBits(UUID memberID) throws TableException {
 		if (!members.contains(memberID)) {
