@@ -1,7 +1,7 @@
 package distsys;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertFalse;
 import it.polimi.distsys.communication.components.FlatTable;
 import it.polimi.distsys.communication.components.TableException;
 
@@ -27,7 +27,7 @@ public class FlatTableTest {
 	Key[] newKeks = table.updateKEKs(joiner);
 
 	for (int i = 0; i < oldKeks.length; i++) {
-	    assertNotEquals(oldKeks[i], newKeks[i]);
+	    assertFalse(oldKeks[i].equals(newKeks[i]));
 	}
 
 	Key[] newOther = table.getOtherKEKs(joiner);
@@ -59,12 +59,12 @@ public class FlatTableTest {
 	assertEquals(keks001[0], keks010[0]);
 
 	assertEquals(keks000[1], keks001[1]);
-	assertNotEquals(keks010[1], keks000[1]);
-	assertNotEquals(keks010[1], keks001[1]);
+	assertFalse(keks010[1].equals(keks000[1]));
+	assertFalse(keks010[1].equals(keks001[1]));
 
 	assertEquals(keks000[2], keks010[2]);
-	assertNotEquals(keks001[2], keks000[2]);
-	assertNotEquals(keks001[2], keks010[2]);
+	assertFalse(keks001[2].equals(keks000[2]));
+	assertFalse(keks001[2].equals(keks010[2]));
     }
 
 }

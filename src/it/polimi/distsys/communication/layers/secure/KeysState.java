@@ -91,12 +91,7 @@ public class KeysState implements ServerState {
 					}
 					// encrypting: oldDEK(newDEK)
 					toSend.add(new DEKMessage(newDek, oldDek));
-				}
-				
-				Key lastDek = table.getDEK();
-				for(UUID joiner : joiners){
-					Key[] keks = table.getKEKs(joiner);
-					toSend.add(new InitMessage(keks, lastDek, table.getPublicKey(joiner)));
+					toSend.add(new InitMessage(newKeks, newDek, table.getPublicKey(joiner)));
 				}
 				
 				for(Message m : toSend){
