@@ -18,7 +18,6 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -74,93 +73,9 @@ public class ClientSecureLayer extends SecureLayer {
 	}
 
 	@Override
-	public void join(UUID memberID, Key publicKey) {
-	}
-
-	@Override
 	public void join() throws IOException {
 		underneath.join();
 		sendDown(new JoinMessage(Peer.ID, getPublic()));
-	}
-
-	@Override
-	public void leave(UUID memberID) {
-	}
-
-	@Override
-	public void updateDEK(SealedObject dek) {
-		if (keks == null) {
-			return;
-		}
-		Printer.printDebug(getClass(), "updating DEK");
-		try {
-			Printer.printDebug(getClass(), "starting decryption with old DEK");
-			this.dek = (Key) dec.decrypt(dek, this.dek);
-			Printer.printDebug(getClass(), "it was encrypted with old DEK");
-			enc.setKey(this.dek);
-			dec.setKey(this.dek);
-
-			Printer.printDebug(getClass(), "DEK updated");
-			return;
-		} catch (InvalidKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | ClassNotFoundException
-				| IllegalBlockSizeException | BadPaddingException | IOException e1) {
-			Printer.printDebug(getClass(), "decryption with old DEK failed");
-		}
-
-		Printer.printDebug(getClass(), "starting decryption with old KEKs");
-
-		for (Key kek : keks) {
-			try {
-				this.dek = (Key) dec.decrypt(dek, kek);
-				Printer.printDebug(getClass(), "it was encrypted with old KEKs");
-				break;
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-					| NoSuchPaddingException | ClassNotFoundException
-					| IllegalBlockSizeException | BadPaddingException
-					| IOException e) {
-				// this means the KEK is not appropriate for decryption
-			}
-		}
-		enc.setKey(this.dek);
-		dec.setKey(this.dek);
-
-		Printer.printDebug(getClass(), "DEK updated");
-	}
-
-	@Override
-	public void updateKEK(SealedObject kek) {
-		if (keks == null) {
-			return;
-		}
-		Printer.printDebug(getClass(), "updating KEK");
-		Object o = null;
-		try {
-			Printer.printDebug(getClass(),
-					"starting level1 decryption with DEK");
-			o = dec.decrypt(kek, this.dek);
-		} catch (InvalidKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | ClassNotFoundException
-				| IllegalBlockSizeException | BadPaddingException | IOException e1) {
-			Printer.printDebug(getClass(), "level1 decryption failed");
-			o = kek;
-		}
-
-		Printer.printDebug(getClass(), "starting level2 decryption with KEKs");
-
-		for (int i = 0; i < keks.length; i++) {
-			try {
-				keks[i] = (Key) dec.decrypt(o, keks[i]);
-				Printer.printDebug(getClass(), "it is a level2 decryption");
-				Printer.printDebug(getClass(), "KEK" + i + " updated");
-				break;
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-					| NoSuchPaddingException | ClassNotFoundException
-					| IllegalBlockSizeException | BadPaddingException
-					| IOException e) {
-				Printer.printDebug(getClass(), "level2 decryption failed");
-			}
-		}
 	}
 
 	public void init(SealedObject[] keks, SealedObject dek) {

@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.UUID;
 
-import javax.crypto.SealedObject;
-
 public class ServerSecureLayer extends SecureLayer {
 	private FlatTable table;
 	private ServerState state;
@@ -30,12 +28,10 @@ public class ServerSecureLayer extends SecureLayer {
 		underneath.join();
 	}
 	
-	@Override
 	public void join(UUID memberID, Key publicKey) throws IOException, TableException {
 		state.join(memberID, publicKey);
 	}
 
-	@Override
 	public void leave(UUID memberID) throws IOException, TableException {
 		state.leave(memberID);
 	}
@@ -58,12 +54,6 @@ public class ServerSecureLayer extends SecureLayer {
 				+ state.getClass().getSimpleName().toUpperCase());
 		this.state = state;
 	}
-
-	@Override
-	public void updateDEK(SealedObject dek) {}
-
-	@Override
-	public void updateKEK(SealedObject kek) {}
 	
 	public void updateDEK(Key dek) {
 		enc.setKey(dek);

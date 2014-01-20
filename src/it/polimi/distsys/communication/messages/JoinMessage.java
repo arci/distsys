@@ -3,7 +3,7 @@ package it.polimi.distsys.communication.messages;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.layers.Layer;
-import it.polimi.distsys.communication.layers.secure.SecureLayer;
+import it.polimi.distsys.communication.layers.secure.ServerSecureLayer;
 
 import java.io.IOException;
 import java.security.Key;
@@ -28,12 +28,16 @@ public class JoinMessage implements Message {
 	@Override
 	public void onReceive(Layer layer) throws IOException {
 		layer.stopReceiving();
-		SecureLayer sec = (SecureLayer) layer;
 		try {
-			sec.join(id, publicKey);
-		} catch (TableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ServerSecureLayer sec = (ServerSecureLayer) layer;
+			try {
+				sec.join(id, publicKey);
+			} catch (TableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (ClassCastException e) {
+
 		}
 	}
 

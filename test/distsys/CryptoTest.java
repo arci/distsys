@@ -45,7 +45,7 @@ public class CryptoTest {
 		for (int i = 0; i < oldKeks.length; i++) {
 			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
 			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
+			//sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
 		}
 		
 		pub.init(Cipher.ENCRYPT_MODE, sec2.getPublic());
@@ -71,14 +71,14 @@ public class CryptoTest {
 		for (int i = 0; i < oldKeks.length; i++) {
 			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
 			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
+			//sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
 		}
 		
 		System.out.println("updating Client 001");
 		for (int i = 0; i < oldKeks.length; i++) {
 			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
 			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			sec2.updateKEK(new SealedObject(newKeks[i], kekCipher));
+			//sec2.updateKEK(new SealedObject(newKeks[i], kekCipher));
 		}
 		
 		pub.init(Cipher.ENCRYPT_MODE, sec3.getPublic());
