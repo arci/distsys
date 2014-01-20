@@ -1,6 +1,7 @@
 package it.polimi.distsys.communication.layers.secure;
 
 import it.polimi.distsys.communication.components.FlatTable;
+import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.messages.DEKMessage;
 import it.polimi.distsys.communication.messages.DONEMessage;
@@ -56,6 +57,7 @@ public class KeysState implements ServerState {
 			try {
 
 				for (UUID leaver : leavers) {
+					Printer.printDebug(getClass(), "processing leaver " + leaver.toString().substring(0, 4));
 					Key oldDek = table.getDEK();
 					Key newDek = table.refreshDEK();
 					layer.updateDEK(newDek);
@@ -76,11 +78,11 @@ public class KeysState implements ServerState {
 				}
 
 				for (UUID joiner : joiners) {
+					Printer.printDebug(getClass(), "processing joiner " + joiner.toString().substring(0, 4));
 					Key oldDek = table.getDEK();
 					Key newDek = table.refreshDEK();
 					layer.updateDEK(newDek);
-					table.join(joiner);
-					Key[] oldKeks = table.getKEKs(joiner);
+					Key[] oldKeks = table.join(joiner);
 					Key[] newKeks = table.updateKEKs(joiner);
 					for (int i = 0; i < oldKeks.length; i++) {
 						// encrypting: oldKEK(newKEK)

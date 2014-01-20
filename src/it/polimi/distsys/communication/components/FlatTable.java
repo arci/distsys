@@ -45,6 +45,15 @@ public class FlatTable implements Iterable<UUID> {
 	public Key[] getKEKs(UUID memberID) throws TableException {
 		Key[] keks = new Key[BITS];
 		int[] bits = getBits(memberID);
+
+		// TODO remove
+		String toprint = "";
+		for (int i = 0; i < BITS; i++) {
+			toprint += bits[i];
+		}
+		Printer.printDebug(getClass(), "getting KEKs for "
+				+ memberID.toString().substring(0, 4) + ":" + toprint);
+
 		for (int i = 0; i < bits.length; i++) {
 			if (bits[i] == 1) {
 				keks[i] = ones[i];
@@ -58,6 +67,14 @@ public class FlatTable implements Iterable<UUID> {
 	public Key[] getOtherKEKs(UUID memberID) throws TableException {
 		Key[] keks = new Key[BITS];
 		int[] bits = getBits(memberID);
+		// TODO remove
+		String toprint = "";
+		for (int i = 0; i < BITS; i++) {
+			toprint += bits[i];
+		}
+		Printer.printDebug(getClass(), "getting other KEKs for "
+				+ memberID.toString().substring(0, 4) + ":" + toprint);
+
 		for (int i = 0; i < bits.length; i++) {
 			if (bits[i] == 1) {
 				keks[i] = zeros[i];
@@ -71,17 +88,22 @@ public class FlatTable implements Iterable<UUID> {
 	public Key[] updateKEKs(UUID memberID) throws TableException {
 		Key[] keks = new Key[BITS];
 		int[] bits = getBits(memberID);
+
+		// TODO remove
 		String toprint = "";
 		for (int i = 0; i < BITS; i++) {
 			toprint += bits[i];
 		}
 		Printer.printDebug(getClass(), "updating KEKs for "
 				+ memberID.toString().substring(0, 4) + ":" + toprint);
+
 		for (int i = 0; i < bits.length; i++) {
 			if (bits[i] == 1) {
+				keygen.init(new SecureRandom());
 				ones[i] = keygen.generateKey();
 				keks[i] = ones[i];
 			} else {
+				keygen.init(new SecureRandom());
 				zeros[i] = keygen.generateKey();
 				keks[i] = zeros[i];
 			}
@@ -98,16 +120,15 @@ public class FlatTable implements Iterable<UUID> {
 		return getKEKs(memberID);
 	}
 
-	public Key[] leave(UUID memberID) throws TableException {
+	public void leave(UUID memberID) throws TableException {
 		if (!members.contains(memberID)) {
 			throw new TableException("The given UUID isn't in members!");
 		}
-		Key[] keks = getKEKs(memberID);
 		members.remove(memberID);
-		return keks;
 	}
 
 	public Key refreshDEK() {
+		keygen.init(new SecureRandom());
 		dek = keygen.generateKey();
 		return dek;
 	}

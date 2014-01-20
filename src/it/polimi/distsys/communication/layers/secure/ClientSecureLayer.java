@@ -92,35 +92,26 @@ public class ClientSecureLayer extends SecureLayer {
 			return;
 		}
 		Printer.printDebug(getClass(), "updating DEK");
-		Object o = null;
 		try {
 			Printer.printDebug(getClass(), "starting decryption with old DEK");
-			o = dec.decrypt(dek, this.dek);
-			try {
-				this.dek = (Key) o;
-				Printer.printDebug(getClass(), "it was encrypted with old DEK");
-				enc.setKey(this.dek);
-				dec.setKey(this.dek);
+			this.dek = (Key) dec.decrypt(dek, this.dek);
+			Printer.printDebug(getClass(), "it was encrypted with old DEK");
+			enc.setKey(this.dek);
+			dec.setKey(this.dek);
 
-				Printer.printDebug(getClass(), "DEK updated");
-				return;
-			} catch (ClassCastException e2) {
-				// this means it is was not encrypted with old DEK
-				Printer.printDebug(getClass(),
-						"it was NOT encrypted with old DEK");
-			}
+			Printer.printDebug(getClass(), "DEK updated");
+			return;
 		} catch (InvalidKeyException | NoSuchAlgorithmException
 				| NoSuchPaddingException | ClassNotFoundException
 				| IllegalBlockSizeException | BadPaddingException | IOException e1) {
 			Printer.printDebug(getClass(), "decryption with old DEK failed");
-			o = dek;
 		}
 
 		Printer.printDebug(getClass(), "starting decryption with old KEKs");
 
 		for (Key kek : keks) {
 			try {
-				this.dek = (Key) dec.decrypt(o, kek);
+				this.dek = (Key) dec.decrypt(dek, kek);
 				Printer.printDebug(getClass(), "it was encrypted with old KEKs");
 				break;
 			} catch (InvalidKeyException | NoSuchAlgorithmException
@@ -160,7 +151,7 @@ public class ClientSecureLayer extends SecureLayer {
 			try {
 				keks[i] = (Key) dec.decrypt(o, keks[i]);
 				Printer.printDebug(getClass(), "it is a level2 decryption");
-				Printer.printDebug(getClass(), "KEK updated");
+				Printer.printDebug(getClass(), "KEK" + i + " updated");
 				break;
 			} catch (InvalidKeyException | NoSuchAlgorithmException
 					| NoSuchPaddingException | ClassNotFoundException
@@ -183,6 +174,7 @@ public class ClientSecureLayer extends SecureLayer {
 			this.dek = (Key) dek.getObject(cipher);
 			dec.setKey(this.dek);
 			enc.setKey(this.dek);
+			Printer.printDebug(getClass(), "init completed");
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException | ClassNotFoundException
 				| IllegalBlockSizeException | BadPaddingException | IOException e) {
