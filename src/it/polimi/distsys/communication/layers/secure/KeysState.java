@@ -6,6 +6,7 @@ import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.messages.DEKMessage;
 import it.polimi.distsys.communication.messages.DONEMessage;
 import it.polimi.distsys.communication.messages.InitMessage;
+import it.polimi.distsys.communication.messages.JoinKeysMessage;
 import it.polimi.distsys.communication.messages.KEKMessage;
 import it.polimi.distsys.communication.messages.Message;
 
@@ -36,7 +37,6 @@ public class KeysState implements ServerState {
 	public void join(UUID id, Key publicKey) throws TableException {
 		joiners.add(id);
 		layer.getTable().addPublicKey(id, publicKey);
-		waitingACK.add(id);
 	}
 
 	@Override
@@ -84,14 +84,10 @@ public class KeysState implements ServerState {
 					layer.updateDEK(newDek);
 					Key[] oldKeks = table.join(joiner);
 					Key[] newKeks = table.updateKEKs(joiner);
-					for (int i = 0; i < oldKeks.length; i++) {
-						// encrypting: oldKEK(newKEK)
-						toSend.add(new KEKMessage(newKeks[i], oldKeks[i],
-								null));
-					}
-					// encrypting: oldDEK(newDEK)
-					toSend.add(new DEKMessage(newDek, oldDek));
-					toSend.add(new InitMessage(newKeks, newDek, table.getPublicKey(joiner)));
+					// encrypting: oldKEK(newKEK), oldDEK(newDEK)
+					toSend.add(new JoinKeysMessage(newKeks, newDek, oldKeks, oldDek));
+					//toSend.add(new DEKMessage(newDek, oldDek));
+					toSend.add(new InitMessage(joiner, newKeks, newDek, table.getPublicKey(joiner)));
 				}
 				
 				for(Message m : toSend){

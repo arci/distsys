@@ -31,7 +31,7 @@ public class ClientSecureLayer extends SecureLayer {
 	private Key dek;
 	private Key privateKey;
 	private Key publicKey;
-	
+
 	private ClientState init;
 	private ClientState stop;
 	private ClientState state;
@@ -74,7 +74,8 @@ public class ClientSecureLayer extends SecureLayer {
 	}
 
 	@Override
-	public void join(UUID memberID, Key publicKey) {}
+	public void join(UUID memberID, Key publicKey) {
+	}
 
 	@Override
 	public void join() throws IOException {
@@ -88,7 +89,7 @@ public class ClientSecureLayer extends SecureLayer {
 
 	@Override
 	public void updateDEK(SealedObject dek) {
-		if(keks == null){
+		if (keks == null) {
 			return;
 		}
 		Printer.printDebug(getClass(), "updating DEK");
@@ -129,7 +130,7 @@ public class ClientSecureLayer extends SecureLayer {
 
 	@Override
 	public void updateKEK(SealedObject kek) {
-		if(keks == null){
+		if (keks == null) {
 			return;
 		}
 		Printer.printDebug(getClass(), "updating KEK");
@@ -170,7 +171,7 @@ public class ClientSecureLayer extends SecureLayer {
 			for (int i = 0; i < keks.length; i++) {
 				this.keks[i] = (Key) keks[i].getObject(cipher);
 			}
-			
+
 			this.dek = (Key) dek.getObject(cipher);
 			dec.setKey(this.dek);
 			enc.setKey(this.dek);
@@ -178,7 +179,40 @@ public class ClientSecureLayer extends SecureLayer {
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeyException | ClassNotFoundException
 				| IllegalBlockSizeException | BadPaddingException | IOException e) {
-			Printer.printDebug(getClass(), "the init was not for me");
+			e.printStackTrace();
+		}
+	}
+
+	public void updateOnJoin(SealedObject[] keks, SealedObject dek) {
+		if (this.keks == null) {
+			return;
+		}
+		try {
+			Cipher cipher = Cipher.getInstance(Decrypter.ALGORITHM);
+			for (int i = 0; i < keks.length; i++) {
+				cipher.init(Cipher.DECRYPT_MODE, this.keks[i]);
+				try {
+					this.keks[i] = (Key) keks[i].getObject(cipher);
+					Printer.printDebug(getClass(), "KEK " + i + " updated");
+				} catch (ClassNotFoundException | IllegalBlockSizeException
+						| BadPaddingException | IOException e) {
+					Printer.printDebug(getClass(), "KEK " + i + " NOT updated");
+				}
+			}
+
+			cipher.init(Cipher.DECRYPT_MODE, this.dek);
+			try {
+				this.dek = (Key) dek.getObject(cipher);
+			} catch (ClassNotFoundException | IllegalBlockSizeException
+					| BadPaddingException | IOException e) {
+				e.printStackTrace();
+			}
+			dec.setKey(this.dek);
+			enc.setKey(this.dek);
+			Printer.printDebug(getClass(), "DEK updated");
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeyException e) {
+			e.printStackTrace();
 		}
 	}
 

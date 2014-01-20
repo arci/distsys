@@ -1,5 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
+import it.polimi.distsys.communication.components.Decrypter;
 import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.layers.Layer;
 import it.polimi.distsys.communication.layers.secure.ClientSecureLayer;
@@ -8,30 +9,31 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
 
-public class InitMessage implements Message {
-	private static final long serialVersionUID = 3758551565395910387L;
+public class JoinKeysMessage implements Message {
+	private static final long serialVersionUID = -4459093759662524595L;
 	private SealedObject[] keks;
 	private SealedObject dek;
-	private UUID receiver;
 
-	public InitMessage(UUID receiver, Key[] keks, Key dek, Key publicKey)
+	public JoinKeysMessage(Key[] enckeks, Key encdek, Key[] keks, Key dek)
 			throws NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, IllegalBlockSizeException, IOException {
-		this.receiver = receiver;
-		Cipher cipher = Cipher.getInstance("RSA");
-		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-		this.keks = new SealedObject[keks.length];
-		for (int i = 0; i < keks.length; i++) {
-			this.keks[i] = new SealedObject(keks[i], cipher);
+		
+		this.keks = new SealedObject[enckeks.length];
+		Cipher cipher = Cipher.getInstance(Decrypter.ALGORITHM);
+		
+		for (int i = 0; i < enckeks.length; i++) {
+			cipher.init(Cipher.ENCRYPT_MODE, keks[i]);
+			this.keks[i] = new SealedObject(enckeks[i], cipher);
 		}
-		this.dek = new SealedObject(dek, cipher);
+
+		cipher.init(Cipher.ENCRYPT_MODE, dek);
+		this.dek = new SealedObject(encdek, cipher);
 	}
 
 	@Override
@@ -43,14 +45,13 @@ public class InitMessage implements Message {
 	public void onReceive(Layer layer) throws IOException {
 		layer.stopReceiving();
 		ClientSecureLayer sec = (ClientSecureLayer) layer;
-		if(sec.isForMe(receiver)){
-			sec.init(keks, dek);
-			sec.keysReceived();
-		}
+		sec.updateOnJoin(keks, dek);
+		sec.keysReceived();
 	}
 
 	@Override
-	public void onSend(Layer layer) {}
+	public void onSend(Layer layer) {
+	}
 
 	@Override
 	public Message unpack() {
