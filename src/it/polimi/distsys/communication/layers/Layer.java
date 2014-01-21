@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Layer {
+	public static boolean DEBUG = true;
 	protected Layer above;
 	protected Layer underneath;
 	protected boolean sendUp;

@@ -27,6 +27,7 @@ public class MulticastLayer extends Layer {
 
 	public MulticastLayer() throws UnknownHostException {
 		super();
+		DEBUG = false;
 		group = InetAddress.getByName(ADDRESS);
 	}
 

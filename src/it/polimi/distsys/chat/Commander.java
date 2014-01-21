@@ -1,5 +1,7 @@
 package it.polimi.distsys.chat;
 
+import java.util.Arrays;
+
 import it.polimi.distsys.Config;
 import it.polimi.distsys.chat.actions.Action;
 import it.polimi.distsys.chat.actions.EchoAction;
@@ -15,26 +17,16 @@ public class Commander {
 	public void execute(String string) {
 		String[] parts = string.split(" ");
 		String key = parts[0];
-		String param = "";
-		if (parts.length >= 2) {
-			for (int i = 1; i < parts.length; i++) {
-				param += parts[i] + " ";
-			}
-
-			param = param.substring(0, param.length() - 1);
-		}
 
 		Action action = null;
 		try {
 			String className = Config.getAction(key);
 			action = (Action) Class.forName(className).newInstance();
+			parts = Arrays.copyOfRange(parts, 1, parts.length);
+			action.execute(peer, parts);
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException e) {
-			action = new EchoAction();
-			param = key + ": command not found";
+			new EchoAction().execute(peer, key + ": command not found");
 		}
-
-		action.execute(peer, param);
 	}
-
 }

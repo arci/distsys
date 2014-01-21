@@ -21,6 +21,8 @@ public class CausalLayer extends Layer {
 	private Set<VectorClockMessage> receiving;
 
 	public CausalLayer() {
+		super();
+		DEBUG = false;
 		vc = new VectorClock(id);
 		receiving = new HashSet<VectorClockMessage>();
 	}

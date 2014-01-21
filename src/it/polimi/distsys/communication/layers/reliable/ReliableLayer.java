@@ -30,6 +30,7 @@ public class ReliableLayer extends Layer {
 
 	public ReliableLayer() {
 		super();
+		DEBUG = false;
 		ID = 0;
 		lastIDs = Collections.synchronizedMap(new HashMap<UUID, Integer>());
 		sendingQueue = Collections.synchronizedList(new ArrayList<Message>());

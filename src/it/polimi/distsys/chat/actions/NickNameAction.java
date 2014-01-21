@@ -6,8 +6,12 @@ import it.polimi.distsys.communication.components.Printer;
 public class NickNameAction implements Action {
 
 	@Override
-	public void execute(Peer peer, String param) {
+	public void execute(Peer peer, String... params) {
 		String message = "";
+		String param = "";
+		for(String p : params){
+			param += p;
+		}
 		if (param.isEmpty()) {
 			message = "cannot set an empty nickname";
 		} else {
