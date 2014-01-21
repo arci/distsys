@@ -27,7 +27,7 @@ public class STOPState implements ClientState {
 	@Override
 	public void done() throws IOException {
 		layer.sendACK();
-		layer.setState(new ReadyState(layer));
+		layer.setState(new ReadyState(layer, sendingQueue));
 	}
 
 	@Override
@@ -39,11 +39,5 @@ public class STOPState implements ClientState {
 	@Override
 	public boolean receive(Message msg) throws IOException {
 		return true;
-	}
-
-	public List<Message> getMessages() {
-		List<Message> cloned = new ArrayList<Message>(sendingQueue);
-		sendingQueue.clear();
-		return cloned;
 	}
 }

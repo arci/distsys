@@ -3,7 +3,6 @@ package it.polimi.distsys.communication.layers.secure;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface ClientState {
 	
@@ -12,5 +11,4 @@ public interface ClientState {
 	public void done() throws IOException;
 	public boolean send(Message msg);
 	public boolean receive(Message msg) throws IOException;
-	public List<Message> getMessages();
 }

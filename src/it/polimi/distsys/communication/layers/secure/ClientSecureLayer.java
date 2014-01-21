@@ -30,19 +30,13 @@ public class ClientSecureLayer extends SecureLayer {
 	private Key dek;
 	private Key privateKey;
 	private Key publicKey;
-
-	private ClientState init;
-	private ClientState stop;
 	private ClientState state;
 
 	public ClientSecureLayer() {
 		super();
 		enc = new Encrypter();
 		dec = new Decrypter();
-
-		init = new InitState(this);
-		stop = new STOPState(this);
-		state = init;
+		state = new InitState(this);
 
 		try {
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -51,7 +45,6 @@ public class ClientSecureLayer extends SecureLayer {
 			privateKey = kp.getPrivate();
 			publicKey = kp.getPublic();
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -192,9 +185,6 @@ public class ClientSecureLayer extends SecureLayer {
 
 	public void keysReceived() throws IOException {
 		state.keysReceived();
-		for (Message m : init.getMessages()) {
-			send(m);
-		}
 	}
 
 	public void stop() throws IOException {
@@ -203,9 +193,6 @@ public class ClientSecureLayer extends SecureLayer {
 
 	public void done() throws IOException {
 		state.done();
-		for (Message m : stop.getMessages()) {
-			send(m);
-		}
 	}
 
 	public Key getPublic() {

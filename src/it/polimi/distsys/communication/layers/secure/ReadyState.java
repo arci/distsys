@@ -8,9 +8,12 @@ import java.util.List;
 public class ReadyState implements ClientState {
 	private ClientSecureLayer layer;
 
-	public ReadyState(ClientSecureLayer layer) {
+	public ReadyState(ClientSecureLayer layer, List<Message> sendingQueue) throws IOException {
 		super();
 		this.layer = layer;
+		for(Message m : sendingQueue){
+			layer.send(m);
+		}
 	}
 	
 	@Override
@@ -34,10 +37,4 @@ public class ReadyState implements ClientState {
 	public boolean receive(Message msg) throws IOException {
 		return true;
 	}
-
-	@Override
-	public List<Message> getMessages() {
-		return null;
-	}
-
 }

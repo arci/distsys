@@ -18,7 +18,7 @@ public class InitState implements ClientState {
 	@Override
 	public void keysReceived() throws IOException {
 		layer.sendACK();
-		layer.setState(new ReadyState(layer));
+		layer.setState(new ReadyState(layer, sendingQueue));
 	}
 
 	@Override
@@ -39,11 +39,4 @@ public class InitState implements ClientState {
 	public boolean receive(Message msg) throws IOException {
 		return false;
 	}
-	
-	public List<Message> getMessages() {
-		List<Message> cloned = new ArrayList<Message>(sendingQueue);
-		sendingQueue.clear();
-		return cloned;
-	}
-
 }
