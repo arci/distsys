@@ -8,7 +8,6 @@ public class Client extends Peer {
 
 	public Client() throws IOException {
 		super();
-		//DEBUG = false;
 		stack = StackFactory.makeCompleteClientStack();
 		stack.join();
 	}

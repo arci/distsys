@@ -7,7 +7,6 @@ import java.io.IOException;
 public class Server extends Peer {
 	public Server() throws IOException {
 		super();
-		DEBUG = true;
 		IS_SERVER = true;
 		nickname = "server";
 		stack = StackFactory.makeCompleteServerStack();

@@ -20,14 +20,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MulticastLayer extends Layer {
-	public static final String ADDRESS = "224.0.0.1";
-	public static final int PORT = 1234;
+	public static String ADDRESS = "224.0.0.1";
+	public static int PORT = 1234;
 	private InetAddress group;
 	private MulticastSocket socket;
 
 	public MulticastLayer() throws UnknownHostException {
 		super();
-		DEBUG = false;
 		group = InetAddress.getByName(ADDRESS);
 	}
 

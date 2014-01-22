@@ -28,7 +28,6 @@ public abstract class SecureLayer extends Layer {
 			m = dec.decryptMsg(encrypted);
 		} catch (ClassNotFoundException | IllegalBlockSizeException
 				| BadPaddingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new ArrayList<Message>(Arrays.asList(m));
@@ -40,7 +39,6 @@ public abstract class SecureLayer extends Layer {
 		try {
 			encrypted = enc.encryptMsg(msg);
 		} catch (IllegalBlockSizeException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new ArrayList<Message>(Arrays.asList(encrypted));
