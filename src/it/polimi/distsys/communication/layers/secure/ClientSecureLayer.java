@@ -26,6 +26,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
 
 public class ClientSecureLayer extends SecureLayer {
+	public static boolean DEBUG;
 	private Key[] keks;
 	private Key dek;
 	private Key privateKey;

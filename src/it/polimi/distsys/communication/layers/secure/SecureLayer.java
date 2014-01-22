@@ -19,6 +19,7 @@ import javax.crypto.IllegalBlockSizeException;
 public abstract class SecureLayer extends Layer {
 	protected Encrypter enc;
 	protected Decrypter dec;
+	public static boolean DEBUG;
 
 	@Override
 	public List<Message> processOnReceive(Message msg) throws IOException {

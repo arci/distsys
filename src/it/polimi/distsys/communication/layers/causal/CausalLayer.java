@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class CausalLayer extends Layer {
+	public static boolean DEBUG;
 	private final UUID id = Peer.ID;
 	private VectorClock vc;
 	private Set<VectorClockMessage> receiving;

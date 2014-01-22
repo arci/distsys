@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ReliableLayer extends Layer {
+	public static boolean DEBUG;
 	private List<Message> sendingQueue;
 	private Map<UUID, Integer> lastIDs;
 	private int ID;

@@ -11,23 +11,41 @@ public class DebugAction implements Action {
 
 	@Override
 	public void execute(Peer peer, String... param) {
-		Class<?> clazz = Peer.class;
 		boolean value = false;
-		
+
 		try {
-			Set<String> layers = Config.getLayers();
-			for(String layer : layers){
-				if(param[0].equals(layer)){
-					clazz = Class.forName(Config.getLayer(layer));
-					value = Boolean.parseBoolean(param[1]);
+			if (param.length == 2) {
+				Set<String> layers = Config.getLayers();
+				value = Boolean.parseBoolean(param[1]);
+
+				if (param[0].equals("all")) {
+					for (String layer : layers) {
+						Class<?> clazz = Class.forName(Config.getLayer(layer));
+						Field debug = clazz.getField("DEBUG");
+						debug.setAccessible(true);
+						debug.setBoolean(null, value);
+						Printer.print(">>> " + clazz.getSimpleName() + ": DEBUG set to "
+								+ value);
+					}
+				} else {
+					for (String layer : layers) {
+						if (param[0].equals(layer)) {
+							Class<?> clazz = Class.forName(Config
+									.getLayer(layer));
+							Field debug = clazz.getField("DEBUG");
+							debug.setAccessible(true);
+							debug.setBoolean(null, value);
+							Printer.print(">>> " + clazz.getSimpleName()
+									+ ": DEBUG set to " + value);
+						}
+					}
 				}
+
+			} else if (param.length == 1) {
+				Peer.DEBUG = Boolean.parseBoolean(param[0]);
+				Printer.print(">>> " + Peer.class.getSimpleName() + ": DEBUG set to "
+						+ value);
 			}
-			
-			Field debug = clazz.getField("DEBUG");
-			debug.setAccessible(true);
-			debug.setBoolean(null, value);
-			
-			Printer.print(clazz.getSimpleName() + ": DEBUG set to " + value);
 		} catch (ClassNotFoundException | IndexOutOfBoundsException e) {
 			Printer.print(">>> debug-usage: /debug [<layer>] (true|false)");
 		} catch (IllegalArgumentException e) {

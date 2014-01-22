@@ -11,6 +11,7 @@ import java.security.Key;
 import java.util.UUID;
 
 public class ServerSecureLayer extends SecureLayer {
+	public static boolean DEBUG;
 	private FlatTable table;
 	private ServerState state;
 

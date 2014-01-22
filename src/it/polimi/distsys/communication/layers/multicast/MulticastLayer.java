@@ -20,8 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MulticastLayer extends Layer {
-	public static String ADDRESS = "224.0.0.1";
-	public static int PORT = 1234;
+	public static boolean DEBUG;
+	public final static String ADDRESS = "224.0.0.1";
+	public final static int PORT = 1234;
 	private InetAddress group;
 	private MulticastSocket socket;
 
