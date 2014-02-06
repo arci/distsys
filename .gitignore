@@ -9,3 +9,7 @@
 # Eclipse Files #
 *.classpath
 *.settings
+.project
+
+# Sonar things #
+/target
