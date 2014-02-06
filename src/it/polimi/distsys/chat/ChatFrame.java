@@ -50,11 +50,12 @@ public class ChatFrame extends JFrame {
 		((DefaultCaret) textPane.getCaret())
 				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textPane.setBorder(BorderFactory.createCompoundBorder(null, padding));
+		textPane.setPreferredSize(new Dimension(800, 400));
 		debugPane.setEditable(false);
 		((DefaultCaret) debugPane.getCaret())
 				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		debugPane.setBorder(BorderFactory.createCompoundBorder(null, padding));
-		debugPane.setPreferredSize(new Dimension(800, 200));
+		debugPane.setSize(new Dimension(800, 200));
 
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
