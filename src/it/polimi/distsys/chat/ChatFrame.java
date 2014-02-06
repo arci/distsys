@@ -3,6 +3,7 @@ package it.polimi.distsys.chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -22,6 +23,7 @@ import javax.swing.text.StyledDocument;
 
 public class ChatFrame extends JFrame {
 	private static final long serialVersionUID = 5288322019518493055L;
+	private JPanel panesPanel = new JPanel();
 	private JTextPane debugPane = new JTextPane();
 	private JTextPane textPane = new JTextPane();
 	private StyledDocument chat = textPane.getStyledDocument();
@@ -40,9 +42,9 @@ public class ChatFrame extends JFrame {
 
 	private ChatFrame() {
 		super("Secure Group Communication");
-		this.setPreferredSize(new Dimension(800, 600));
+		this.setPreferredSize(new Dimension(1000, 600));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLayout(new BorderLayout());
 
 		Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -55,21 +57,26 @@ public class ChatFrame extends JFrame {
 		((DefaultCaret) debugPane.getCaret())
 				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		debugPane.setBorder(BorderFactory.createCompoundBorder(null, padding));
-		debugPane.setSize(new Dimension(800, 200));
 
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
-		this.add(new JScrollPane(textPane,
+
+		panesPanel.setLayout(new GridLayout(0, 2));
+		panesPanel.add(new JScrollPane(textPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
-		this.add(new JScrollPane(debugPane,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+		panesPanel.add(new JScrollPane(debugPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.NORTH);
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+		this.add(panesPanel, BorderLayout.CENTER);
 		inputPanel.setLayout(new BorderLayout());
+		inputPanel.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		inputPanel.add(nickname, BorderLayout.WEST);
 		inputPanel.add(textField, BorderLayout.CENTER);
 		this.add(inputPanel, BorderLayout.SOUTH);
 		pack();
+		textPane.setSize(new Dimension(this.getWidth() / 2, this.getHeight()));
+		debugPane.setSize(new Dimension(this.getWidth() / 2, this.getHeight()));
 		textField.requestFocusInWindow();
 		setLocationRelativeTo(null);
 		setVisible(true);
