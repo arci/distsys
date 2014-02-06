@@ -15,23 +15,35 @@ import javax.swing.border.Border;
 
 public class ChatFrame extends JFrame {
 	private static final long serialVersionUID = 5288322019518493055L;
-	private JTextArea chatPanel = new JTextArea();
+	private JTextArea chat = new JTextArea();
 	private JPanel inputPanel = new JPanel();
 	private JTextField textField = new JTextField();
 	private JLabel nickname = new JLabel("nickname");
+	private static ChatFrame instance;
 
-	public ChatFrame(String title) {
-		super(title);
+	public static void init() {
+		instance = new ChatFrame();
+	}
+
+	public static ChatFrame get() {
+		if (instance == null) {
+			init();
+		}
+		return instance;
+	}
+
+	public ChatFrame() {
+		super("Secure Group Communication");
 		this.setPreferredSize(new Dimension(800, 500));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
-		chatPanel.setEditable(false);
+		chat.setEditable(false);
 		Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-		chatPanel.setBorder(BorderFactory.createCompoundBorder(null, padding));
+		chat.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
-		this.add(chatPanel, BorderLayout.CENTER);
+		this.add(chat, BorderLayout.CENTER);
 		inputPanel.setLayout(new BorderLayout());
 		inputPanel.add(nickname, BorderLayout.WEST);
 		inputPanel.add(textField, BorderLayout.CENTER);
@@ -40,6 +52,22 @@ public class ChatFrame extends JFrame {
 		textField.requestFocusInWindow();
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+
+	public void append(String message) {
+		this.chat.append(nickname.getText() + ": " + message + "\n");
+	}
+
+	public void print(String message) {
+		this.chat.append(message + "\n");
+	}
+
+	public void debug(String debugMessage) {
+		this.chat.append(debugMessage + "\n");
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname.setText(nickname);
 	}
 
 	class SubmitListener implements KeyListener {
@@ -52,8 +80,7 @@ public class ChatFrame extends JFrame {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == 10) {
-				chatPanel.append(nickname.getText() + ": "
-						+ textField.getText() + "\n");
+				append(textField.getText());
 				textField.setText("");
 			}
 		}

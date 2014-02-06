@@ -6,8 +6,7 @@ import java.io.IOException;
 
 public class ClientLauncher {
 	public static void main(String[] args) throws IOException {
-		new ChatFrame("Secure Group Communication");
-
+		ChatFrame.init();
 		Config.init();
 		Printer.print("Welcome to SGC! Now type your messages...");
 		Client client = new Client();

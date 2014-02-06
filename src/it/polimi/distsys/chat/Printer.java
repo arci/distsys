@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 
 public class Printer {
 
+	private static ChatFrame chatFrame = ChatFrame.get();
+
 	public static void printDebug(Class<?> clazz, String string) {
 		boolean debug = false;
 		if (Layer.class.isAssignableFrom(clazz)) {
@@ -23,12 +25,14 @@ public class Printer {
 		}
 
 		if (debug) {
-			System.err.println(clazz.getSimpleName() + ": " + string);
+			chatFrame.print(clazz.getSimpleName() + ": " + string);
+			// System.err.println(clazz.getSimpleName() + ": " + strin);
 		}
 	}
 
 	public static void print(String string) {
-		System.out.println(string);
+		chatFrame.print(string);
+		// System.out.println(string);
 	}
 
 }
