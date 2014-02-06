@@ -1,6 +1,7 @@
 package distsys;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import it.polimi.distsys.communication.secure.ClientSecureLayer;
 import it.polimi.distsys.communication.secure.Decrypter;
 import it.polimi.distsys.communication.secure.FlatTable;
@@ -14,6 +15,8 @@ import javax.crypto.SealedObject;
 import org.junit.Test;
 
 public class CryptoTest {
+
+	// TODO redo
 
 	@Test
 	public void test() throws Throwable {
@@ -45,9 +48,9 @@ public class CryptoTest {
 		for (int i = 0; i < oldKeks.length; i++) {
 			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
 			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			//sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
+			// sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
 		}
-		
+
 		pub.init(Cipher.ENCRYPT_MODE, sec2.getPublic());
 		sos = new SealedObject[FlatTable.BITS];
 		for (int i = 0; i < newKeks.length; i++) {
@@ -55,32 +58,32 @@ public class CryptoTest {
 		}
 		sec2.init(sos, new SealedObject(table.getDEK(), pub));
 		System.out.println("Client 001 initialized");
-		
+
 		assertTrue(sec1.getKEK(0).equals(sec2.getKEK(0)));
 		assertTrue(sec1.getKEK(1).equals(sec2.getKEK(1)));
 		assertFalse(sec1.getKEK(2).equals(sec2.getKEK(2)));
-		
+
 		ClientSecureLayer sec3 = new ClientSecureLayer();
 		UUID id3 = UUID.randomUUID();
 
 		oldKeks = table.join(id3);
 		newKeks = table.updateKEKs(id3);
 		System.out.println("Client 010 joined");
-		
+
 		System.out.println("updating Client 000");
 		for (int i = 0; i < oldKeks.length; i++) {
 			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
 			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			//sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
+			// sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
 		}
-		
+
 		System.out.println("updating Client 001");
 		for (int i = 0; i < oldKeks.length; i++) {
 			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
 			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			//sec2.updateKEK(new SealedObject(newKeks[i], kekCipher));
+			// sec2.updateKEK(new SealedObject(newKeks[i], kekCipher));
 		}
-		
+
 		pub.init(Cipher.ENCRYPT_MODE, sec3.getPublic());
 		sos = new SealedObject[FlatTable.BITS];
 		for (int i = 0; i < newKeks.length; i++) {
@@ -88,7 +91,7 @@ public class CryptoTest {
 		}
 		sec3.init(sos, new SealedObject(table.getDEK(), pub));
 		System.out.println("Client 010 initialized");
-		
+
 		assertTrue(sec1.getKEK(0).equals(sec2.getKEK(0)));
 		assertTrue(sec2.getKEK(0).equals(sec3.getKEK(0)));
 		assertTrue(sec1.getKEK(1).equals(sec2.getKEK(1)));
