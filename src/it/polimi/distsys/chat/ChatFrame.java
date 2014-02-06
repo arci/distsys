@@ -1,6 +1,7 @@
 package it.polimi.distsys.chat;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -10,17 +11,21 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.Border;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 public class ChatFrame extends JFrame {
 	private static final long serialVersionUID = 5288322019518493055L;
-	private JTextArea chat = new JTextArea();
-	JScrollPane scroll = new JScrollPane(chat,
-			JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	private JTextPane debugPane = new JTextPane();
+	private JTextPane textPane = new JTextPane();
+	private StyledDocument chat = textPane.getStyledDocument();
+	private StyledDocument debug = debugPane.getStyledDocument();
 	private JPanel inputPanel = new JPanel();
 	private JTextField textField = new JTextField();
 	private JLabel nickname = new JLabel("nickname");
@@ -35,18 +40,30 @@ public class ChatFrame extends JFrame {
 
 	private ChatFrame() {
 		super("Secure Group Communication");
-		this.setPreferredSize(new Dimension(800, 500));
+		this.setPreferredSize(new Dimension(800, 600));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
-		chat.setEditable(false);
-		DefaultCaret caret = (DefaultCaret) chat.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
 		Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-		chat.setBorder(BorderFactory.createCompoundBorder(null, padding));
+		textPane.setEditable(false);
+		((DefaultCaret) textPane.getCaret())
+				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		textPane.setBorder(BorderFactory.createCompoundBorder(null, padding));
+		debugPane.setEditable(false);
+		((DefaultCaret) debugPane.getCaret())
+				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		debugPane.setBorder(BorderFactory.createCompoundBorder(null, padding));
+		debugPane.setPreferredSize(new Dimension(800, 200));
+
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
-		this.add(scroll, BorderLayout.CENTER);
+		this.add(new JScrollPane(textPane,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+		this.add(new JScrollPane(debugPane,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.NORTH);
 		inputPanel.setLayout(new BorderLayout());
 		inputPanel.add(nickname, BorderLayout.WEST);
 		inputPanel.add(textField, BorderLayout.CENTER);
@@ -58,15 +75,36 @@ public class ChatFrame extends JFrame {
 	}
 
 	public void append(String message) {
-		this.chat.append(nickname.getText() + "> " + message + "\n");
+		SimpleAttributeSet keyWord = new SimpleAttributeSet();
+		StyleConstants.setForeground(keyWord, Color.BLUE);
+		try {
+			chat.insertString(chat.getLength(), nickname.getText() + "> "
+					+ message + "\n", keyWord);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void print(String message) {
-		this.chat.append(message + "\n");
+		SimpleAttributeSet keyWord = new SimpleAttributeSet();
+		StyleConstants.setForeground(keyWord, Color.BLACK);
+		StyleConstants.setBold(keyWord, true);
+		try {
+			chat.insertString(chat.getLength(), message + "\n", keyWord);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void debug(String debugMessage) {
-		this.chat.append(debugMessage + "\n");
+		SimpleAttributeSet keyWord = new SimpleAttributeSet();
+		StyleConstants.setForeground(keyWord, Color.RED);
+		StyleConstants.setBold(keyWord, true);
+		try {
+			debug.insertString(debug.getLength(), debugMessage + "\n", keyWord);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getMessage() throws InterruptedException {
@@ -107,5 +145,4 @@ public class ChatFrame extends JFrame {
 		}
 
 	}
-
 }

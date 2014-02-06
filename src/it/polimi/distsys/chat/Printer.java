@@ -25,7 +25,7 @@ public class Printer {
 		}
 
 		if (debug) {
-			chatFrame.print(clazz.getSimpleName() + ": " + string);
+			chatFrame.debug(clazz.getSimpleName() + ": " + string);
 		}
 	}
 
