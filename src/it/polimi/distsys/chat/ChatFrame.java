@@ -9,41 +9,44 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.text.DefaultCaret;
 
 public class ChatFrame extends JFrame {
 	private static final long serialVersionUID = 5288322019518493055L;
 	private JTextArea chat = new JTextArea();
+	JScrollPane scroll = new JScrollPane(chat,
+			JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	private JPanel inputPanel = new JPanel();
 	private JTextField textField = new JTextField();
 	private JLabel nickname = new JLabel("nickname");
 	private static ChatFrame instance;
 
-	public static void init() {
-		instance = new ChatFrame();
-	}
-
 	public static ChatFrame get() {
 		if (instance == null) {
-			init();
+			instance = new ChatFrame();
 		}
 		return instance;
 	}
 
-	public ChatFrame() {
+	private ChatFrame() {
 		super("Secure Group Communication");
 		this.setPreferredSize(new Dimension(800, 500));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
 		chat.setEditable(false);
+		DefaultCaret caret = (DefaultCaret) chat.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 		chat.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
-		this.add(chat, BorderLayout.CENTER);
+		this.add(scroll, BorderLayout.CENTER);
 		inputPanel.setLayout(new BorderLayout());
 		inputPanel.add(nickname, BorderLayout.WEST);
 		inputPanel.add(textField, BorderLayout.CENTER);
@@ -71,7 +74,9 @@ public class ChatFrame extends JFrame {
 			if (this.textField.getText().equals("")) {
 				textField.wait();
 			}
-			return this.textField.getText();
+			String text = this.textField.getText();
+			textField.setText("");
+			return text;
 		}
 	}
 
@@ -91,7 +96,6 @@ public class ChatFrame extends JFrame {
 			synchronized (textField) {
 				if (e.getKeyCode() == 10) {
 					append(textField.getText());
-					textField.setText("");
 					textField.notify();
 				}
 			}
