@@ -45,6 +45,8 @@ public class DebugAction implements Action {
 				Peer.DEBUG = Boolean.parseBoolean(param[0]);
 				Printer.print(">>> " + Peer.class.getSimpleName() + ": DEBUG set to "
 						+ value);
+			} else {
+				Printer.print(">>> debug-usage: /debug [<layer>] (true|false)");
 			}
 		} catch (ClassNotFoundException | IndexOutOfBoundsException e) {
 			Printer.print(">>> debug-usage: /debug [<layer>] (true|false)");
