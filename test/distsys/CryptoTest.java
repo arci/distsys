@@ -1,6 +1,5 @@
 package distsys;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import it.polimi.distsys.communication.secure.ClientSecureLayer;
 import it.polimi.distsys.communication.secure.Decrypter;
@@ -20,85 +19,200 @@ public class CryptoTest {
 
 	@Test
 	public void test() throws Throwable {
+
+		/* INIT */
+
 		FlatTable table = new FlatTable();
-		ClientSecureLayer sec1 = new ClientSecureLayer();
-		ClientSecureLayer sec2 = new ClientSecureLayer();
+		ClientSecureLayer sl000 = new ClientSecureLayer();
+		ClientSecureLayer sl001 = new ClientSecureLayer();
+		ClientSecureLayer sl010 = new ClientSecureLayer();
+
 		UUID id1 = UUID.randomUUID();
 		UUID id2 = UUID.randomUUID();
+		UUID id3 = UUID.randomUUID();
+
+		SealedObject[] sos = new SealedObject[FlatTable.BITS];
+
+		/* INIT 000 AND JOIN */
+
+		Cipher pub000 = Cipher.getInstance("RSA");
+		pub000.init(Cipher.ENCRYPT_MODE, sl000.getPublic());
 
 		Key[] oldKeks = table.join(id1);
 		Key[] newKeks = table.updateKEKs(id1);
 		System.out.println("Client 000 joined");
 
-		Cipher pub = Cipher.getInstance("RSA");
-		pub.init(Cipher.ENCRYPT_MODE, sec1.getPublic());
-
-		SealedObject[] sos = new SealedObject[FlatTable.BITS];
 		for (int i = 0; i < newKeks.length; i++) {
-			sos[i] = new SealedObject(newKeks[i], pub);
+			sos[i] = new SealedObject(newKeks[i], pub000);
 		}
-		sec1.init(sos, new SealedObject(table.getDEK(), pub));
+
+		sl000.init(sos, new SealedObject(table.getDEK(), pub000));
 		System.out.println("Client 000 initialized");
+
+		/* JOIN 001 */
 
 		oldKeks = table.join(id2);
 		newKeks = table.updateKEKs(id2);
+		Key oldDek = table.getDEK();
+		Key newDek = table.refreshDEK();
+
 		System.out.println("Client 001 joined");
 
-		System.out.println("updating Client 000");
-		for (int i = 0; i < oldKeks.length; i++) {
-			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
-			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			// sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
+		/* INIT 001 */
+
+		Cipher pub001 = Cipher.getInstance("RSA");
+		pub001.init(Cipher.ENCRYPT_MODE, sl001.getPublic());
+
+		for (int i = 0; i < newKeks.length; i++) {
+			sos[i] = new SealedObject(newKeks[i], pub001);
 		}
 
-		pub.init(Cipher.ENCRYPT_MODE, sec2.getPublic());
-		sos = new SealedObject[FlatTable.BITS];
-		for (int i = 0; i < newKeks.length; i++) {
-			sos[i] = new SealedObject(newKeks[i], pub);
-		}
-		sec2.init(sos, new SealedObject(table.getDEK(), pub));
+		sl001.init(sos, new SealedObject(newDek, pub001));
 		System.out.println("Client 001 initialized");
 
-		assertTrue(sec1.getKEK(0).equals(sec2.getKEK(0)));
-		assertTrue(sec1.getKEK(1).equals(sec2.getKEK(1)));
-		assertFalse(sec1.getKEK(2).equals(sec2.getKEK(2)));
+		/* UPDATING */
+		/* new dek with old dek, each key keks with its correspondi old kek */
 
-		ClientSecureLayer sec3 = new ClientSecureLayer();
-		UUID id3 = UUID.randomUUID();
+		System.out.println("updating Client 000");
+
+		for (int i = 0; i < newKeks.length; i++) {
+			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
+			sos[i] = new SealedObject(newKeks[i], kekCipher);
+
+		}
+
+		Cipher dekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+		dekCipher.init(Cipher.ENCRYPT_MODE, oldDek);
+
+		sl000.updateOnJoin(sos, new SealedObject(newDek, dekCipher));
+		System.out.println("Client 000 updated");
+
+		/* assertions */
+
+		assertTrue(sl000.getKEK(0).equals(sl001.getKEK(0)));
+		assertTrue(sl000.getKEK(1).equals(sl001.getKEK(1)));
+		assertTrue(!sl000.getKEK(2).equals(sl001.getKEK(2)));
+
+		/* JOIN 010 */
 
 		oldKeks = table.join(id3);
 		newKeks = table.updateKEKs(id3);
+		oldDek = table.getDEK();
+
+		newDek = table.refreshDEK();
+
 		System.out.println("Client 010 joined");
 
-		System.out.println("updating Client 000");
-		for (int i = 0; i < oldKeks.length; i++) {
-			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
-			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			// sec1.updateKEK(new SealedObject(newKeks[i], kekCipher));
-		}
+		/* INIT 010 */
 
-		System.out.println("updating Client 001");
-		for (int i = 0; i < oldKeks.length; i++) {
-			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
-			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
-			// sec2.updateKEK(new SealedObject(newKeks[i], kekCipher));
-		}
+		Cipher pub010 = Cipher.getInstance("RSA");
+		pub010.init(Cipher.ENCRYPT_MODE, sl010.getPublic());
 
-		pub.init(Cipher.ENCRYPT_MODE, sec3.getPublic());
-		sos = new SealedObject[FlatTable.BITS];
 		for (int i = 0; i < newKeks.length; i++) {
-			sos[i] = new SealedObject(newKeks[i], pub);
+			sos[i] = new SealedObject(newKeks[i], pub010);
 		}
-		sec3.init(sos, new SealedObject(table.getDEK(), pub));
+
+		sl010.init(sos, new SealedObject(newDek, pub010));
 		System.out.println("Client 010 initialized");
 
-		assertTrue(sec1.getKEK(0).equals(sec2.getKEK(0)));
-		assertTrue(sec2.getKEK(0).equals(sec3.getKEK(0)));
-		assertTrue(sec1.getKEK(1).equals(sec2.getKEK(1)));
-		assertTrue(sec1.getKEK(2).equals(sec3.getKEK(2)));
-		assertFalse(sec1.getKEK(1).equals(sec3.getKEK(1)));
-		assertFalse(sec2.getKEK(1).equals(sec3.getKEK(1)));
-		assertFalse(sec1.getKEK(2).equals(sec2.getKEK(2)));
-		assertFalse(sec2.getKEK(2).equals(sec3.getKEK(2)));
+		/* UPDATING */
+		/* new dek with old dek, each key keks with its corresponding old kek */
+
+		System.out.println("updating Client 000");
+
+		for (int i = 0; i < newKeks.length; i++) {
+			Cipher kekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+			kekCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
+			sos[i] = new SealedObject(newKeks[i], kekCipher);
+
+		}
+
+		Cipher dekCipher1 = Cipher.getInstance(Decrypter.ALGORITHM);
+		dekCipher1.init(Cipher.ENCRYPT_MODE, oldDek);
+
+		sl000.updateOnJoin(sos, new SealedObject(newDek, dekCipher1));
+		System.out.println("Client 000 updated");
+		System.out.println(" updating Client 001");
+
+		sl001.updateOnJoin(sos, new SealedObject(newDek, dekCipher1));
+		System.out.println("Client 001 updated");
+
+		/* assertions */
+
+		assertTrue(sl000.getKEK(0).equals(sl001.getKEK(0)));
+		assertTrue(sl000.getKEK(1).equals(sl001.getKEK(1)));
+		assertTrue(!sl000.getKEK(2).equals(sl001.getKEK(2)));
+
+		assertTrue(sl000.getKEK(0).equals(sl010.getKEK(0)));
+		assertTrue(!sl000.getKEK(1).equals(sl010.getKEK(1)));
+		assertTrue(sl000.getKEK(2).equals(sl010.getKEK(2)));
+
+		assertTrue(sl001.getKEK(0).equals(sl010.getKEK(0)));
+		assertTrue(!sl001.getKEK(1).equals(sl010.getKEK(1)));
+		assertTrue(!sl001.getKEK(2).equals(sl010.getKEK(2)));
+
+		/* LEAVE */
+
+		/* LEAVE 001 */
+		oldKeks = table.getKEKs(id2);
+		Key[] oldOtherKeks = table.getOtherKEKs(id2);
+		newKeks = table.updateKEKs(id2);
+
+		oldDek = table.getDEK();
+		newDek = table.refreshDEK();
+
+		table.leave(id2);
+
+		SealedObject[] keks = new SealedObject[FlatTable.BITS];
+		SealedObject[] deks = new SealedObject[FlatTable.BITS];
+
+		System.out.println("Client 001 leaved");
+		/* UPDATING */
+		/*
+		 * new dek with old keks, each key keks with its correspondi old kek and
+		 * the with oldDek
+		 */
+
+		System.out.println("updating Client 000");
+
+		Cipher oldDekCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+		oldDekCipher.init(Cipher.ENCRYPT_MODE, oldDek);
+		Cipher kekOtherCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+
+		Cipher kekOldCipher = Cipher.getInstance(Decrypter.ALGORITHM);
+
+		for (int i = 0; i < oldOtherKeks.length; i++) {
+			kekOtherCipher.init(Cipher.ENCRYPT_MODE, oldOtherKeks[i]);
+			deks[i] = new SealedObject(newDek, kekOtherCipher);
+		}
+
+		for (int i = 0; i < oldKeks.length; i++) {
+			kekOldCipher.init(Cipher.ENCRYPT_MODE, oldKeks[i]);
+
+			keks[i] = new SealedObject(new SealedObject(newKeks[i],
+					kekOldCipher), oldDekCipher);
+
+		}
+
+		sl000.updateOnLeave(keks, deks);
+		System.out.println("Client 000 updated");
+		System.out.println("updating Client 010");
+		sl010.updateOnLeave(keks, deks);
+		System.out.println("Client 010 updated");
+
+		/* assertions */
+
+		assertTrue(sl010.getKEK(0).equals(sl000.getKEK(0)));
+		assertTrue(!sl010.getKEK(1).equals(sl000.getKEK(1)));
+		assertTrue(sl010.getKEK(2).equals(sl000.getKEK(2)));
+
+		assertTrue(!sl000.getKEK(0).equals(sl001.getKEK(0)));
+		assertTrue(!sl000.getKEK(1).equals(sl001.getKEK(1)));
+		assertTrue(!sl000.getKEK(2).equals(sl001.getKEK(2)));
+
+		assertTrue(!sl010.getKEK(0).equals(sl001.getKEK(0)));
+		assertTrue(!sl010.getKEK(1).equals(sl001.getKEK(1)));
+		assertTrue(!sl010.getKEK(2).equals(sl001.getKEK(2)));
 	}
 }
