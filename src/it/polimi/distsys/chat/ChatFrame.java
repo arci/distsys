@@ -22,6 +22,7 @@ import javax.swing.text.StyledDocument;
 
 public class ChatFrame extends JFrame {
 	private static final long serialVersionUID = 5288322019518493055L;
+	private JPanel textPanel = new JPanel();
 	private JTextPane debugPane = new JTextPane();
 	private JTextPane textPane = new JTextPane();
 	private StyledDocument chat = textPane.getStyledDocument();
@@ -40,7 +41,7 @@ public class ChatFrame extends JFrame {
 
 	private ChatFrame() {
 		super("Secure Group Communication");
-		this.setPreferredSize(new Dimension(800, 600));
+		this.setPreferredSize(new Dimension(1000, 600));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLayout(new BorderLayout());
@@ -54,21 +55,26 @@ public class ChatFrame extends JFrame {
 		((DefaultCaret) debugPane.getCaret())
 				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		debugPane.setBorder(BorderFactory.createCompoundBorder(null, padding));
-		debugPane.setPreferredSize(new Dimension(800, 200));
 
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
-		this.add(new JScrollPane(textPane,
+
+		textPanel.setLayout(new BorderLayout());
+		textPanel.add(new JScrollPane(textPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
-		this.add(new JScrollPane(debugPane,
+		textPanel.add(new JScrollPane(debugPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.NORTH);
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.EAST);
+		this.add(textPanel, BorderLayout.CENTER);
 		inputPanel.setLayout(new BorderLayout());
+		inputPanel.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		inputPanel.add(nickname, BorderLayout.WEST);
 		inputPanel.add(textField, BorderLayout.CENTER);
 		this.add(inputPanel, BorderLayout.SOUTH);
 		pack();
+		debugPane.setPreferredSize(new Dimension(textPanel.getWidth() / 2,
+				textPanel.getHeight()));
 		textField.requestFocusInWindow();
 		setLocationRelativeTo(null);
 		setVisible(true);
