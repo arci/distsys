@@ -27,7 +27,9 @@ public class InitState implements ClientState {
 	}
 
 	@Override
-	public void done() {}
+	public void done() throws IOException {
+		layer.sendACK();
+	}
 
 	@Override
 	public boolean send(Message msg) {

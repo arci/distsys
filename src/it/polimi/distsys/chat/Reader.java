@@ -4,9 +4,9 @@ import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.StringMessage;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Reader implements Runnable {
+	private static ChatFrame chatFrame = ChatFrame.get();
 	private Peer peer;
 
 	public Reader(Peer peer) {
@@ -15,11 +15,16 @@ public class Reader implements Runnable {
 
 	@Override
 	public void run() {
-		Scanner in = new Scanner(System.in);
 		Commander commander = new Commander(peer);
 
 		while (true) {
-			String str = in.nextLine();
+			String str = "";
+			try {
+				str = chatFrame.getMessage();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			if (str.equals("leave")) {
 				break;
 			}
@@ -43,8 +48,7 @@ public class Reader implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		in.close();
-		
+
 		System.exit(0);
 	}
 }

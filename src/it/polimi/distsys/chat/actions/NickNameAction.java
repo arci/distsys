@@ -1,15 +1,17 @@
 package it.polimi.distsys.chat.actions;
 
+import it.polimi.distsys.chat.ChatFrame;
 import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.chat.Printer;
 
 public class NickNameAction implements Action {
+	private ChatFrame chatFrame = ChatFrame.get();
 
 	@Override
 	public void execute(Peer peer, String... params) {
 		String message = "";
 		String param = "";
-		for(String p : params){
+		for (String p : params) {
 			param += p;
 		}
 		if (param.isEmpty()) {
@@ -19,6 +21,7 @@ public class NickNameAction implements Action {
 			message = "nickname changed to " + param;
 			peer.setNickname(param);
 		}
+		chatFrame.setNickname(peer.getNickname());
 		Printer.print(message);
 	}
 
