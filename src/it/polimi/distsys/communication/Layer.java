@@ -10,13 +10,8 @@ import java.util.List;
 public abstract class Layer {
 	protected Layer above;
 	protected Layer underneath;
-	protected boolean sendUp;
-	protected boolean sendDown;
-
-	public Layer() {
-		sendUp = true;
-		sendDown = true;
-	}
+	protected boolean sendUp = true;
+	protected boolean sendDown = true;
 
 	public void send(Message msg) throws IOException {
 		Printer.printDebug(getClass(), "sending "
@@ -24,13 +19,15 @@ public abstract class Layer {
 		
 		List<Message> toSend = new ArrayList<Message>();
 		msg.onSend(this);
-		if (sendDown) {
-			toSend = processOnSend(msg);
-			for(Message m : toSend){
-				sendDown(m);
+		synchronized (this) {
+			if (sendDown) {
+				toSend = processOnSend(msg);
+				for(Message m : toSend){
+					sendDown(m);
+				}
 			}
+			sendDown = true;	
 		}
-		sendDown = true;
 	}
 
 	public List<Message> receive(List<Message> msgs) throws IOException {
@@ -40,28 +37,30 @@ public abstract class Layer {
 			Printer.printDebug(getClass(), "receiving "
 					+ m.getClass().getSimpleName() + "-> " + m.toString());
 			m.onReceive(this);
-			if (sendUp) {
-				toReceive.addAll(processOnReceive(m));
+			synchronized (this) {
+				if (sendUp) {
+					toReceive.addAll(processOnReceive(m));
+				}
+				sendUp = true;
 			}
-			sendUp = true;
 		}
 
 		return sendUp(toReceive);
 	}
 
-	public void stopReceiving() {
+	public synchronized void stopReceiving() {
 		sendUp = false;
 	}
 
-	public void stopSending() {
+	public synchronized void stopSending() {
 		sendDown = false;
 	}
 
-	public boolean isSending() {
+	public synchronized boolean isSending() {
 		return sendDown;
 	}
 
-	public boolean isReceiving() {
+	public synchronized boolean isReceiving() {
 		return sendUp;
 	}
 
