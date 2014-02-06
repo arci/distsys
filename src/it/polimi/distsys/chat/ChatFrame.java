@@ -55,7 +55,7 @@ public class ChatFrame extends JFrame {
 	}
 
 	public void append(String message) {
-		this.chat.append(nickname.getText() + ": " + message + "\n");
+		this.chat.append(nickname.getText() + "> " + message + "\n");
 	}
 
 	public void print(String message) {
@@ -66,11 +66,20 @@ public class ChatFrame extends JFrame {
 		this.chat.append(debugMessage + "\n");
 	}
 
+	public String getMessage() throws InterruptedException {
+		synchronized (textField) {
+			if (this.textField.getText().equals("")) {
+				textField.wait();
+			}
+			return this.textField.getText();
+		}
+	}
+
 	public void setNickname(String nickname) {
 		this.nickname.setText(nickname);
 	}
 
-	class SubmitListener implements KeyListener {
+	private class SubmitListener implements KeyListener {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
@@ -79,9 +88,12 @@ public class ChatFrame extends JFrame {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == 10) {
-				append(textField.getText());
-				textField.setText("");
+			synchronized (textField) {
+				if (e.getKeyCode() == 10) {
+					append(textField.getText());
+					textField.setText("");
+					textField.notify();
+				}
 			}
 		}
 

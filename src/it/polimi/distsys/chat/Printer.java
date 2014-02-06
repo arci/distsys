@@ -26,13 +26,11 @@ public class Printer {
 
 		if (debug) {
 			chatFrame.print(clazz.getSimpleName() + ": " + string);
-			// System.err.println(clazz.getSimpleName() + ": " + strin);
 		}
 	}
 
 	public static void print(String string) {
 		chatFrame.print(string);
-		// System.out.println(string);
 	}
 
 }
