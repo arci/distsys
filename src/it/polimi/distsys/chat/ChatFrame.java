@@ -3,6 +3,7 @@ package it.polimi.distsys.chat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -22,7 +23,7 @@ import javax.swing.text.StyledDocument;
 
 public class ChatFrame extends JFrame {
 	private static final long serialVersionUID = 5288322019518493055L;
-	private JPanel textPanel = new JPanel();
+	private JPanel panesPanel = new JPanel();
 	private JTextPane debugPane = new JTextPane();
 	private JTextPane textPane = new JTextPane();
 	private StyledDocument chat = textPane.getStyledDocument();
@@ -59,22 +60,22 @@ public class ChatFrame extends JFrame {
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
 
-		textPanel.setLayout(new BorderLayout());
-		textPanel.add(new JScrollPane(textPane,
+		panesPanel.setLayout(new GridLayout(0, 2));
+		panesPanel.add(new JScrollPane(textPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
-		textPanel.add(new JScrollPane(debugPane,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+		panesPanel.add(new JScrollPane(debugPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.EAST);
-		this.add(textPanel, BorderLayout.CENTER);
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+		this.add(panesPanel, BorderLayout.CENTER);
 		inputPanel.setLayout(new BorderLayout());
 		inputPanel.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		inputPanel.add(nickname, BorderLayout.WEST);
 		inputPanel.add(textField, BorderLayout.CENTER);
 		this.add(inputPanel, BorderLayout.SOUTH);
 		pack();
-		debugPane.setPreferredSize(new Dimension(textPanel.getWidth() / 2,
-				textPanel.getHeight()));
+		textPane.setSize(new Dimension(this.getWidth() / 2, this.getHeight()));
+		debugPane.setSize(new Dimension(this.getWidth() / 2, this.getHeight()));
 		textField.requestFocusInWindow();
 		setLocationRelativeTo(null);
 		setVisible(true);
