@@ -5,7 +5,6 @@ import it.polimi.distsys.communication.messages.STOPMessage;
 import java.io.IOException;
 import java.security.Key;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,10 +17,7 @@ public class NormalState implements ServerState {
 	public NormalState(ServerSecureLayer layer) {
 		super();
 		this.layer = layer;
-		Iterator<UUID> itr = layer.getTable().iterator();
-		while(itr.hasNext()){
-			members.add(itr.next());
-		}
+		members = layer.getTable().getMembers();
 	}
 
 	@Override
