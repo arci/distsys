@@ -44,7 +44,7 @@ public class ChatFrame extends JFrame {
 		super("Secure Group Communication");
 		this.setPreferredSize(new Dimension(1000, 600));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
+		this.setResizable(true);
 		this.setLayout(new BorderLayout());
 
 		Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
