@@ -7,7 +7,11 @@ public class EchoAction implements Action {
 
 	@Override
 	public void execute(Peer peer, String... param) {
-		Printer.print(">>> " + param);
+		String toprint = "";
+		for(String s : param){
+			toprint += (s + " ");
+		}
+		Printer.print(">>> " + toprint);
 	}
 
 }

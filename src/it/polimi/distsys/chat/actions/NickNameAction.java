@@ -15,10 +15,10 @@ public class NickNameAction implements Action {
 			param += p;
 		}
 		if (param.isEmpty()) {
-			message = "cannot set an empty nickname";
+			message = ">>> cannot set an empty nickname";
 		} else {
 			param = param.replace(" ", "_");
-			message = "nickname changed to " + param;
+			message = ">>> nickname changed to " + param;
 			peer.setNickname(param);
 		}
 		chatFrame.setNickname(peer.getNickname());

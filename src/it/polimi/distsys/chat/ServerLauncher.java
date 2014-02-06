@@ -10,6 +10,7 @@ public class ServerLauncher {
 		Config.init();
 		Server server = new Server();
 		server.startDisplayer();
+		server.startReader();
 
 		Printer.printDebug(ServerLauncher.class, "Server ready");
 		Printer.print("Server launched...");

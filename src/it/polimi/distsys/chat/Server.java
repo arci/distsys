@@ -12,6 +12,10 @@ public class Server extends Peer {
 		stack = StackFactory.makeCompleteServerStack();
 		stack.join();
 	}
+	
+	public void startReader() {
+		new Thread(new Reader(this)).start();
+	}
 
 	public void startDisplayer() {
 		new Thread(new Displayer(this)).start();
