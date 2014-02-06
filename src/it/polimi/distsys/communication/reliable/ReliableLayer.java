@@ -23,14 +23,14 @@ public class ReliableLayer extends Layer {
 	public static boolean DEBUG;
 	private List<Message> sendingQueue;
 	private Map<UUID, Integer> lastIDs;
-	private int ID;
-	// private final static int ACK_INTERVAL = 30;
+	private int ID = 0;
+	private final static int NUMBER_MESSAGES_TO_CLEAR = 50;
+	private final static int CLEAR_INTERVAL = NUMBER_MESSAGES_TO_CLEAR * 2;
 	private final UUID uniqueID = Peer.ID;
 	private NACKer nacker;
 
 	public ReliableLayer() {
 		super();
-		ID = 0;
 		lastIDs = Collections.synchronizedMap(new HashMap<UUID, Integer>());
 		sendingQueue = Collections.synchronizedList(new ArrayList<Message>());
 		nacker = new NACKer(this);
@@ -42,6 +42,9 @@ public class ReliableLayer extends Layer {
 		SequenceNumber sn = new SequenceNumber(uniqueID, ID);
 		SequenceNumberMessage toSend = new SequenceNumberMessage(sn, msg);
 		sendingQueue.add(toSend);
+		if((ID + 1) % CLEAR_INTERVAL == 0){
+			sendingQueue.subList(0, NUMBER_MESSAGES_TO_CLEAR).clear();
+		}
 		return new ArrayList<Message>(Arrays.asList(toSend));
 	}
 
@@ -187,7 +190,6 @@ public class ReliableLayer extends Layer {
 						layer.sendDown(new NACKMessage(sn));
 					}
 				} catch (IOException | InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
