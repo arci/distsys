@@ -6,6 +6,7 @@ import it.polimi.distsys.communication.messages.InitMessage;
 import it.polimi.distsys.communication.messages.KeysJoinMessage;
 import it.polimi.distsys.communication.messages.KeysLeaveMessage;
 import it.polimi.distsys.communication.messages.Message;
+import it.polimi.distsys.communication.messages.STOPMessage;
 
 import java.io.IOException;
 import java.security.Key;
@@ -31,14 +32,17 @@ public class KeysState implements ServerState {
 	}
 
 	@Override
-	public void join(UUID id, Key publicKey) throws TableException {
+	public void join(UUID id, Key publicKey) throws TableException, IOException {
 		joiners.add(id);
+		members.add(id);
 		layer.getTable().addPublicKey(id, publicKey);
+		layer.sendDown(new STOPMessage());
 	}
 
 	@Override
 	public void leave(UUID id) throws IOException, TableException {
 		leavers.add(id);
+		members.remove(id);
 		layer.getTable().removePublicKey(id);
 		ACKReceived(id);
 	}

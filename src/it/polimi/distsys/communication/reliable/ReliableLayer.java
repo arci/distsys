@@ -11,7 +11,6 @@ import it.polimi.distsys.communication.messages.StringMessage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,8 @@ public class ReliableLayer extends Layer {
 
 	public ReliableLayer() {
 		super();
-		lastIDs = Collections.synchronizedMap(new HashMap<UUID, Integer>());
-		sendingQueue = Collections.synchronizedList(new ArrayList<Message>());
+		lastIDs = new HashMap<UUID, Integer>();
+		sendingQueue = new ArrayList<Message>();
 		nacker = new NACKer(this);
 	}
 
@@ -116,10 +115,7 @@ public class ReliableLayer extends Layer {
 		nacker.stopNACK(id);
 	}
 
-	public void cleanQueue(int messageID) {
-		// TODO Auto-generated method stub
-
-	}
+	public void cleanQueue(int messageID) {}
 
 	@Override
 	public void join() throws IOException {
@@ -149,8 +145,7 @@ public class ReliableLayer extends Layer {
 
 		public NACKer(ReliableLayer layer) {
 			executor = Executors.newCachedThreadPool();
-			processing = Collections
-					.synchronizedMap(new HashMap<UUID, Processer>());
+			processing = new HashMap<UUID, Processer>();
 			this.layer = layer;
 		}
 
