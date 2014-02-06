@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.communication.components.VectorClock;
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.causal.VectorClock;
 
 public class VectorClockMessage implements MessageDecorator {
 	private static final long serialVersionUID = 3674718470667194111L;

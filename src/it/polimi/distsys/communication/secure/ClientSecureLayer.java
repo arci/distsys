@@ -1,10 +1,7 @@
-package it.polimi.distsys.communication.layers.secure;
+package it.polimi.distsys.communication.secure;
 
+import it.polimi.distsys.Printer;
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.components.Decrypter;
-import it.polimi.distsys.communication.components.Encrypter;
-import it.polimi.distsys.communication.components.FlatTable;
-import it.polimi.distsys.communication.components.Printer;
 import it.polimi.distsys.communication.messages.ACKMessage;
 import it.polimi.distsys.communication.messages.JoinMessage;
 import it.polimi.distsys.communication.messages.LeaveMessage;

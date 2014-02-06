@@ -1,12 +1,11 @@
 package it.polimi.distsys;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.layers.causal.CausalLayer;
-import it.polimi.distsys.communication.layers.multicast.MulticastLayer;
-import it.polimi.distsys.communication.layers.reliable.ReliableLayer;
-import it.polimi.distsys.communication.layers.secure.ClientSecureLayer;
-import it.polimi.distsys.communication.layers.secure.ServerSecureLayer;
+import it.polimi.distsys.communication.causal.CausalLayer;
+import it.polimi.distsys.communication.multicast.MulticastLayer;
+import it.polimi.distsys.communication.reliable.ReliableLayer;
+import it.polimi.distsys.communication.secure.ClientSecureLayer;
+import it.polimi.distsys.communication.secure.ServerSecureLayer;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

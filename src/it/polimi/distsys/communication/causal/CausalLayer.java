@@ -1,9 +1,8 @@
-package it.polimi.distsys.communication.layers.causal;
+package it.polimi.distsys.communication.causal;
 
+import it.polimi.distsys.Printer;
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.components.VectorClock;
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.VectorClockMessage;
 

@@ -2,9 +2,9 @@ package it.polimi.distsys.communication.messages;
 
 import java.io.IOException;
 
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.layers.Layer;
-import it.polimi.distsys.communication.layers.secure.ClientSecureLayer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.secure.ClientSecureLayer;
 
 public class STOPMessage implements Message {
 	private static final long serialVersionUID = 305630151031207741L;

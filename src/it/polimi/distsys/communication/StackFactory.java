@@ -1,11 +1,11 @@
-package it.polimi.distsys.communication.layers;
+package it.polimi.distsys.communication;
 
-import it.polimi.distsys.communication.layers.causal.CausalLayer;
-import it.polimi.distsys.communication.layers.multicast.MulticastLayer;
-import it.polimi.distsys.communication.layers.reliable.ReliableLayer;
-import it.polimi.distsys.communication.layers.secure.ClientSecureLayer;
-import it.polimi.distsys.communication.layers.secure.SecureLayer;
-import it.polimi.distsys.communication.layers.secure.ServerSecureLayer;
+import it.polimi.distsys.communication.causal.CausalLayer;
+import it.polimi.distsys.communication.multicast.MulticastLayer;
+import it.polimi.distsys.communication.reliable.ReliableLayer;
+import it.polimi.distsys.communication.secure.ClientSecureLayer;
+import it.polimi.distsys.communication.secure.SecureLayer;
+import it.polimi.distsys.communication.secure.ServerSecureLayer;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

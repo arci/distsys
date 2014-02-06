@@ -1,7 +1,7 @@
-package it.polimi.distsys.communication.layers.multicast;
+package it.polimi.distsys.communication.multicast;
 
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.BufferedInputStream;

@@ -1,4 +1,4 @@
-package it.polimi.distsys.communication.components;
+package it.polimi.distsys.communication.causal;
 
 import java.io.Serializable;
 import java.util.Collections;

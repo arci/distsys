@@ -1,8 +1,8 @@
 package it.polimi.distsys.chat.actions;
 
 import it.polimi.distsys.Config;
+import it.polimi.distsys.Printer;
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.components.Printer;
 
 import java.lang.reflect.Field;
 import java.util.Set;

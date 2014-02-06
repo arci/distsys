@@ -1,4 +1,4 @@
-package it.polimi.distsys.communication.components;
+package it.polimi.distsys.communication.secure;
 
 public class TableException extends Exception{
 	private static final long serialVersionUID = 7550859866569271640L;

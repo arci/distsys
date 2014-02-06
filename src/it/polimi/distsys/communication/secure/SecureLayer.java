@@ -1,9 +1,7 @@
-package it.polimi.distsys.communication.layers.secure;
+package it.polimi.distsys.communication.secure;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.components.Decrypter;
-import it.polimi.distsys.communication.components.Encrypter;
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.messages.EncryptedMessage;
 import it.polimi.distsys.communication.messages.Message;
 

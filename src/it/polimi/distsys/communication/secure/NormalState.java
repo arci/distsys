@@ -1,6 +1,5 @@
-package it.polimi.distsys.communication.layers.secure;
+package it.polimi.distsys.communication.secure;
 
-import it.polimi.distsys.communication.components.TableException;
 import it.polimi.distsys.communication.messages.STOPMessage;
 
 import java.io.IOException;

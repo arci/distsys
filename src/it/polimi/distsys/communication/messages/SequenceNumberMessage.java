@@ -1,8 +1,8 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.components.SequenceNumber;
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.reliable.SequenceNumber;
 
 public class SequenceNumberMessage implements MessageDecorator {
 	private static final long serialVersionUID = -6506203353941938533L;

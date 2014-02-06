@@ -2,8 +2,8 @@ package distsys;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import it.polimi.distsys.communication.components.FlatTable;
-import it.polimi.distsys.communication.components.TableException;
+import it.polimi.distsys.communication.secure.FlatTable;
+import it.polimi.distsys.communication.secure.TableException;
 
 import java.security.Key;
 import java.util.UUID;

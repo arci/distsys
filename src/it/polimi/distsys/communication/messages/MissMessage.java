@@ -2,9 +2,9 @@ package it.polimi.distsys.communication.messages;
 
 import java.io.IOException;
 
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.layers.Layer;
-import it.polimi.distsys.communication.layers.reliable.ReliableLayer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.reliable.ReliableLayer;
 
 public class MissMessage extends StringMessage implements Message {
 	private static final long serialVersionUID = -8644231993272185224L;

@@ -1,9 +1,9 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.communication.components.Decrypter;
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.layers.Layer;
-import it.polimi.distsys.communication.layers.secure.ClientSecureLayer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.secure.ClientSecureLayer;
+import it.polimi.distsys.communication.secure.Decrypter;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;

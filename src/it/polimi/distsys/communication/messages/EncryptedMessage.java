@@ -7,8 +7,8 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SealedObject;
 
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
 
 public class EncryptedMessage implements Message {
 	private static final long serialVersionUID = 107158341380726137L;

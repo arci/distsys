@@ -2,10 +2,10 @@ package it.polimi.distsys.communication.messages;
 
 import java.io.IOException;
 
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.components.SequenceNumber;
-import it.polimi.distsys.communication.layers.Layer;
-import it.polimi.distsys.communication.layers.reliable.ReliableLayer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.reliable.ReliableLayer;
+import it.polimi.distsys.communication.reliable.SequenceNumber;
 
 public class NACKMessage implements Message {
 	private static final long serialVersionUID = 4534419416507706053L;

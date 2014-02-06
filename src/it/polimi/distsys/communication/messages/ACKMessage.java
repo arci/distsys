@@ -1,9 +1,9 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.components.TableException;
-import it.polimi.distsys.communication.layers.Layer;
-import it.polimi.distsys.communication.layers.secure.ServerSecureLayer;
+import it.polimi.distsys.Printer;
+import it.polimi.distsys.communication.Layer;
+import it.polimi.distsys.communication.secure.ServerSecureLayer;
+import it.polimi.distsys.communication.secure.TableException;
 
 import java.io.IOException;
 import java.util.UUID;

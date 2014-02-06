@@ -1,6 +1,5 @@
-package it.polimi.distsys.communication.layers.secure;
+package it.polimi.distsys.communication.secure;
 
-import it.polimi.distsys.communication.components.TableException;
 
 import java.io.IOException;
 import java.security.Key;

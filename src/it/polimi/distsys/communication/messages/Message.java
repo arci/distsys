@@ -1,6 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.communication.Layer;
 
 import java.io.IOException;
 import java.io.Serializable;

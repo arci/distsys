@@ -1,9 +1,9 @@
 package distsys;
 
 import static org.junit.Assert.*;
-import it.polimi.distsys.communication.components.Decrypter;
-import it.polimi.distsys.communication.components.FlatTable;
-import it.polimi.distsys.communication.layers.secure.ClientSecureLayer;
+import it.polimi.distsys.communication.secure.ClientSecureLayer;
+import it.polimi.distsys.communication.secure.Decrypter;
+import it.polimi.distsys.communication.secure.FlatTable;
 
 import java.security.Key;
 import java.util.UUID;

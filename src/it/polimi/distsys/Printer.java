@@ -1,7 +1,7 @@
-package it.polimi.distsys.communication.components;
+package it.polimi.distsys;
 
 import it.polimi.distsys.chat.Peer;
-import it.polimi.distsys.communication.layers.Layer;
+import it.polimi.distsys.communication.Layer;
 
 import java.lang.reflect.Field;
 

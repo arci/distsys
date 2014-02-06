@@ -1,8 +1,6 @@
-package it.polimi.distsys.communication.layers.secure;
+package it.polimi.distsys.communication.secure;
 
-import it.polimi.distsys.communication.components.FlatTable;
-import it.polimi.distsys.communication.components.Printer;
-import it.polimi.distsys.communication.components.TableException;
+import it.polimi.distsys.Printer;
 import it.polimi.distsys.communication.messages.DONEMessage;
 import it.polimi.distsys.communication.messages.InitMessage;
 import it.polimi.distsys.communication.messages.KeysJoinMessage;

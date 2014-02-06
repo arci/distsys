@@ -1,6 +1,6 @@
-package it.polimi.distsys.communication.layers;
+package it.polimi.distsys.communication;
 
-import it.polimi.distsys.communication.components.Printer;
+import it.polimi.distsys.Printer;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;

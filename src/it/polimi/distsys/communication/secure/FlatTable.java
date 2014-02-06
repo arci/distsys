@@ -1,4 +1,6 @@
-package it.polimi.distsys.communication.components;
+package it.polimi.distsys.communication.secure;
+
+import it.polimi.distsys.Printer;
 
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
