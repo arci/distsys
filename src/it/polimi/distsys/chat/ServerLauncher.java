@@ -1,7 +1,6 @@
 package it.polimi.distsys.chat;
 
 import it.polimi.distsys.Config;
-import it.polimi.distsys.Printer;
 
 import java.io.IOException;
 

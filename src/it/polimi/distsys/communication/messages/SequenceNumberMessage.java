@@ -1,6 +1,6 @@
 package it.polimi.distsys.communication.messages;
 
-import it.polimi.distsys.Printer;
+import it.polimi.distsys.chat.Printer;
 import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.reliable.SequenceNumber;
 

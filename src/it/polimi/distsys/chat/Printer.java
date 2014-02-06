@@ -1,6 +1,5 @@
-package it.polimi.distsys;
+package it.polimi.distsys.chat;
 
-import it.polimi.distsys.chat.Peer;
 import it.polimi.distsys.communication.Layer;
 
 import java.lang.reflect.Field;

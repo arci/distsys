@@ -7,7 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.SealedObject;
 
-import it.polimi.distsys.Printer;
+import it.polimi.distsys.chat.Printer;
 import it.polimi.distsys.communication.Layer;
 
 public class EncryptedMessage implements Message {

@@ -1,6 +1,6 @@
 package it.polimi.distsys.communication;
 
-import it.polimi.distsys.Printer;
+import it.polimi.distsys.chat.Printer;
 import it.polimi.distsys.communication.messages.Message;
 
 import java.io.IOException;

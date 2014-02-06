@@ -1,6 +1,6 @@
 package it.polimi.distsys.communication.secure;
 
-import it.polimi.distsys.Printer;
+import it.polimi.distsys.chat.Printer;
 
 import java.io.IOException;
 import java.security.Key;

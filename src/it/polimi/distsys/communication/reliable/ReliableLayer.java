@@ -1,7 +1,7 @@
 package it.polimi.distsys.communication.reliable;
 
-import it.polimi.distsys.Printer;
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.chat.Printer;
 import it.polimi.distsys.communication.Layer;
 import it.polimi.distsys.communication.messages.Message;
 import it.polimi.distsys.communication.messages.NACKMessage;

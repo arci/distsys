@@ -1,6 +1,7 @@
 package it.polimi.distsys;
 
 import it.polimi.distsys.chat.Peer;
+import it.polimi.distsys.chat.Printer;
 import it.polimi.distsys.communication.causal.CausalLayer;
 import it.polimi.distsys.communication.multicast.MulticastLayer;
 import it.polimi.distsys.communication.reliable.ReliableLayer;
