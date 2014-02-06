@@ -61,7 +61,7 @@ public class ChatFrame extends JFrame {
 		nickname.setBorder(BorderFactory.createCompoundBorder(null, padding));
 		textField.addKeyListener(new SubmitListener());
 
-		panesPanel.setLayout(new GridLayout(0, 2));
+		panesPanel.setLayout(new GridLayout(2, 0));
 		panesPanel.add(new JScrollPane(textPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
@@ -75,8 +75,8 @@ public class ChatFrame extends JFrame {
 		inputPanel.add(textField, BorderLayout.CENTER);
 		this.add(inputPanel, BorderLayout.SOUTH);
 		pack();
-		textPane.setSize(new Dimension(this.getWidth() / 2, this.getHeight()));
-		debugPane.setSize(new Dimension(this.getWidth() / 2, this.getHeight()));
+		textPane.setSize(new Dimension(this.getWidth(), this.getHeight() / 2));
+		debugPane.setSize(new Dimension(this.getWidth(), this.getHeight() / 2));
 		textField.requestFocusInWindow();
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -85,6 +85,7 @@ public class ChatFrame extends JFrame {
 	public void append(String message) {
 		SimpleAttributeSet keyWord = new SimpleAttributeSet();
 		StyleConstants.setForeground(keyWord, Color.BLUE);
+		StyleConstants.setBold(keyWord, true);
 		try {
 			chat.insertString(chat.getLength(), nickname.getText() + "> "
 					+ message + "\n", keyWord);
